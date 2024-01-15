@@ -1,0 +1,61 @@
+version: '3'
+
+services:
+  nginx:
+    image: nginx:latest
+    container_name: ${PROJECT_NAME}-webserver
+    ports:
+      - "80:80"
+      - "443:443"
+    restart: always
+    volumes:
+      - ${WORKSPACE}/docker/nginx/conf/conf.d:/etc/nginx/conf.d:ro
+      - ${WORKSPACE}/docker/nginx/conf/certs:/etc/nginx/certs:ro
+      - ${WORKSPACE}:/var/www/html
+    depends_on:
+      - php
+    networks:
+      - internal
+
+  php:
+    build: ${WORKSPACE}/docker/php
+    container_name: ${PROJECT_NAME}-php
+    volumes:
+      - ${WORKSPACE}:/var/www/html
+    environment:
+      ENV: ${ENV:-}
+      SYMFONY_VERSION: ${SYMFONY_VERSION:-}
+      DEV_UID: ${UID}
+    networks:
+      - internal
+
+  database:
+    image: mysql:5.7
+    container_name: ${PROJECT_NAME}-database
+    environment:
+      MYSQL_ROOT_PASSWORD: ${ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DB_NAME}
+      MYSQL_USER: ${MYSQL_USERNAME}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - "6033:3306"
+    volumes:
+      - ${WORKSPACE}/docker/mysql/init:/docker-entrypoint-initdb.d
+    networks:
+      - internal
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: ${PROJECT_NAME}-phpmyadmin
+    environment:
+      PMA_ARBITRARY: 1
+      PMA_HOST: database
+      UPLOAD_LIMIT: 20M
+    ports:
+        - "8899:80"
+    networks:
+      - internal
+
+networks:
+  internal:
+    driver: bridge
