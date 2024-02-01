@@ -54,3 +54,28 @@ ssh-nginx: ## Ssh into nginx container (www-data)
 
 ssh-php: ## Ssh into php container (www-data)
 	$(PHP_CLI) sh
+
+php-cs-fixer:
+	make php-cs-fixer-fix ARGS="--dry-run --diff -vv ${ARGS}";
+
+php-cs-fixer-fix:
+	$(PHP_CLI) tools/php-cs-fixer/vendor/bin/php-cs-fixer fix\
+			${ARGS}\
+			--config=tools/php-cs-fixer/.php-cs-fixer.dist.php
+
+test:
+	make test-unit
+	make test-integration
+	make test-system
+
+test-unit:
+	$(PHP_CLI) php bin/phpunit --stop-on-failure --testdox --testsuite unit $(ARGS)
+
+test-integration:
+	$(PHP_CLI) php bin/phpunit --stop-on-failure --testdox --testsuite integration $(ARGS)
+
+test-system:
+	$(PHP_CLI) php bin/phpunit --stop-on-failure --testdox --testsuite system $(ARGS)
+
+test-coverage:
+	$(PHP_CLI) php bin/phpunit --coverage-html public/test-coverage

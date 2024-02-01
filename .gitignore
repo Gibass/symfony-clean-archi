@@ -8,6 +8,15 @@
 /var/
 /vendor/
 ###< symfony/framework-bundle ###
+
+# Tests
+public/test-coverage
+
+# Tools
+/tools/*/vendor
+/tools/*/composer.lock
+/tools/*/*.cache
+
 # Environment files
 .env
 docker/nginx/conf/certs/*.pem
@@ -26,3 +35,13 @@ dist/
 # Log files
 *.log
 
+
+###> symfony/phpunit-bridge ###
+.phpunit.result.cache
+/phpunit.xml
+###< symfony/phpunit-bridge ###
+
+###> phpunit/phpunit ###
+/phpunit.xml
+.phpunit.result.cache
+###< phpunit/phpunit ###
