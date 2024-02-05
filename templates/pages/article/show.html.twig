@@ -1,0 +1,35 @@
+{% extends 'layouts/base.html.twig' %}
+
+{% block title %}{{ article.title }} | LogBook{% endblock %}
+
+{% block body %}
+    <section class="section">
+        <div class="container">
+            <article id="article-{{ article.id }}" class="row mb-4">
+                <div class="col-lg-10 mx-auto mb-4">
+                    <h1 class="title h2 mb-3">{{ article.title }}</h1>
+                    <ul class="list-inline post-meta mb-3">
+                        <li class="list-inline-item"><i class="ti-user mr-2"></i><a href="author.html">John Doe</a></li>
+                        <li class="list-inline-item">Date : {{ article.publishedAt|date("F d, Y") }}</li>
+                        <li class="list-inline-item">Categories : <a href="#!" class="ml-1">Photography </a>
+                        </li>
+                        <li class="list-inline-item">Tags : <a href="#!" class="ml-1">Photo </a> ,<a href="#!" class="ml-1">Image </a>
+                        </li>
+                    </ul>
+                </div>
+                {% if article.mainMedia %}
+                    <div class="col-12 mb-3">
+                        <div class="post-slider">
+                            <img src="{{ mediaPath(article.mainMedia) }}" class="img-fluid media media-{{ article.mainMedia.id }}" alt="{{ article.mainMedia.title }}">
+                        </div>
+                    </div>
+                {% endif %}
+                <div class="col-lg-10 mx-auto">
+                    <div class="content">
+                        {{ article.content }}
+                    </div>
+                </div>
+            </article>
+        </div>
+    </section>
+{% endblock %}

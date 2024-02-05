@@ -8,6 +8,18 @@
 /var/
 /vendor/
 ###< symfony/framework-bundle ###
+
+# Tests
+public/test-coverage
+
+# Uploads
+public/uploads
+
+# Tools
+/tools/*/vendor
+/tools/*/composer.lock
+/tools/*/*.cache
+
 # Environment files
 .env
 docker/nginx/conf/certs/*.pem
@@ -26,3 +38,15 @@ dist/
 # Log files
 *.log
 
+## Php cs
+.php-cs-fixer.cache
+
+###> symfony/phpunit-bridge ###
+.phpunit.result.cache
+/phpunit.xml
+###< symfony/phpunit-bridge ###
+
+###> symfony/asset-mapper ###
+/public/assets/
+/assets/vendor/
+###< symfony/asset-mapper ###
