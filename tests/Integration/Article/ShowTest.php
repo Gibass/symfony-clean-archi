@@ -17,6 +17,8 @@ class ShowTest extends IntegrationTestCase
 
         $this->assertStringContainsString('Custom Title', $crawler->html());
         $this->assertStringContainsString('Custom Content', $crawler->html());
+        $this->assertStringContainsString('May 15, 2023', $crawler->html());
+        $this->assertStringContainsString('/02-2024/image-custom.jpg', $crawler->html());
     }
 
     public function testShowWithNotFoundArticle(): void

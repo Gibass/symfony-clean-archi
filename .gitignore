@@ -12,6 +12,9 @@
 # Tests
 public/test-coverage
 
+# Uploads
+public/uploads
+
 # Tools
 /tools/*/vendor
 /tools/*/composer.lock
@@ -35,16 +38,13 @@ dist/
 # Log files
 *.log
 
+## Php cs
+.php-cs-fixer.cache
 
 ###> symfony/phpunit-bridge ###
 .phpunit.result.cache
 /phpunit.xml
 ###< symfony/phpunit-bridge ###
-
-###> phpunit/phpunit ###
-/phpunit.xml
-.phpunit.result.cache
-###< phpunit/phpunit ###
 
 ###> symfony/asset-mapper ###
 /public/assets/

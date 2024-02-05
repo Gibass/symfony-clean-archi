@@ -5,6 +5,7 @@ namespace App\Infrastructure\Adapter\Repository;
 use App\Domain\Article\Entity\Article;
 use App\Domain\Article\Gateway\ArticleGatewayInterface;
 use App\Infrastructure\Doctrine\Entity\ArticleDoctrine;
+use App\Infrastructure\Doctrine\Entity\MediaDoctrine;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -30,12 +31,32 @@ class ArticleRepository extends ServiceEntityRepository implements ArticleGatewa
         return $_article ? $this->convert($_article) : null;
     }
 
+    public function getPublishedById(int $id): ?Article
+    {
+        $_article = $this->findOneBy([
+            'id' => $id,
+            'status' => true,
+        ]);
+
+        return $_article ? $this->convert($_article) : null;
+    }
+
     private function convert(ArticleDoctrine $articleDoctrine): Article
     {
         return (new Article())
             ->setId($articleDoctrine->getId())
+            ->setSlug($articleDoctrine->getSlug())
             ->setTitle($articleDoctrine->getTitle())
+            ->setMainMedia(
+                $articleDoctrine->getMainMedia() ?
+                    $this->_em->getRepository(MediaDoctrine::class)->convert($articleDoctrine->getMainMedia()) :
+                    null
+            )
             ->setContent($articleDoctrine->getContent())
+            ->setStatus($articleDoctrine->isPublished())
+            ->setUpdateAt($articleDoctrine->getUpdatedAt())
+            ->setCreatedAt($articleDoctrine->getCreatedAt())
+            ->setPublishedAt($articleDoctrine->getPublishedAt())
         ;
     }
 }

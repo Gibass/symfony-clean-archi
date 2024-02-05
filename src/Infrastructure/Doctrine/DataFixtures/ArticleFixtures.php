@@ -3,22 +3,29 @@
 namespace App\Infrastructure\Doctrine\DataFixtures;
 
 use App\Infrastructure\Doctrine\Entity\ArticleDoctrine;
+use App\Infrastructure\Doctrine\Entity\ImageDoctrine;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
+use Symfony\Component\Filesystem\Filesystem;
 
 class ArticleFixtures extends Fixture implements FixtureGroupInterface
 {
     private \Faker\Generator $faker;
+    private Filesystem $fileSystem;
 
-    public function __construct()
+    public function __construct(private readonly string $uploadDir)
     {
         $this->faker = Factory::create();
+        $this->fileSystem = new Filesystem();
     }
 
     public function load(ObjectManager $manager): void
     {
+        $this->fileSystem->remove($this->uploadDir . '/test');
+        $this->fileSystem->mkdir($this->uploadDir . '/test');
+
         for ($i = 1; $i <= 20; ++$i) {
             $article = new ArticleDoctrine();
             $article->setTitle($this->faker->sentence(4))
@@ -42,6 +49,19 @@ class ArticleFixtures extends Fixture implements FixtureGroupInterface
                 if ($end === 'now') {
                     $article->setUpdatedAt($article->getPublishedAt());
                 }
+            }
+
+            $image = (new ImageDoctrine())
+                ->setTitle($this->faker->title)
+                ->setCreatedAt(\DateTimeImmutable::createFromMutable($this->faker->dateTimeBetween('-1 year')))
+                ->setPath(str_replace($this->uploadDir, '', $this->faker->image($this->uploadDir . '/test', 1200, 650)))
+            ;
+
+            $manager->persist($image);
+
+            if ($this->faker->boolean(75)) {
+                $image->setUpdatedAt(\DateTimeImmutable::createFromMutable($this->faker->dateTimeBetween($image->getCreatedAt()->format('c'))));
+                $article->setMainMedia($image);
             }
 
             $manager->persist($article);

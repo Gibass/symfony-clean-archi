@@ -12,8 +12,8 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Table(name: 'article')]
 class ArticleDoctrine
 {
-    use EntityPublish;
     use EntityDate;
+    use EntityPublish;
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -25,6 +25,9 @@ class ArticleDoctrine
 
     #[ORM\Column(length: 255)]
     private ?string $slug = null;
+
+    #[ORM\ManyToOne]
+    private ?MediaDoctrine $mainMedia = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $content = null;
@@ -54,6 +57,18 @@ class ArticleDoctrine
     public function setSlug(string $slug): static
     {
         $this->slug = $slug;
+
+        return $this;
+    }
+
+    public function getMainMedia(): ?MediaDoctrine
+    {
+        return $this->mainMedia;
+    }
+
+    public function setMainMedia(?MediaDoctrine $mainMedia): static
+    {
+        $this->mainMedia = $mainMedia;
 
         return $this;
     }

@@ -19,7 +19,7 @@ class Show
      */
     public function execute(ShowRequest $request, ShowPresenterInterface $presenter): mixed
     {
-        $article = $this->gateway->getById($request->getId());
+        $article = $this->gateway->getPublishedById($request->getId());
 
         if ($article === null) {
             throw new ArticleNotFoundException(sprintf('Article with id : %d not found.', $request->getId()));

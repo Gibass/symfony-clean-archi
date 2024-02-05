@@ -3,6 +3,7 @@
 namespace App\Tests\Unit\Article;
 
 use App\Domain\Article\Entity\Article;
+use App\Domain\Article\Entity\Image;
 use App\Domain\Article\Exception\ArticleNotFoundException;
 use App\Domain\Article\Gateway\ArticleGatewayInterface;
 use App\Domain\Article\Presenter\ShowPresenterInterface;
@@ -30,10 +31,7 @@ class ShowTest extends TestCase
         $this->presenter = new class() implements ShowPresenterInterface {
             public function present(ShowResponse $response): string
             {
-                return 'Article id: ' . $response->getArticle()->id . ', ' .
-                    'url: ' . $response->getArticle()->getSlug() . ', ' .
-                    'title : ' . $response->getArticle()->getTitle() . ', ' .
-                    'Content: ' . $response->getArticle()->getContent();
+                return ShowTest::present($response);
             }
         };
 
@@ -47,7 +45,7 @@ class ShowTest extends TestCase
     {
         $request = new ShowRequest($id);
 
-        $this->gateway->method('getById')->with($id)->willReturn($article);
+        $this->gateway->method('getPublishedById')->with($id)->willReturn($article);
 
         $response = $this->useCase->execute($request, $this->presenter);
         $this->assertSame($viewResponse, $response);
@@ -63,7 +61,7 @@ class ShowTest extends TestCase
         $this->expectException($exception);
         $this->expectExceptionMessage($message);
 
-        $this->gateway->method('getById')->with($id)->willReturn($article);
+        $this->gateway->method('getPublishedById')->with($id)->willReturn($article);
         $this->useCase->execute($request, $this->presenter);
     }
 
@@ -75,8 +73,10 @@ class ShowTest extends TestCase
                 ->setId(1)
                 ->setSlug('title-1')
                 ->setTitle('Title 1')
-                ->setContent('The main Content'),
-            'viewResponse' => 'Article id: 1, url: title-1, title : Title 1, Content: The main Content',
+                ->setContent('The main Content')
+                ->setMainMedia((new Image())->setTitle('Image 1'))
+                ->setCreatedAt(\DateTimeImmutable::createFromFormat('d/m/Y', '25/04/2023')),
+            'viewResponse' => self::generateArticleViewResponse(1, 'The main Content', '25-04-2023'),
         ];
 
         yield 'show_existing_article_with_no_content' => [
@@ -84,8 +84,9 @@ class ShowTest extends TestCase
             'article' => (new Article())
                 ->setId(2)
                 ->setSlug('title-2')
-                ->setTitle('Title 2'),
-            'viewResponse' => 'Article id: 2, url: title-2, title : Title 2, Content: ',
+                ->setTitle('Title 2')
+                ->setCreatedAt(\DateTimeImmutable::createFromFormat('d/m/Y', '15/02/2023')),
+            'viewResponse' => self::generateArticleViewResponse(2, '', '15-02-2023', false),
         ];
     }
 
@@ -97,5 +98,31 @@ class ShowTest extends TestCase
             'exception' => ArticleNotFoundException::class,
             'message' => 'Article with id : 3 not found',
         ];
+    }
+
+    public static function present(ShowResponse $response): string
+    {
+        $val = 'Article id: ' . $response->getArticle()->getId() . ', ' .
+            'url: ' . $response->getArticle()->getSlug() . ', ' .
+            'title : ' . $response->getArticle()->getTitle() . ', ' .
+            'Content: ' . $response->getArticle()->getContent() . ', ' .
+            'Created At: ' . $response->getArticle()->getCreatedAt()->format('d-m-Y');
+
+        if ($response->getArticle()->getMainMedia()) {
+            $val .= sprintf(', Media : %s', $response->getArticle()->getMainMedia()->getTitle());
+        }
+
+        return $val;
+    }
+
+    private static function generateArticleViewResponse(int $id, string $content, string $date, bool $media = true): string
+    {
+        $val = "Article id: $id, url: title-$id, title : Title $id, Content: $content, Created At: $date";
+
+        if ($media) {
+            $val .= ", Media : Image $id";
+        }
+
+        return $val;
     }
 }
