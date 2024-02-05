@@ -2,15 +2,19 @@
 
 namespace App\Domain\Article\Entity;
 
+use App\Domain\Shared\Entity\DateEntity;
+use App\Domain\Shared\Entity\PublishEntity;
+
 class Article
 {
-    public ?int $id = null;
+    use DateEntity;
+    use PublishEntity;
 
-    public ?string $slug = null;
-
-    public ?string $title = null;
-
-    public ?string $content = null;
+    private ?int $id = null;
+    private ?string $slug = null;
+    private ?string $title = null;
+    private ?Media $mainMedia = null;
+    private ?string $content = null;
 
     public function getId(): ?int
     {
@@ -20,6 +24,7 @@ class Article
     public function setId(?int $id): Article
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -31,6 +36,7 @@ class Article
     public function setSlug(?string $slug): Article
     {
         $this->slug = $slug;
+
         return $this;
     }
 
@@ -42,6 +48,19 @@ class Article
     public function setTitle(?string $title): Article
     {
         $this->title = $title;
+
+        return $this;
+    }
+
+    public function getMainMedia(): ?Media
+    {
+        return $this->mainMedia;
+    }
+
+    public function setMainMedia(?Media $mainMedia): Article
+    {
+        $this->mainMedia = $mainMedia;
+
         return $this;
     }
 
@@ -53,6 +72,7 @@ class Article
     public function setContent(?string $content): Article
     {
         $this->content = $content;
+
         return $this;
     }
 }

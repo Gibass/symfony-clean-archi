@@ -1,4 +1,5 @@
 <?php
+
 namespace App\UserInterface\Controller\Article;
 
 use App\Domain\Article\Exception\ArticleNotFoundException;

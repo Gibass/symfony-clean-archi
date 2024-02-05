@@ -1,23 +1,19 @@
 <?php
 
-namespace App\Infrastructure\Doctrine\Trait;
+namespace App\Domain\Shared\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-
-trait EntityPublish
+trait PublishEntity
 {
-    #[ORM\Column]
     private bool $status = false;
 
-    #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $publishedAt = null;
 
-    public function isPublished(): ?bool
+    public function isPublished(): bool
     {
         return $this->status;
     }
 
-    public function setStatus(bool $status): static
+    public function setStatus(bool $status): self
     {
         $this->status = $status;
 
@@ -29,7 +25,7 @@ trait EntityPublish
         return $this->publishedAt;
     }
 
-    public function setPublishedAt(?\DateTimeImmutable $publishedAt): static
+    public function setPublishedAt(?\DateTimeImmutable $publishedAt): self
     {
         $this->publishedAt = $publishedAt;
 
