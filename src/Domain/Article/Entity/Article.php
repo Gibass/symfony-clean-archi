@@ -14,6 +14,7 @@ class Article
     private ?string $slug = null;
     private ?string $title = null;
     private ?Media $mainMedia = null;
+    private ?string $description = null;
     private ?string $content = null;
 
     public function getId(): ?int
@@ -60,6 +61,18 @@ class Article
     public function setMainMedia(?Media $mainMedia): Article
     {
         $this->mainMedia = $mainMedia;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): Article
+    {
+        $this->description = $description;
 
         return $this;
     }

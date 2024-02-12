@@ -8,6 +8,8 @@ use App\Infrastructure\Doctrine\Entity\ArticleDoctrine;
 use App\Infrastructure\Doctrine\Entity\MediaDoctrine;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Pagerfanta\Adapter\AdapterInterface;
+use Pagerfanta\Doctrine\ORM\QueryAdapter;
 
 /**
  * @extends ServiceEntityRepository<ArticleDoctrine>
@@ -54,9 +56,19 @@ class ArticleRepository extends ServiceEntityRepository implements ArticleGatewa
             )
             ->setContent($articleDoctrine->getContent())
             ->setStatus($articleDoctrine->isPublished())
-            ->setUpdateAt($articleDoctrine->getUpdatedAt())
+            ->setUpdatedAt($articleDoctrine->getUpdatedAt())
             ->setCreatedAt($articleDoctrine->getCreatedAt())
             ->setPublishedAt($articleDoctrine->getPublishedAt())
         ;
+    }
+
+    public function getPaginatedAdapter(): AdapterInterface
+    {
+        $queryBuilder = $this->createQueryBuilder('a')
+            ->where('a.status = :status')
+            ->orderBy('a.createdAt', 'DESC')
+            ->setParameter('status', true);
+
+        return new QueryAdapter($queryBuilder);
     }
 }

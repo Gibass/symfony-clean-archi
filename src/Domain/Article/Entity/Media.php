@@ -2,11 +2,11 @@
 
 namespace App\Domain\Article\Entity;
 
-use App\Infrastructure\Doctrine\Trait\EntityDate;
+use App\Domain\Shared\Entity\DateEntity;
 
 abstract class Media
 {
-    use EntityDate;
+    use DateEntity;
 
     private ?int $id = null;
     private ?string $title = null;

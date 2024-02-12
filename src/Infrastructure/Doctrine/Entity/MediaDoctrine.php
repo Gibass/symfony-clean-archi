@@ -3,8 +3,8 @@
 namespace App\Infrastructure\Doctrine\Entity;
 
 use App\Infrastructure\Adapter\Repository\MediaRepository;
-use App\Infrastructure\Doctrine\Trait\EntityDate;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Timestampable\Traits\TimestampableEntity;
 
 #[ORM\Entity(repositoryClass: MediaRepository::class)]
 #[ORM\InheritanceType('JOINED')]
@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Table(name: 'media')]
 class MediaDoctrine
 {
-    use EntityDate;
+    use TimestampableEntity;
 
     #[ORM\Id]
     #[ORM\GeneratedValue]

@@ -3,17 +3,18 @@
 namespace App\Infrastructure\Doctrine\Entity;
 
 use App\Infrastructure\Adapter\Repository\ArticleRepository;
-use App\Infrastructure\Doctrine\Trait\EntityDate;
 use App\Infrastructure\Doctrine\Trait\EntityPublish;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation\Slug;
+use Gedmo\Timestampable\Traits\TimestampableEntity;
 
 #[ORM\Entity(repositoryClass: ArticleRepository::class)]
 #[ORM\Table(name: 'article')]
 class ArticleDoctrine
 {
-    use EntityDate;
     use EntityPublish;
+    use TimestampableEntity;
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -23,11 +24,15 @@ class ArticleDoctrine
     #[ORM\Column(length: 255)]
     private ?string $title = null;
 
-    #[ORM\Column(length: 255)]
+    #[Slug(fields: ['title'])]
+    #[ORM\Column(length: 100, unique: true)]
     private ?string $slug = null;
 
     #[ORM\ManyToOne]
     private ?MediaDoctrine $mainMedia = null;
+
+    #[ORM\Column(type: Types::TEXT, length: 800, nullable: true)]
+    private ?string $description = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $content = null;
@@ -69,6 +74,18 @@ class ArticleDoctrine
     public function setMainMedia(?MediaDoctrine $mainMedia): static
     {
         $this->mainMedia = $mainMedia;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): ArticleDoctrine
+    {
+        $this->description = $description;
 
         return $this;
     }

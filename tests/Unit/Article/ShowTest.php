@@ -74,8 +74,7 @@ class ShowTest extends TestCase
                 ->setSlug('title-1')
                 ->setTitle('Title 1')
                 ->setContent('The main Content')
-                ->setMainMedia((new Image())->setTitle('Image 1'))
-                ->setCreatedAt(\DateTimeImmutable::createFromFormat('d/m/Y', '25/04/2023')),
+                ->setCreatedAt(\DateTime::createFromFormat('d/m/Y', '25/04/2023')),
             'viewResponse' => self::generateArticleViewResponse(1, 'The main Content', '25-04-2023'),
         ];
 
@@ -85,8 +84,8 @@ class ShowTest extends TestCase
                 ->setId(2)
                 ->setSlug('title-2')
                 ->setTitle('Title 2')
-                ->setCreatedAt(\DateTimeImmutable::createFromFormat('d/m/Y', '15/02/2023')),
-            'viewResponse' => self::generateArticleViewResponse(2, '', '15-02-2023', false),
+                ->setCreatedAt(\DateTime::createFromFormat('d/m/Y', '15/02/2023')),
+            'viewResponse' => self::generateArticleViewResponse(2, '', '15-02-2023'),
         ];
     }
 
@@ -115,14 +114,8 @@ class ShowTest extends TestCase
         return $val;
     }
 
-    private static function generateArticleViewResponse(int $id, string $content, string $date, bool $media = true): string
+    private static function generateArticleViewResponse(int $id, string $content, string $date): string
     {
-        $val = "Article id: $id, url: title-$id, title : Title $id, Content: $content, Created At: $date";
-
-        if ($media) {
-            $val .= ", Media : Image $id";
-        }
-
-        return $val;
+        return "Article id: $id, url: title-$id, title : Title $id, Content: $content, Created At: $date";
     }
 }
