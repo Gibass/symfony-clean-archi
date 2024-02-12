@@ -1,6 +1,6 @@
 <?php
 
-namespace App\UserInterface\Controller\Article;
+namespace App\UserInterface\Controller\Front\Article;
 
 use App\Domain\Article\Exception\ArticleNotFoundException;
 use App\Domain\Article\Request\ShowRequest;

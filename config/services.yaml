@@ -22,11 +22,6 @@ services:
             - '../src/Kernel.php'
             - '../src/Infrastructure/{Test}'
 
-
-    App\Infrastructure\Doctrine\DataFixtures\ArticleFixtures:
-        arguments:
-            $uploadDir: '%app.upload_dir%'
-
     App\UserInterface\Extension\Twig\MediaPath:
         arguments:
             $uploadPath: '/uploads'

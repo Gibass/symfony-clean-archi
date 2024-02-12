@@ -10,7 +10,7 @@ class ShowArticlePresenterHTML extends AbstractWebPresenter implements ShowPrese
 {
     public function present(ShowResponse $response): Response
     {
-        return $this->render('pages/article/show.html.twig', [
+        return $this->render('front/pages/article/show.html.twig', [
             'article' => $response->getArticle(),
         ]);
     }
