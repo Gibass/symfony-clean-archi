@@ -2,22 +2,22 @@
 
 namespace App\Infrastructure\Doctrine\DataFixtures;
 
-use App\Infrastructure\Doctrine\Factory\ArticleDoctrineFactory;
 use App\Infrastructure\Doctrine\Factory\TagDoctrineFactory;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\Persistence\ObjectManager;
 
-class ArticleFixtures extends Fixture implements FixtureGroupInterface
+class TagTestFixtures extends Fixture implements FixtureGroupInterface
 {
     public function load(ObjectManager $manager): void
     {
-        TagDoctrineFactory::createMany(20);
-        ArticleDoctrineFactory::createMany(100);
+        TagDoctrineFactory::createOne([
+            'title' => 'Empty',
+        ]);
     }
 
     public static function getGroups(): array
     {
-        return ['dev'];
+        return ['test'];
     }
 }

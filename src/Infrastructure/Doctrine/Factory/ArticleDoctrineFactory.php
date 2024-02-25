@@ -4,6 +4,7 @@ namespace App\Infrastructure\Doctrine\Factory;
 
 use App\Infrastructure\Adapter\Repository\ArticleRepository;
 use App\Infrastructure\Doctrine\Entity\ArticleDoctrine;
+use Zenstruck\Foundry\LazyValue;
 use Zenstruck\Foundry\ModelFactory;
 use Zenstruck\Foundry\Proxy;
 use Zenstruck\Foundry\RepositoryProxy;
@@ -39,6 +40,11 @@ final class ArticleDoctrineFactory extends ModelFactory
         parent::__construct();
     }
 
+    public function noTag(): self
+    {
+        return $this->addState(['tags' => []]);
+    }
+
     public function published(): self
     {
         return $this->addState(['status' => true, 'publishedAt' => self::faker()->dateTime()]);
@@ -61,6 +67,7 @@ final class ArticleDoctrineFactory extends ModelFactory
             'title' => self::faker()->sentence,
             'description' => self::faker()->paragraphs(3, true),
             'content' => self::faker()->paragraphs(20, true),
+            'tags' => LazyValue::new(fn () => TagDoctrineFactory::randomRange(0, 5)),
             'createdAt' => self::faker()->dateTimeBetween('-1 year'),
         ];
     }

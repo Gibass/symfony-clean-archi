@@ -17,6 +17,11 @@ class Article
     private ?string $description = null;
     private ?string $content = null;
 
+    /**
+     * @var Tag[]
+     */
+    private array $tags = [];
+
     public function getId(): ?int
     {
         return $this->id;
@@ -85,6 +90,26 @@ class Article
     public function setContent(?string $content): Article
     {
         $this->content = $content;
+
+        return $this;
+    }
+
+    /**
+     * @return Tag[]
+     */
+    public function getTags(): array
+    {
+        return $this->tags;
+    }
+
+    /**
+     * @param Tag[] $tags
+     */
+    public function addTags(array $tags): Article
+    {
+        foreach ($tags as $tag) {
+            $this->tags[] = $tag;
+        }
 
         return $this;
     }

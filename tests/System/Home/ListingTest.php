@@ -46,35 +46,39 @@ class ListingTest extends WebTestCase
         yield 'test_first_page_return_10_first_article' => [
             'url' => '/',
             'count' => 10,
-            'firstId' => 57,
-            'lastId' => 48,
+            'firstId' => 63,
+            'lastId' => 54,
         ];
 
         yield 'test_next_page_return_10_next_article' => [
             'url' => '/?page=2',
             'count' => 10,
-            'firstId' => 47,
-            'lastId' => 38,
+            'firstId' => 53,
+            'lastId' => 44,
         ];
 
         yield 'test_last_page_return_6_last_article' => [
             'url' => '/?page=6',
-            'count' => 6,
-            'firstId' => 7,
+            'count' => 10,
+            'firstId' => 13,
             'lastId' => 1,
         ];
 
         yield 'test_with_invalid_page' => [
             'url' => '/?page=oops',
             'count' => 10,
-            'firstId' => 57,
-            'lastId' => 48,
+            'firstId' => 63,
+            'lastId' => 54,
         ];
     }
 
     public static function dataListingFailedProvider(): \Generator
     {
-        yield 'test_with_no_content_found_in_the page' => [
+        yield 'test_with_no_content_found_in_next_last_page' => [
+            'url' => '/?page=7',
+        ];
+
+        yield 'test_with_no_content_found_in_the_page' => [
             'url' => '/?page=20',
         ];
     }
