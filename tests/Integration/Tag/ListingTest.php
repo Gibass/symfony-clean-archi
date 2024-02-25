@@ -1,16 +1,16 @@
 <?php
 
-namespace Integration\Home;
+namespace Integration\Tag;
 
 use App\Infrastructure\Test\IntegrationTestCase;
-use Pagerfanta\Exception\OutOfRangeCurrentPageException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ListingTest extends IntegrationTestCase
 {
     /**
      * @dataProvider dataListingProvider
      */
-    public function testHomeListing(string $url, int $count, ?int $firstId, ?int $lastId): void
+    public function testTagListing(string $url, int $count, ?int $firstId, ?int $lastId): void
     {
         $client = self::createClient();
 
@@ -29,12 +29,12 @@ class ListingTest extends IntegrationTestCase
     /**
      * @dataProvider dataListingFailedProvider
      */
-    public function testHomeListWithNotFoundPage(string $url): void
+    public function testTagListWithNotFoundPage(string $url): void
     {
         $client = self::createClient();
 
         $client->catchExceptions(false);
-        $this->expectException(OutOfRangeCurrentPageException::class);
+        $this->expectException(NotFoundHttpException::class);
 
         $client->request('GET', $url);
 
@@ -43,39 +43,32 @@ class ListingTest extends IntegrationTestCase
 
     public static function dataListingProvider(): \Generator
     {
-        yield 'test_first_page_return_2_first_article' => [
-            'url' => '/',
-            'count' => 10,
-            'firstId' => 1,
-            'lastId' => 10,
-        ];
-
-        yield 'test_next_page_return_2_next_article' => [
-            'url' => '/?page=2',
-            'count' => 10,
-            'firstId' => 11,
-            'lastId' => 20,
-        ];
-
-        yield 'test_last_page_return_1_last_article' => [
-            'url' => '/?page=3',
+        yield 'test_page_with_photo_tag' => [
+            'url' => '/tag/photo',
             'count' => 5,
-            'firstId' => 21,
-            'lastId' => 25,
+            'firstId' => 6,
+            'lastId' => 10,
         ];
 
-        yield 'test_with_invalid_page' => [
-            'url' => '/?page=oops',
-            'count' => 10,
+        yield 'test_page_with_image_tag' => [
+            'url' => '/tag/image',
+            'count' => 5,
             'firstId' => 1,
-            'lastId' => 10,
+            'lastId' => 5,
+        ];
+
+        yield 'test_page_with_no_content_empty_tag' => [
+            'url' => '/tag/empty',
+            'count' => 0,
+            'firstId' => 0,
+            'lastId' => 0,
         ];
     }
 
     public static function dataListingFailedProvider(): \Generator
     {
-        yield 'test_with_no_content_found_in_the page' => [
-            'url' => '/?page=20',
+        yield 'test_page_with_no_existing_tag' => [
+            'url' => '/tag/no-tag',
         ];
     }
 }

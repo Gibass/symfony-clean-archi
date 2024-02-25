@@ -3,7 +3,7 @@
 namespace App\Infrastructure\Test\Adapter;
 
 use App\Domain\Article\Entity\Article;
-use App\Domain\Article\Entity\Image;
+use App\Domain\Article\Entity\Tag;
 use App\Domain\Article\Gateway\ArticleGatewayInterface;
 use Pagerfanta\Adapter\AdapterInterface;
 
@@ -12,12 +12,12 @@ class ArticleGateway implements ArticleGatewayInterface
     public function getById(int $id): ?Article
     {
         if ($id > 0) {
-
             return (new Article())
                 ->setId($id)
                 ->setTitle('Custom Title')
                 ->setSlug('custom-article')
                 ->setContent('Custom Content')
+                ->addTags([new Tag('Photo', 'photo'), new Tag('Image', 'image')])
                 ->setCreatedAt(\DateTime::createFromFormat('d/m/Y', '15/05/2023'))
                 ->setPublishedAt(\DateTimeImmutable::createFromFormat('d/m/Y', '15/05/2023'))
             ;
@@ -38,8 +38,8 @@ class ArticleGateway implements ArticleGatewayInterface
 
             public function __construct()
             {
-                for ($i = 0; $i < 25; ++$i) {
-                    $this->articles[] = (new Article())->setId($i + 1);
+                foreach (range(1, 25) as $i) {
+                    $this->articles[] = (new Article())->setId($i);
                 }
             }
 

@@ -69,13 +69,25 @@ test:
 	make test-system
 
 test-unit:
-	$(PHP_CLI) php bin/phpunit --stop-on-failure --testdox --testsuite unit $(ARGS)
+	if [ ! -z $(DOMAIN) ]; then \
+  	  $(PHP_CLI) php bin/phpunit --stop-on-failure --testdox --testsuite unit "tests/Unit/$(DOMAIN)"; \
+  	else \
+  	  $(PHP_CLI) php bin/phpunit --stop-on-failure --testdox --testsuite unit; \
+  	fi
 
 test-integration:
-	$(PHP_CLI) php bin/phpunit --stop-on-failure --testdox --testsuite integration $(ARGS)
+	if [ ! -z $(DOMAIN) ]; then \
+	  $(PHP_CLI) php bin/phpunit --stop-on-failure --testdox --testsuite integration "tests/Integration/$(DOMAIN)"; \
+	else \
+	  $(PHP_CLI) php bin/phpunit --stop-on-failure --testdox --testsuite integration; \
+	fi
 
 test-system:
-	$(PHP_CLI) php bin/phpunit --stop-on-failure --testdox --testsuite system $(ARGS)
+	if [ ! -z $(DOMAIN) ]; then \
+		$(PHP_CLI) php bin/phpunit --stop-on-failure --testdox --testsuite system "tests/System/$(DOMAIN)"; \
+	else \
+    	$(PHP_CLI) php bin/phpunit --stop-on-failure --testdox --testsuite system; \
+    fi
 
 test-coverage:
 	$(PHP_CLI) php bin/phpunit --coverage-html public/test-coverage

@@ -4,6 +4,8 @@ namespace App\Infrastructure\Doctrine\Entity;
 
 use App\Infrastructure\Adapter\Repository\ArticleRepository;
 use App\Infrastructure\Doctrine\Trait\EntityPublish;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation\Slug;
@@ -36,6 +38,17 @@ class ArticleDoctrine
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $content = null;
+
+    #[ORM\JoinTable(name: 'articles_tags')]
+    #[ORM\JoinColumn(name: 'article_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'tag_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: TagDoctrine::class)]
+    private Collection $tags;
+
+    public function __construct()
+    {
+        $this->tags = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -98,6 +111,30 @@ class ArticleDoctrine
     public function setContent(?string $content): static
     {
         $this->content = $content;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, TagDoctrine>
+     */
+    public function getTags(): Collection
+    {
+        return $this->tags;
+    }
+
+    public function addTag(TagDoctrine $tag): static
+    {
+        if (!$this->tags->contains($tag)) {
+            $this->tags->add($tag);
+        }
+
+        return $this;
+    }
+
+    public function removeTag(TagDoctrine $tag): static
+    {
+        $this->tags->removeElement($tag);
 
         return $this;
     }
