@@ -8,11 +8,6 @@ trait PublishEntity
 
     private ?\DateTimeImmutable $publishedAt = null;
 
-    public function isPublished(): bool
-    {
-        return $this->status;
-    }
-
     public function setStatus(bool $status): self
     {
         $this->status = $status;

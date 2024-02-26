@@ -1,0 +1,29 @@
+{% macro renderLarge(article) %}
+
+    {% import 'front/macros/links/taxonomy-link-list.html.twig' as taxonomyLinks %}
+
+    <article id="article-{{ article.id }}" class="row mb-5">
+        <div class="col-12">
+            <div class="post-slider">
+                <img loading="lazy" src="https://picsum.photos/1200/600" class="img-fluid" alt="post-thumb">
+            </div>
+        </div>
+        <div class="col-12 mx-auto">
+            <h3><a class="post-title" href="{{ path('article_show', {id: article.id}) }}">{{ article.title }}</a></h3>
+            <ul class="list-inline post-meta mb-4">
+                <li class="list-inline-item"><i class="ti-user mr-2"></i>
+                    <a href="author.html">John Doe</a>
+                </li>
+                <li class="list-inline-item">Date : {{ article.publishedAt|date("F d, Y") }}</li>
+                {% if article.category %}
+                    <li class="list-inline-item">Category : <a href="{{ path('category_listing', {slug: article.category.slug}) }}" class="ml-1">{{ article.category.title }} </a></li>
+                {% endif %}
+                {% if article.tags|length > 0 %}
+                    <li class="list-inline-item">Tags : {{ taxonomyLinks.generate(article.tags, 'tag_show') }}</li>
+                {% endif %}
+            </ul>
+            <p>{{ article.description|u.truncate(500, '...') }}</p>
+            <a href="{{ path('article_show', {id: article.id}) }}" class="btn btn-outline-primary">Continue Reading</a>
+        </div>
+    </article>
+{% endmacro %}

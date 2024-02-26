@@ -2,7 +2,7 @@
 
 namespace App\Tests\Unit\Article;
 
-use App\Domain\Article\Entity\Article;
+use App\Domain\Article\Entity\Category;
 use App\Domain\Article\Entity\Tag;
 use App\Domain\Article\Exception\ArticleNotFoundException;
 use App\Domain\Article\Gateway\ArticleGatewayInterface;
@@ -67,18 +67,32 @@ class ShowTest extends TestCase
 
     public static function dataSuccessfulProvider(): \Generator
     {
-        yield 'show_existing_article_with_title_and_content' => [ArticleTestDetails::create(1, [
+        yield 'show_existing_complete_article_with_title_and_content' => [ArticleTestDetails::create(1, [
+            'category' => new Category('Men', 'men'),
             'tags' => [new Tag('Photo', 'photo'), new Tag('Image', 'image')],
             'content' => 'The main Content',
             'createdAt' => new \DateTime('25-04-2023'),
         ])];
 
         yield 'show_existing_article_with_no_content' => [ArticleTestDetails::create(2, [
+            'category' => new Category('Men', 'men'),
             'tags' => [new Tag('Photo', 'photo')],
             'createdAt' => new \DateTime('25-04-2023'),
         ])];
 
-        yield 'show_existing_article_with_no_tag' => [ArticleTestDetails::create(2, [
+        yield 'show_existing_article_with_no_tag' => [ArticleTestDetails::create(3, [
+            'category' => new Category('Men', 'men'),
+            'content' => 'The main Content',
+            'createdAt' => new \DateTime('25-04-2023'),
+        ])];
+
+        yield 'show_existing_article_with_no_category' => [ArticleTestDetails::create(4, [
+            'tags' => [new Tag('Photo', 'photo')],
+            'content' => 'The main Content',
+            'createdAt' => new \DateTime('25-04-2023'),
+        ])];
+
+        yield 'show_existing_article_with_no_taxonomy' => [ArticleTestDetails::create(4, [
             'content' => 'The main Content',
             'createdAt' => new \DateTime('25-04-2023'),
         ])];
@@ -101,6 +115,10 @@ class ShowTest extends TestCase
             'title : ' . $response->getArticle()->getTitle() . ', ' .
             'Content: ' . $response->getArticle()->getContent() . ', ' .
             'Created At: ' . $response->getArticle()->getCreatedAt()->format('d-m-Y');
+
+        if ($category = $response->getArticle()->getCategory()) {
+            $val .= ', Category: ' . $category->getTitle();
+        }
 
         if ($response->getArticle()->getTags()) {
             $val .= ', Tags: ' . implode(',', array_map(function (Tag $tag) {

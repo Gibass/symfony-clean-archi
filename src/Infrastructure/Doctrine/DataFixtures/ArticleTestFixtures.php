@@ -3,6 +3,7 @@
 namespace App\Infrastructure\Doctrine\DataFixtures;
 
 use App\Infrastructure\Doctrine\Factory\ArticleDoctrineFactory;
+use App\Infrastructure\Doctrine\Factory\CategoryDoctrineFactory;
 use App\Infrastructure\Doctrine\Factory\TagDoctrineFactory;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
@@ -19,9 +20,13 @@ class ArticleTestFixtures extends Fixture implements FixtureGroupInterface
         $photo = TagDoctrineFactory::createOne(['title' => 'Photo']);
         $image = TagDoctrineFactory::createOne(['title' => 'Image']);
 
+        // Category
+        $men = CategoryDoctrineFactory::createOne(['title' => 'Men']);
+
         ArticleDoctrineFactory::new([
             'title' => 'Custom Title',
             'content' => 'This is the article content',
+            'category' => $men,
             'tags' => [
                 $photo,
                 $image,
@@ -31,11 +36,12 @@ class ArticleTestFixtures extends Fixture implements FixtureGroupInterface
 
         ArticleDoctrineFactory::new()
             ->published()
-            ->sequence(function () use ($photo) {
+            ->sequence(function () use ($photo, $men) {
                 $date = new \DateTimeImmutable('2023-05-15 01:00:00');
                 foreach (range(1, 2) as $i) {
                     yield [
                         'tags' => [$photo],
+                        'category' => $men,
                         'createdAt' => $date->modify('+' . $i . ' hour'),
                     ];
                 }
@@ -45,6 +51,7 @@ class ArticleTestFixtures extends Fixture implements FixtureGroupInterface
 
         ArticleDoctrineFactory::new()
             ->published()
+            ->noCategory()
             ->sequence(function () use ($image) {
                 $date = new \DateTimeImmutable('2023-05-15 03:15:00');
                 foreach (range(1, 2) as $i) {
@@ -59,13 +66,13 @@ class ArticleTestFixtures extends Fixture implements FixtureGroupInterface
 
         // Unpublished
         ArticleDoctrineFactory::new(['tags' => [$image]])->unpublished()->create();
-        ArticleDoctrineFactory::new(['tags' => [$photo]])->unpublished()->create();
-        ArticleDoctrineFactory::new('unpublished', 'noTag')->create();
+        ArticleDoctrineFactory::new(['tags' => [$photo], 'category' => $men])->unpublished()->create();
+        ArticleDoctrineFactory::new('unpublished', 'noTaxonomy')->create();
 
         // Stock
         ArticleDoctrineFactory::new()
             ->published()
-            ->noTag()
+            ->noTaxonomy()
             ->sequence(function () {
                 $date = new \DateTimeImmutable('2023-05-15');
                 foreach (range(1, 55) as $i) {

@@ -5,8 +5,10 @@ namespace App\Domain\Article\Entity;
 abstract class Taxonomy
 {
     protected ?int $id = null;
-    protected ?string $title = null;
-    protected ?string $slug = null;
+
+    public function __construct(protected ?string $title, protected ?string $slug)
+    {
+    }
 
     public function getId(): ?int
     {

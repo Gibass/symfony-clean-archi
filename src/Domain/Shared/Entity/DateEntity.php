@@ -19,11 +19,6 @@ trait DateEntity
         return $this;
     }
 
-    public function getUpdatedAt(): ?\DateTime
-    {
-        return $this->updateAt;
-    }
-
     public function setUpdatedAt(?\DateTime $updateAt): self
     {
         $this->updateAt = $updateAt;

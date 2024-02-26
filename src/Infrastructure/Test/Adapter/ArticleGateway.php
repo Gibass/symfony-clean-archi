@@ -31,7 +31,7 @@ class ArticleGateway implements ArticleGatewayInterface
         return $this->getById($id);
     }
 
-    public function getPaginatedAdapter(): AdapterInterface
+    public function getPaginatedAdapter(array $conditions = []): AdapterInterface
     {
         return new class() implements AdapterInterface {
             private array $articles;

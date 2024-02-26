@@ -16,6 +16,7 @@ class Article
     private ?Media $mainMedia = null;
     private ?string $description = null;
     private ?string $content = null;
+    private ?Category $category = null;
 
     /**
      * @var Tag[]
@@ -90,6 +91,18 @@ class Article
     public function setContent(?string $content): Article
     {
         $this->content = $content;
+
+        return $this;
+    }
+
+    public function getCategory(): ?Category
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?Category $category): static
+    {
+        $this->category = $category;
 
         return $this;
     }

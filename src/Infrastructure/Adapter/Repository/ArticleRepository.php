@@ -5,6 +5,7 @@ namespace App\Infrastructure\Adapter\Repository;
 use App\Domain\Article\Entity\Article;
 use App\Domain\Article\Gateway\ArticleGatewayInterface;
 use App\Infrastructure\Doctrine\Entity\ArticleDoctrine;
+use App\Infrastructure\Doctrine\Entity\CategoryDoctrine;
 use App\Infrastructure\Doctrine\Entity\MediaDoctrine;
 use App\Infrastructure\Doctrine\Entity\TagDoctrine;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -38,28 +39,38 @@ class ArticleRepository extends ServiceEntityRepository implements ArticleGatewa
 
     public function getPublishedById(int $id): ?Article
     {
-        $_article = $this->findOneBy([
-            'id' => $id,
-            'status' => true,
-        ]);
+        $_article = $this->getFullArticleQuery()
+            ->andWhere('article.id = :articleId')
+            ->setParameter('articleId', $id)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
 
         return $_article ? $this->convert($_article) : null;
     }
 
-    public function queryBuilder(): QueryBuilder
+    public function getFullArticleQuery(): QueryBuilder
     {
         return $this->createQueryBuilder('article')
             ->addSelect('tags')
+            ->addSelect('category')
             ->leftJoin('article.tags', 'tags')
+            ->leftJoin('article.category', 'category')
             ->where('article.status = :status')
-            ->orderBy('article.createdAt', Criteria::DESC)
             ->setParameter('status', true)
         ;
     }
 
-    public function getPaginatedAdapter(): AdapterInterface
+    public function orderQuery(): QueryBuilder
     {
-        return new QueryAdapter($this->queryBuilder());
+        return $this->getFullArticleQuery()
+            ->orderBy('article.createdAt', Criteria::DESC)
+        ;
+    }
+
+    public function getPaginatedAdapter(array $conditions = []): AdapterInterface
+    {
+        return new QueryAdapter($this->orderQuery());
     }
 
     public function convert(ArticleDoctrine $articleDoctrine): Article
@@ -80,6 +91,11 @@ class ArticleRepository extends ServiceEntityRepository implements ArticleGatewa
             )
             ->setDescription($articleDoctrine->getDescription())
             ->setContent($articleDoctrine->getContent())
+            ->setCategory(
+                $articleDoctrine->getCategory() ?
+                    $this->_em->getRepository(CategoryDoctrine::class)->convert($articleDoctrine->getCategory()) :
+                    null
+            )
             ->setStatus($articleDoctrine->isPublished())
             ->setUpdatedAt($articleDoctrine->getUpdatedAt())
             ->setCreatedAt($articleDoctrine->getCreatedAt())

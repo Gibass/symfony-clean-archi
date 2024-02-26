@@ -64,6 +64,10 @@ readonly class ArticleTestDetails
             $article->addTags($data['tags']);
         }
 
+        if (!empty($data['category'])) {
+            $article->setCategory($data['category']);
+        }
+
         foreach ($data as $key => $value) {
             $method = 'set' . ucfirst($key);
             if (method_exists($article, $method)) {
@@ -81,6 +85,10 @@ readonly class ArticleTestDetails
             'title : Title-' . $id . ', ' .
             'Content: ' . ($data['content'] ?? '') . ', ' .
             'Created At: ' . (!empty($data['createdAt']) ? $data['createdAt']->format('d-m-Y') : '');
+
+        if (!empty($data['category'])) {
+            $response .= ', Category: ' . $data['category']->getTitle();
+        }
 
         if (!empty($data['tags'])) {
             $response .= ', Tags: ' . implode(',', array_map(function (Tag $tag) {

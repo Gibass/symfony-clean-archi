@@ -3,11 +3,9 @@
 namespace App\Domain\Tag\Gateway;
 
 use App\Domain\Article\Entity\Tag;
-use Pagerfanta\Adapter\AdapterInterface;
+use App\Domain\Shared\Listing\Gateway\ListingGatewayInterface;
 
-interface TagGatewayInterface
+interface TagGatewayInterface extends ListingGatewayInterface
 {
     public function getBySlug(string $slug): ?Tag;
-
-    public function getPaginatedAdapter(Tag $tag): AdapterInterface;
 }

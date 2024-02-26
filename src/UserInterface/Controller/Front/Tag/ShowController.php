@@ -2,9 +2,10 @@
 
 namespace App\UserInterface\Controller\Front\Tag;
 
+use App\Domain\Shared\Listing\UseCase\ListingUseCase;
 use App\Domain\Tag\Exception\TagNotFoundException;
 use App\Domain\Tag\Request\ListingRequest;
-use App\Domain\Tag\UseCase\Listing;
+use App\Domain\Tag\UseCase\TagListing;
 use App\UserInterface\Presenter\Web\ListingTagPresenterHTML;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,13 +17,13 @@ use Symfony\Component\Routing\Annotation\Route;
 class ShowController
 {
     #[Route('/tag/{slug}', name: 'tag_show')]
-    public function showTag(string $slug, Request $request, Listing $listing, ListingTagPresenterHTML $presenter): Response
+    public function showTag(string $slug, Request $request, TagListing $listing, ListingUseCase $listingUseCase, ListingTagPresenterHTML $presenter): Response
     {
         $page = (int) $request->query->get('page', 0);
         $request = new ListingRequest($slug, $page);
 
         try {
-            return $listing->execute($request, $presenter);
+            return $listingUseCase->execute($request, $listing, $presenter);
         } catch (TagNotFoundException $e) {
             throw new NotFoundHttpException($e->getMessage());
         }
