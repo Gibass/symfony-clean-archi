@@ -2,14 +2,8 @@
 
 namespace App\Domain\Home\Request;
 
-readonly class ListingRequest
-{
-    public function __construct(private int $page = 0)
-    {
-    }
+use App\Domain\Shared\Listing\Request\AbstractListingRequest;
 
-    public function getPage(): int
-    {
-        return $this->page;
-    }
+class ListingRequest extends AbstractListingRequest
+{
 }

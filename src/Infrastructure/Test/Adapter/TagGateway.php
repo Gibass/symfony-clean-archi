@@ -15,21 +15,21 @@ class TagGateway implements TagGatewayInterface
             return null;
         }
 
-        return new Tag($slug, $slug);
+        return new Tag(ucfirst($slug), $slug);
     }
 
-    public function getPaginatedAdapter(Tag $tag): AdapterInterface
+    public function getPaginatedAdapter(array $conditions = []): AdapterInterface
     {
         $articles = [];
 
-        $range = match ($tag->getSlug()) {
+        $range = match ($conditions['slug'] ?? null) {
             'image' => range(1, 5),
             'photo' => range(6, 10),
             default => [],
         };
 
         foreach ($range as $i) {
-            $articles[$i] = (new Article())->setId($i)->addTags([$tag]);
+            $articles[$i] = (new Article())->setId($i)->addTags([new Tag($conditions['slug'], $conditions['slug'])]);
         }
 
         return new class($articles) implements AdapterInterface {

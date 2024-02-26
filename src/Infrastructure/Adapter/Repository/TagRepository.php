@@ -7,7 +7,6 @@ use App\Domain\Tag\Gateway\TagGatewayInterface;
 use App\Infrastructure\Doctrine\Entity\ArticleDoctrine;
 use App\Infrastructure\Doctrine\Entity\TagDoctrine;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Common\Collections\Criteria;
 use Doctrine\Persistence\ManagerRegistry;
 use Pagerfanta\Adapter\AdapterInterface;
 use Pagerfanta\Doctrine\ORM\QueryAdapter;
@@ -34,15 +33,11 @@ class TagRepository extends ServiceEntityRepository implements TagGatewayInterfa
         return $_tag ? $this->convert($_tag) : null;
     }
 
-    public function getPaginatedAdapter(Tag $tag): AdapterInterface
+    public function getPaginatedAdapter(array $conditions = []): AdapterInterface
     {
-        $query = $this->_em->getRepository(ArticleDoctrine::class)->createQueryBuilder('article')
-            ->addSelect('tags')
-            ->leftJoin('article.tags', 'tags')
+        $query = $this->_em->getRepository(ArticleDoctrine::class)->orderQuery()
             ->andwhere('tags.id = :tagId AND article.status = :status')
-            ->orderBy('article.createdAt', Criteria::DESC)
-            ->setParameter('tagId', $tag->getId())
-            ->setParameter('status', true)
+            ->setParameter('tagId', $conditions['id'] ?? null)
         ;
 
         return new QueryAdapter($query);
@@ -54,29 +49,4 @@ class TagRepository extends ServiceEntityRepository implements TagGatewayInterfa
             ->setId($tagDoctrine->getId())
         ;
     }
-
-    //    /**
-    //     * @return TagDoctrine[] Returns an array of TagDoctrine objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('t')
-    //            ->andWhere('t.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('t.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
-
-    //    public function findOneBySomeField($value): ?TagDoctrine
-    //    {
-    //        return $this->createQueryBuilder('t')
-    //            ->andWhere('t.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
 }

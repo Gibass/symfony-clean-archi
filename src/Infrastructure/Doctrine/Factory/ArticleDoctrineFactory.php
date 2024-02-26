@@ -40,9 +40,14 @@ final class ArticleDoctrineFactory extends ModelFactory
         parent::__construct();
     }
 
-    public function noTag(): self
+    public function noTaxonomy(): self
     {
-        return $this->addState(['tags' => []]);
+        return $this->addState(['tags' => [], 'category' => null]);
+    }
+
+    public function noCategory(): self
+    {
+        return $this->addState(['category' => null]);
     }
 
     public function published(): self
@@ -67,6 +72,7 @@ final class ArticleDoctrineFactory extends ModelFactory
             'title' => self::faker()->sentence,
             'description' => self::faker()->paragraphs(3, true),
             'content' => self::faker()->paragraphs(20, true),
+            'category' => LazyValue::new(fn () => CategoryDoctrineFactory::random()),
             'tags' => LazyValue::new(fn () => TagDoctrineFactory::randomRange(0, 5)),
             'createdAt' => self::faker()->dateTimeBetween('-1 year'),
         ];

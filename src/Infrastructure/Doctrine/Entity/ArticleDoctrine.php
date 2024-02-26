@@ -39,6 +39,9 @@ class ArticleDoctrine
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $content = null;
 
+    #[ORM\ManyToOne(inversedBy: 'articles')]
+    private ?CategoryDoctrine $category = null;
+
     #[ORM\JoinTable(name: 'articles_tags')]
     #[ORM\JoinColumn(name: 'article_id', referencedColumnName: 'id')]
     #[ORM\InverseJoinColumn(name: 'tag_id', referencedColumnName: 'id')]
@@ -111,6 +114,18 @@ class ArticleDoctrine
     public function setContent(?string $content): static
     {
         $this->content = $content;
+
+        return $this;
+    }
+
+    public function getCategory(): ?CategoryDoctrine
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?CategoryDoctrine $category): static
+    {
+        $this->category = $category;
 
         return $this;
     }

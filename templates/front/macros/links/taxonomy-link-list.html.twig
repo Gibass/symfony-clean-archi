@@ -1,5 +1,5 @@
 {% macro generate(taxonomies, pathName, separator = ',') %}
-    {% for taxonomy in taxonomies %}
+    {% for taxonomy in taxonomies|slice(0, 2) %}
         <a href="{{ path(pathName, {slug: taxonomy.slug}) }}" class="ml-1">{{ taxonomy.title }}</a>{% if not loop.last %} {{ separator }}{% endif %}
     {% endfor %}
 {% endmacro %}
