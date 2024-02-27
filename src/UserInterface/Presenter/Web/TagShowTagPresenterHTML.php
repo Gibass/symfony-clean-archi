@@ -21,6 +21,9 @@ class TagShowTagPresenterHTML extends AbstractWebPresenter implements TagListing
         return $this->render('front/pages/tag/listing.html.twig', [
             'pager' => $pager,
             'tag' => $response->getTag(),
+            'categories' => $response->getCategories(),
+            'tags' => $response->getTags(),
+            'lastArticles' => $response->getLastArticles(),
         ]);
     }
 }

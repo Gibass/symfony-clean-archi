@@ -7,6 +7,7 @@ use App\Domain\Category\Gateway\CategoryGatewayInterface;
 use App\Infrastructure\Doctrine\Entity\ArticleDoctrine;
 use App\Infrastructure\Doctrine\Entity\CategoryDoctrine;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\Persistence\ManagerRegistry;
 use Pagerfanta\Adapter\AdapterInterface;
 use Pagerfanta\Doctrine\ORM\QueryAdapter;
@@ -45,7 +46,18 @@ class CategoryRepository extends ServiceEntityRepository implements CategoryGate
 
     public function getFacetCategories(): array
     {
-        return [];
+        return $this->createQueryBuilder('cat')
+            ->select('cat.slug, cat.title, COUNT(articles) AS total')
+            ->leftJoin('cat.articles', 'articles')
+            ->andWhere('articles.status = :status')
+            ->having('total > 0')
+            ->groupBy('cat.slug')
+            ->orderBy('total', Criteria::DESC)
+            ->setParameter('status', true)
+            ->setMaxResults(5)
+            ->getQuery()
+            ->getScalarResult()
+        ;
     }
 
     public function convert(CategoryDoctrine $category): Category

@@ -76,7 +76,10 @@ class ArticleTestFixtures extends Fixture implements FixtureGroupInterface
             ->sequence(function () {
                 $date = new \DateTimeImmutable('2023-05-15');
                 foreach (range(1, 55) as $i) {
-                    yield ['createdAt' => $date->modify('+' . $i . ' day')];
+                    yield [
+                        'title' => 'Stock - ' . $i,
+                        'createdAt' => $date->modify('+' . $i . ' day'),
+                    ];
                 }
             })
             ->create()

@@ -26,6 +26,15 @@ class ArticleGateway implements ArticleGatewayInterface
         return null;
     }
 
+    public function getLastArticles(): array
+    {
+        return [
+            (new Article())->setId(1)->setTitle('Custom title'),
+            (new Article())->setId(2)->setTitle('Lorem title'),
+            (new Article())->setId(3)->setTitle('Ipsum title'),
+        ];
+    }
+
     public function getPaginatedAdapter(array $conditions = []): AdapterInterface
     {
         return new class() implements AdapterInterface {
@@ -48,10 +57,5 @@ class ArticleGateway implements ArticleGatewayInterface
                 return \array_slice($this->articles, $offset, $length);
             }
         };
-    }
-
-    public function getLastArticles(): array
-    {
-        return [];
     }
 }

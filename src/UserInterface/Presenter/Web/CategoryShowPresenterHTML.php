@@ -20,6 +20,9 @@ class CategoryShowPresenterHTML extends AbstractWebPresenter implements Category
         return $this->render('front/pages/category/listing.html.twig', [
             'pager' => $pager,
             'category' => $response->getCategory(),
+            'categories' => $response->getCategories(),
+            'tags' => $response->getTags(),
+            'lastArticles' => $response->getLastArticles(),
         ]);
     }
 }

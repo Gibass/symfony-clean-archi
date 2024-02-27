@@ -27,6 +27,15 @@ class TagGateway implements TagGatewayInterface
         };
     }
 
+    public function getPopularTag(): array
+    {
+        return [
+            new Tag('Image', 'image'),
+            new Tag('Photo', 'photo'),
+            new Tag('Video', 'video'),
+        ];
+    }
+
     public function getPaginatedAdapter(array $conditions = []): AdapterInterface
     {
         $articles = [];
@@ -61,10 +70,5 @@ class TagGateway implements TagGatewayInterface
                 return \array_slice($this->articles, $offset, $length);
             }
         };
-    }
-
-    public function getPopularTag(): array
-    {
-        return [];
     }
 }

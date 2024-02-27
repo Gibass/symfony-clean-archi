@@ -2,6 +2,7 @@
 
 namespace App\Domain\Tag\Response;
 
+use App\Domain\Article\Entity\Article;
 use App\Domain\Article\Entity\Tag;
 use App\Domain\Shared\Listing\Response\AbstractListingResponse;
 use Pagerfanta\Adapter\AdapterInterface;
@@ -34,6 +35,9 @@ class TagShowResponse extends AbstractListingResponse
         return $this->tags;
     }
 
+    /**
+     * @return Article[]
+     */
     public function getLastArticles(): array
     {
         return $this->lastArticles;

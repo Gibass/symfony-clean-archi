@@ -1,19 +1,10 @@
-<div class="widget">
+{% if tags is defined and tags|length > 0 %}
+<div class="widget tag-widget">
     <h5 class="widget-title"><span>Tags</span></h5>
     <ul class="list-inline widget-list-inline">
-        <li class="list-inline-item"><a href="#!">Booth</a>
-        </li>
-        <li class="list-inline-item"><a href="#!">City</a>
-        </li>
-        <li class="list-inline-item"><a href="#!">Image</a>
-        </li>
-        <li class="list-inline-item"><a href="#!">New</a>
-        </li>
-        <li class="list-inline-item"><a href="#!">Photo</a>
-        </li>
-        <li class="list-inline-item"><a href="#!">Seasone</a>
-        </li>
-        <li class="list-inline-item"><a href="#!">Video</a>
-        </li>
+        {% for tag in tags %}
+            <li class="list-inline-item"><a href="{{ path('tag_show', {slug: tag.slug}) }}">{{ tag.title }}</a></li>
+        {% endfor %}
     </ul>
 </div>
+{% endif %}

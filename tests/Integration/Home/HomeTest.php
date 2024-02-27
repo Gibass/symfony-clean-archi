@@ -17,6 +17,15 @@ class HomeTest extends IntegrationTestCase
     public function testHomeSuccessResponse(ListingTestDetails $details): void
     {
         $crawler = $this->listingSuccessResponse($details);
+
+        $this->assertSelectorCount(2, 'aside .category-widget ul li');
+        $this->assertSame('(3)', $crawler->filter('aside .category-widget li:nth-child(1) a small')->html());
+
+        $this->assertSelectorCount(3, 'aside .tag-widget ul li');
+        $this->assertSame('/tag/image', $crawler->filter('aside .tag-widget li:nth-child(1) a')->attr('href'));
+
+        $this->assertSelectorCount(3, 'aside .last-post-widget ul .widget-post');
+        $this->assertSame('Custom title', $crawler->filter('aside .last-post-widget .widget-post:nth-child(1) .media-body a')->html());
     }
 
     public static function dataSuccessfulProvider(): \Generator

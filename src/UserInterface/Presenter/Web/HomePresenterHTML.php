@@ -22,6 +22,9 @@ class HomePresenterHTML extends AbstractWebPresenter implements HomePresenterInt
 
         return $this->render('front/pages/home/listing.html.twig', [
             'pager' => $pager,
+            'categories' => $response->getCategories(),
+            'tags' => $response->getTags(),
+            'lastArticles' => $response->getLastArticles(),
         ]);
     }
 }

@@ -15,7 +15,7 @@ use Symfony\Component\Routing\Annotation\Route;
 #[AsController]
 class ShowController
 {
-    #[Route('/category/{slug}', name: 'category_listing')]
+    #[Route('/category/{slug}', name: 'category_show')]
     public function showCategory(string $slug, Request $request, CategoryShow $categoryShow, CategoryShowPresenterHTML $presenter): Response
     {
         $page = (int) $request->query->get('page', 0);

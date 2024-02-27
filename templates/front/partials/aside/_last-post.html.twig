@@ -1,40 +1,19 @@
-<div class="widget">
+{% if lastArticles is defined and lastArticles|length > 0 %}
+<div class="widget last-post-widget">
     <h5 class="widget-title"><span>Latest Article</span></h5>
     <!-- post-item -->
     <ul class="list-unstyled widget-list">
-        <li class="media widget-post align-items-center">
-            <a href="post-elements.html">
-                <img loading="lazy" class="mr-3" src="https://picsum.photos/100/100">
-            </a>
-            <div class="media-body">
-                <h5 class="h6 mb-0"><a href="post-elements.html">Elements That You Can Use To Create A New Post On
-                        This Template.</a></h5>
-                <small>March 15, 2020</small>
-            </div>
-        </li>
-    </ul>
-    <ul class="list-unstyled widget-list">
-        <li class="media widget-post align-items-center">
-            <a href="post-details-1.html">
-                <img loading="lazy" class="mr-3" src="https://picsum.photos/100/100">
-            </a>
-            <div class="media-body">
-                <h5 class="h6 mb-0"><a href="post-details-1.html">Cheerful Loving Couple Bakers Drinking Coffee</a>
-                </h5>
-                <small>March 14, 2020</small>
-            </div>
-        </li>
-    </ul>
-    <ul class="list-unstyled widget-list">
-        <li class="media widget-post align-items-center">
-            <a href="post-details-2.html">
-                <img loading="lazy" class="mr-3" src="https://picsum.photos/100/100">
-            </a>
-            <div class="media-body">
-                <h5 class="h6 mb-0"><a href="post-details-2.html">Cheerful Loving Couple Bakers Drinking Coffee</a>
-                </h5>
-                <small>March 14, 2020</small>
-            </div>
-        </li>
+        {% for article in lastArticles %}
+            <li class="media widget-post align-items-center">
+                <a href="{{ path('article_show', {id: article.id}) }}">
+                    <img loading="lazy" class="mr-3" src="https://picsum.photos/100/100">
+                </a>
+                <div class="media-body">
+                    <h5 class="h6 mb-0"><a href="{{ path('article_show', {id: article.id}) }}">{{ article.title }}</a></h5>
+                    <small>{{ article.createdAt|date("F d, Y") }}</small>
+                </div>
+            </li>
+        {% endfor %}
     </ul>
 </div>
+{% endif %}

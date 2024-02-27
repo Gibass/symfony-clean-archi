@@ -21,6 +21,14 @@ class CategoryGateway implements CategoryGatewayInterface
         };
     }
 
+    public function getFacetCategories(): array
+    {
+        return [
+            ['id' => 1, 'slug' => 'men', 'title' => 'Men', 'total' => 3],
+            ['id' => 2, 'slug' => 'women', 'title' => 'Women', 'total' => 1],
+        ];
+    }
+
     public function getPaginatedAdapter(array $conditions = []): AdapterInterface
     {
         $articles = [];
@@ -52,10 +60,5 @@ class CategoryGateway implements CategoryGatewayInterface
                 return \array_slice($this->articles, $offset, $length);
             }
         };
-    }
-
-    public function getFacetCategories(): array
-    {
-        return [];
     }
 }
