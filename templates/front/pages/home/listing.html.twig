@@ -1,0 +1,23 @@
+{% extends 'front/layouts/base.html.twig' %}
+
+{% import 'front/macros/content/article-large-block.html.twig' as articleBlock %}
+
+{% block title %} LogBook {% endblock %}
+
+{% block body %}
+    <section class="section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8  mb-5 mb-lg-0">
+                    <div class="article-content">
+                        {% for article in pager %}
+                            {{ articleBlock.renderLarge(article) }}
+                        {% endfor %}
+                    </div>
+                    {{ pagerfanta(pager, {'prev_message': '<', 'next_message': '>'}) }}
+                </div>
+                {% include 'front/partials/aside/_aside.html.twig' %}
+            </div>
+        </div>
+    </section>
+{% endblock %}

@@ -14,7 +14,14 @@ class Article
     private ?string $slug = null;
     private ?string $title = null;
     private ?Media $mainMedia = null;
+    private ?string $description = null;
     private ?string $content = null;
+    private ?Category $category = null;
+
+    /**
+     * @var Tag[]
+     */
+    private array $tags = [];
 
     public function getId(): ?int
     {
@@ -64,6 +71,18 @@ class Article
         return $this;
     }
 
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): Article
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
     public function getContent(): ?string
     {
         return $this->content;
@@ -72,6 +91,38 @@ class Article
     public function setContent(?string $content): Article
     {
         $this->content = $content;
+
+        return $this;
+    }
+
+    public function getCategory(): ?Category
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?Category $category): static
+    {
+        $this->category = $category;
+
+        return $this;
+    }
+
+    /**
+     * @return Tag[]
+     */
+    public function getTags(): array
+    {
+        return $this->tags;
+    }
+
+    /**
+     * @param Tag[] $tags
+     */
+    public function addTags(array $tags): Article
+    {
+        foreach ($tags as $tag) {
+            $this->tags[] = $tag;
+        }
 
         return $this;
     }

@@ -4,27 +4,22 @@ namespace App\Domain\Shared\Entity;
 
 trait DateEntity
 {
-    private ?\DateTimeImmutable $createdAt = null;
-    private ?\DateTimeImmutable $updateAt = null;
+    private ?\DateTime $createdAt = null;
+    private ?\DateTime $updateAt = null;
 
-    public function getCreatedAt(): ?\DateTimeImmutable
+    public function getCreatedAt(): ?\DateTime
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(?\DateTimeImmutable $createdAt): self
+    public function setCreatedAt(?\DateTime $createdAt): self
     {
         $this->createdAt = $createdAt;
 
         return $this;
     }
 
-    public function getUpdateAt(): ?\DateTimeImmutable
-    {
-        return $this->updateAt;
-    }
-
-    public function setUpdateAt(?\DateTimeImmutable $updateAt): self
+    public function setUpdatedAt(?\DateTime $updateAt): self
     {
         $this->updateAt = $updateAt;
 

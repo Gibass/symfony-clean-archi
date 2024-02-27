@@ -2,8 +2,8 @@
 
 namespace App\Tests\Unit\Article;
 
-use App\Domain\Article\Entity\Article;
-use App\Domain\Article\Entity\Image;
+use App\Domain\Article\Entity\Category;
+use App\Domain\Article\Entity\Tag;
 use App\Domain\Article\Exception\ArticleNotFoundException;
 use App\Domain\Article\Gateway\ArticleGatewayInterface;
 use App\Domain\Article\Presenter\ShowPresenterInterface;
@@ -41,63 +41,71 @@ class ShowTest extends TestCase
     /**
      * @dataProvider dataSuccessfulProvider
      */
-    public function testSuccessful(int $id, Article $article, string $viewResponse): void
+    public function testSuccessful(ArticleTestDetails $details): void
     {
-        $request = new ShowRequest($id);
+        $request = new ShowRequest($details->getId());
 
-        $this->gateway->method('getPublishedById')->with($id)->willReturn($article);
+        $this->gateway->method('getPublishedById')->with($details->getId())->willReturn($details->getArticle());
 
         $response = $this->useCase->execute($request, $this->presenter);
-        $this->assertSame($viewResponse, $response);
+        $this->assertSame($details->getResponse(), $response);
     }
 
     /**
      * @dataProvider dataFailedProvider
      */
-    public function testFailed(int $id, ?Article $article, string $exception, string $message): void
+    public function testFailed(ArticleTestDetails $details): void
     {
-        $request = new ShowRequest($id);
+        $request = new ShowRequest($details->getId());
 
-        $this->expectException($exception);
-        $this->expectExceptionMessage($message);
+        $this->expectException($details->getException());
+        $this->expectExceptionMessage($details->getExceptionMessage());
 
-        $this->gateway->method('getPublishedById')->with($id)->willReturn($article);
+        $this->gateway->method('getPublishedById')->with($details->getId())->willReturn($details->getArticle());
         $this->useCase->execute($request, $this->presenter);
     }
 
     public static function dataSuccessfulProvider(): \Generator
     {
-        yield 'show_existing_article_with_title_and_content' => [
-            'id' => 1,
-            'article' => (new Article())
-                ->setId(1)
-                ->setSlug('title-1')
-                ->setTitle('Title 1')
-                ->setContent('The main Content')
-                ->setMainMedia((new Image())->setTitle('Image 1'))
-                ->setCreatedAt(\DateTimeImmutable::createFromFormat('d/m/Y', '25/04/2023')),
-            'viewResponse' => self::generateArticleViewResponse(1, 'The main Content', '25-04-2023'),
-        ];
+        yield 'show_existing_complete_article_with_title_and_content' => [ArticleTestDetails::create(1, [
+            'category' => new Category('Men', 'men'),
+            'tags' => [new Tag('Photo', 'photo'), new Tag('Image', 'image')],
+            'content' => 'The main Content',
+            'createdAt' => new \DateTime('25-04-2023'),
+        ])];
 
-        yield 'show_existing_article_with_no_content' => [
-            'id' => 2,
-            'article' => (new Article())
-                ->setId(2)
-                ->setSlug('title-2')
-                ->setTitle('Title 2')
-                ->setCreatedAt(\DateTimeImmutable::createFromFormat('d/m/Y', '15/02/2023')),
-            'viewResponse' => self::generateArticleViewResponse(2, '', '15-02-2023', false),
-        ];
+        yield 'show_existing_article_with_no_content' => [ArticleTestDetails::create(2, [
+            'category' => new Category('Men', 'men'),
+            'tags' => [new Tag('Photo', 'photo')],
+            'createdAt' => new \DateTime('25-04-2023'),
+        ])];
+
+        yield 'show_existing_article_with_no_tag' => [ArticleTestDetails::create(3, [
+            'category' => new Category('Men', 'men'),
+            'content' => 'The main Content',
+            'createdAt' => new \DateTime('25-04-2023'),
+        ])];
+
+        yield 'show_existing_article_with_no_category' => [ArticleTestDetails::create(4, [
+            'tags' => [new Tag('Photo', 'photo')],
+            'content' => 'The main Content',
+            'createdAt' => new \DateTime('25-04-2023'),
+        ])];
+
+        yield 'show_existing_article_with_no_taxonomy' => [ArticleTestDetails::create(4, [
+            'content' => 'The main Content',
+            'createdAt' => new \DateTime('25-04-2023'),
+        ])];
     }
 
     public static function dataFailedProvider(): \Generator
     {
-        yield 'load_non_existing_article' => [
-            'id' => 3,
-            'article' => null,
-            'exception' => ArticleNotFoundException::class,
-            'message' => 'Article with id : 3 not found',
-        ];
+        yield 'load_non_existing_article' => [ArticleTestDetails::create(
+            3,
+            [],
+            ArticleNotFoundException::class,
+            'Article with id : 3 not found'
+        )];
     }
 
     public static function present(ShowResponse $response): string
@@ -108,19 +116,18 @@ class ShowTest extends TestCase
             'Content: ' . $response->getArticle()->getContent() . ', ' .
             'Created At: ' . $response->getArticle()->getCreatedAt()->format('d-m-Y');
 
-        if ($response->getArticle()->getMainMedia()) {
-            $val .= sprintf(', Media : %s', $response->getArticle()->getMainMedia()->getTitle());
+        if ($category = $response->getArticle()->getCategory()) {
+            $val .= ', Category: ' . $category->getTitle();
         }
 
-        return $val;
-    }
+        if ($response->getArticle()->getTags()) {
+            $val .= ', Tags: ' . implode(',', array_map(function (Tag $tag) {
+                return $tag->getTitle();
+            }, $response->getArticle()->getTags()));
+        }
 
-    private static function generateArticleViewResponse(int $id, string $content, string $date, bool $media = true): string
-    {
-        $val = "Article id: $id, url: title-$id, title : Title $id, Content: $content, Created At: $date";
-
-        if ($media) {
-            $val .= ", Media : Image $id";
+        if ($response->getArticle()->getMainMedia()) {
+            $val .= sprintf(', Media : %s', $response->getArticle()->getMainMedia()->getTitle());
         }
 
         return $val;

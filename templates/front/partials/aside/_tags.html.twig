@@ -1,0 +1,10 @@
+{% if tags is defined and tags|length > 0 %}
+<div class="widget tag-widget">
+    <h5 class="widget-title"><span>Tags</span></h5>
+    <ul class="list-inline widget-list-inline">
+        {% for tag in tags %}
+            <li class="list-inline-item"><a href="{{ path('tag_show', {slug: tag.slug}) }}">{{ tag.title }}</a></li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}

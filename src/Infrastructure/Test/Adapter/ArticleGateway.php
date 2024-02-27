@@ -3,23 +3,22 @@
 namespace App\Infrastructure\Test\Adapter;
 
 use App\Domain\Article\Entity\Article;
-use App\Domain\Article\Entity\Image;
+use App\Domain\Article\Entity\Tag;
 use App\Domain\Article\Gateway\ArticleGatewayInterface;
+use Pagerfanta\Adapter\AdapterInterface;
 
 class ArticleGateway implements ArticleGatewayInterface
 {
-    public function getById(int $id): ?Article
+    public function getPublishedById(int $id): ?Article
     {
         if ($id > 0) {
-            $image = (new Image())->setTitle('Image Custom')->setPath('/02-2024/image-custom.jpg');
-
             return (new Article())
                 ->setId($id)
                 ->setTitle('Custom Title')
                 ->setSlug('custom-article')
                 ->setContent('Custom Content')
-                ->setMainMedia($image)
-                ->setCreatedAt(\DateTimeImmutable::createFromFormat('d/m/Y', '15/05/2023'))
+                ->addTags([new Tag('Photo', 'photo'), new Tag('Image', 'image')])
+                ->setCreatedAt(\DateTime::createFromFormat('d/m/Y', '15/05/2023'))
                 ->setPublishedAt(\DateTimeImmutable::createFromFormat('d/m/Y', '15/05/2023'))
             ;
         }
@@ -27,8 +26,36 @@ class ArticleGateway implements ArticleGatewayInterface
         return null;
     }
 
-    public function getPublishedById(int $id): ?Article
+    public function getLastArticles(): array
     {
-        return $this->getById($id);
+        return [
+            (new Article())->setId(1)->setTitle('Custom title'),
+            (new Article())->setId(2)->setTitle('Lorem title'),
+            (new Article())->setId(3)->setTitle('Ipsum title'),
+        ];
+    }
+
+    public function getPaginatedAdapter(array $conditions = []): AdapterInterface
+    {
+        return new class() implements AdapterInterface {
+            private array $articles;
+
+            public function __construct()
+            {
+                foreach (range(1, 25) as $i) {
+                    $this->articles[] = (new Article())->setId($i);
+                }
+            }
+
+            public function getNbResults(): int
+            {
+                return \count($this->articles);
+            }
+
+            public function getSlice(int $offset, int $length): iterable
+            {
+                return \array_slice($this->articles, $offset, $length);
+            }
+        };
     }
 }

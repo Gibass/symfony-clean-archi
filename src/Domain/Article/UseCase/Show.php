@@ -8,7 +8,7 @@ use App\Domain\Article\Presenter\ShowPresenterInterface;
 use App\Domain\Article\Request\ShowRequest;
 use App\Domain\Article\Response\ShowResponse;
 
-class Show
+readonly class Show
 {
     public function __construct(private ArticleGatewayInterface $gateway)
     {

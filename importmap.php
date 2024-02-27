@@ -15,7 +15,7 @@
  */
 return [
     'app' => [
-        'path' => './assets/js/app.js',
+        'path' => './assets/front/js/app.js',
         'entrypoint' => true,
     ],
 ];

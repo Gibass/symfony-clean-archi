@@ -1,0 +1,30 @@
+{% extends 'front/layouts/base.html.twig' %}
+
+{% import 'front/macros/content/article-medium-block.html.twig' as articleBlock %}
+
+{% block title %}{{ tag.title }} | LogBook{% endblock %}
+
+{% block body %}
+    <section class="section">
+        <div class="container">
+            <section class="head-title">
+                <div class="title-bordered mb-5 d-flex align-items-center">
+                    <h1 class="h4">{{ tag.title }}</h1>
+                </div>
+            </section>
+            <section class="section-sm">
+                <div class="row">
+                    <div class="col-lg-8  mb-5 mb-lg-0">
+                        <div class="article-content">
+                            {% for article in pager %}
+                                {{ articleBlock.renderMedium(article) }}
+                            {% endfor %}
+                        </div>
+                        {{ pagerfanta(pager, {'prev_message': '<', 'next_message': '>'}) }}
+                    </div>
+                    {% include 'front/partials/aside/_aside.html.twig' %}
+                </div>
+            </section>
+        </div>
+    </section>
+{% endblock %}

@@ -2,8 +2,9 @@
 
 namespace App\Infrastructure\Doctrine\DataFixtures;
 
-use App\Infrastructure\Doctrine\Entity\ArticleDoctrine;
-use App\Infrastructure\Doctrine\Entity\ImageDoctrine;
+use App\Infrastructure\Doctrine\Factory\ArticleDoctrineFactory;
+use App\Infrastructure\Doctrine\Factory\CategoryDoctrineFactory;
+use App\Infrastructure\Doctrine\Factory\TagDoctrineFactory;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\Persistence\ObjectManager;
@@ -15,53 +16,74 @@ class ArticleTestFixtures extends Fixture implements FixtureGroupInterface
      */
     public function load(ObjectManager $manager): void
     {
-        $article = new ArticleDoctrine();
+        // Tag
+        $photo = TagDoctrineFactory::createOne(['title' => 'Photo']);
+        $image = TagDoctrineFactory::createOne(['title' => 'Image']);
 
-        $image = (new ImageDoctrine())
-            ->setTitle('Image Custom')
-            ->setPath('/02-2024/image-custom.jpg')
-            ->setCreatedAt(\DateTimeImmutable::createFromFormat('Y-m-d H:i:s', '2022-02-25 17:16:42'))
+        // Category
+        $men = CategoryDoctrineFactory::createOne(['title' => 'Men']);
+
+        ArticleDoctrineFactory::new([
+            'title' => 'Custom Title',
+            'content' => 'This is the article content',
+            'category' => $men,
+            'tags' => [
+                $photo,
+                $image,
+            ],
+            'createdAt' => \DateTime::createFromFormat('Y-m-d H:i:s', '2023-05-15 01:00:00'),
+        ])->published()->create();
+
+        ArticleDoctrineFactory::new()
+            ->published()
+            ->sequence(function () use ($photo, $men) {
+                $date = new \DateTimeImmutable('2023-05-15 01:00:00');
+                foreach (range(1, 2) as $i) {
+                    yield [
+                        'tags' => [$photo],
+                        'category' => $men,
+                        'createdAt' => $date->modify('+' . $i . ' hour'),
+                    ];
+                }
+            })
+            ->create()
         ;
 
-        $manager->persist($image);
-
-        $article->setTitle('Custom Title')
-            ->setSlug('custom-article')
-            ->setContent('This is the article content')
-            ->setStatus(1)
-            ->setMainMedia($image)
-            ->setPublishedAt(\DateTimeImmutable::createFromFormat('Y-m-d H:i:s', '2023-05-15 22:15:52'))
-            ->setUpdatedAt(\DateTimeImmutable::createFromFormat('Y-m-d H:i:s', '2023-05-15 22:15:52'))
-            ->setCreatedAt(\DateTimeImmutable::createFromFormat('Y-m-d H:i:s', '2022-02-25 18:16:42'))
+        ArticleDoctrineFactory::new()
+            ->published()
+            ->noCategory()
+            ->sequence(function () use ($image) {
+                $date = new \DateTimeImmutable('2023-05-15 03:15:00');
+                foreach (range(1, 2) as $i) {
+                    yield [
+                        'tags' => [$image],
+                        'createdAt' => $date->modify('+' . $i . ' hour'),
+                    ];
+                }
+            })
+            ->create()
         ;
 
-        $manager->persist($article);
+        // Unpublished
+        ArticleDoctrineFactory::new(['tags' => [$image]])->unpublished()->create();
+        ArticleDoctrineFactory::new(['tags' => [$photo], 'category' => $men])->unpublished()->create();
+        ArticleDoctrineFactory::new('unpublished', 'noTaxonomy')->create();
 
-        $article = new ArticleDoctrine();
-
-        $article->setTitle('Unpublished Title')
-            ->setSlug('unpublished-article')
-            ->setContent('This is the article content that not published')
-            ->setUpdatedAt(\DateTimeImmutable::createFromFormat('Y-m-d H:i:s', '2023-04-18 21:05:52'))
-            ->setCreatedAt(\DateTimeImmutable::createFromFormat('Y-m-d H:i:s', '2022-03-15 16:16:42'))
+        // Stock
+        ArticleDoctrineFactory::new()
+            ->published()
+            ->noTaxonomy()
+            ->sequence(function () {
+                $date = new \DateTimeImmutable('2023-05-15');
+                foreach (range(1, 55) as $i) {
+                    yield [
+                        'title' => 'Stock - ' . $i,
+                        'createdAt' => $date->modify('+' . $i . ' day'),
+                    ];
+                }
+            })
+            ->create()
         ;
-
-        $manager->persist($article);
-
-        $article = new ArticleDoctrine();
-
-        $article->setTitle('No Media')
-            ->setSlug('custom-no-media-article')
-            ->setContent('This is the article content with no Media')
-            ->setStatus(1)
-            ->setPublishedAt(\DateTimeImmutable::createFromFormat('Y-m-d H:i:s', '2023-05-15 22:15:52'))
-            ->setUpdatedAt(\DateTimeImmutable::createFromFormat('Y-m-d H:i:s', '2023-05-15 22:15:52'))
-            ->setCreatedAt(\DateTimeImmutable::createFromFormat('Y-m-d H:i:s', '2022-02-25 18:16:42'))
-        ;
-
-        $manager->persist($article);
-
-        $manager->flush();
     }
 
     public static function getGroups(): array

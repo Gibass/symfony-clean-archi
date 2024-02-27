@@ -1,0 +1,19 @@
+{% if lastArticles is defined and lastArticles|length > 0 %}
+<div class="widget last-post-widget">
+    <h5 class="widget-title"><span>Latest Article</span></h5>
+    <!-- post-item -->
+    <ul class="list-unstyled widget-list">
+        {% for article in lastArticles %}
+            <li class="media widget-post align-items-center">
+                <a href="{{ path('article_show', {id: article.id}) }}">
+                    <img loading="lazy" class="mr-3" src="https://picsum.photos/100/100">
+                </a>
+                <div class="media-body">
+                    <h5 class="h6 mb-0"><a href="{{ path('article_show', {id: article.id}) }}">{{ article.title }}</a></h5>
+                    <small>{{ article.createdAt|date("F d, Y") }}</small>
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
