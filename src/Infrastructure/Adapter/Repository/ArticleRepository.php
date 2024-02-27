@@ -30,13 +30,6 @@ class ArticleRepository extends ServiceEntityRepository implements ArticleGatewa
         parent::__construct($registry, ArticleDoctrine::class);
     }
 
-    public function getById(int $id): ?Article
-    {
-        $_article = $this->find($id);
-
-        return $_article ? $this->convert($_article) : null;
-    }
-
     public function getPublishedById(int $id): ?Article
     {
         $_article = $this->getFullArticleQuery()
@@ -73,17 +66,17 @@ class ArticleRepository extends ServiceEntityRepository implements ArticleGatewa
         return new QueryAdapter($this->orderQuery());
     }
 
+    public function getLastArticles(): array
+    {
+        return [];
+    }
+
     public function convert(ArticleDoctrine $articleDoctrine): Article
     {
         return (new Article())
             ->setId($articleDoctrine->getId())
             ->setSlug($articleDoctrine->getSlug())
             ->setTitle($articleDoctrine->getTitle())
-            ->setMainMedia(
-                $articleDoctrine->getMainMedia() ?
-                    $this->_em->getRepository(MediaDoctrine::class)->convert($articleDoctrine->getMainMedia()) :
-                    null
-            )
             ->addTags(
                 $articleDoctrine->getTags() ? array_map(function (TagDoctrine $tag) {
                     return $this->_em->getRepository(TagDoctrine::class)->convert($tag);

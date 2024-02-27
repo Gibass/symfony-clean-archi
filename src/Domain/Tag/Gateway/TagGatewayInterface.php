@@ -8,4 +8,6 @@ use App\Domain\Shared\Listing\Gateway\ListingGatewayInterface;
 interface TagGatewayInterface extends ListingGatewayInterface
 {
     public function getBySlug(string $slug): ?Tag;
+
+    public function getPopularTag(): array;
 }

@@ -3,10 +3,9 @@
 namespace App\UserInterface\Controller\Front\Category;
 
 use App\Domain\Category\Exception\CategoryNotFoundException;
-use App\Domain\Category\Request\ListingRequest;
-use App\Domain\Category\UseCase\CategoryListing;
-use App\Domain\Shared\Listing\UseCase\ListingUseCase;
-use App\UserInterface\Presenter\Web\ListingCategoryPresenterHTML;
+use App\Domain\Category\Request\CategoryShowRequest;
+use App\Domain\Category\UseCase\CategoryShow;
+use App\UserInterface\Presenter\Web\CategoryShowPresenterHTML;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
@@ -17,13 +16,13 @@ use Symfony\Component\Routing\Annotation\Route;
 class ShowController
 {
     #[Route('/category/{slug}', name: 'category_listing')]
-    public function showCategory(string $slug, Request $request, CategoryListing $listing, ListingUseCase $listingUseCase, ListingCategoryPresenterHTML $presenter): Response
+    public function showCategory(string $slug, Request $request, CategoryShow $categoryShow, CategoryShowPresenterHTML $presenter): Response
     {
-        $page = $request->query->get('page', 0);
-        $request = new ListingRequest($slug, $page);
+        $page = (int) $request->query->get('page', 0);
+        $request = new CategoryShowRequest($slug, $page);
 
         try {
-            return $listingUseCase->execute($request, $listing, $presenter);
+            return $categoryShow->execute($request, $presenter);
         } catch (CategoryNotFoundException $e) {
             throw new NotFoundHttpException($e->getMessage());
         }

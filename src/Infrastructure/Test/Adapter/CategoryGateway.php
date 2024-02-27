@@ -15,20 +15,23 @@ class CategoryGateway implements CategoryGatewayInterface
             return null;
         }
 
-        return new Category(ucfirst($slug), $slug);
+        return match ($slug) {
+            'men' => (new Category('Men', $slug))->setId(1),
+            default => new Category(ucfirst($slug), $slug),
+        };
     }
 
     public function getPaginatedAdapter(array $conditions = []): AdapterInterface
     {
         $articles = [];
 
-        $range = match ($conditions['slug'] ?? null) {
-            'men' => range(1, 5),
+        $range = match ($conditions['id'] ?? null) {
+            1 => range(1, 5),
             default => [],
         };
 
         foreach ($range as $i) {
-            $articles[$i] = (new Article())->setId($i)->setCategory(new Category($conditions['slug'], $conditions['slug']));
+            $articles[$i] = (new Article())->setId($i)->setCategory(new Category('men', 'men'));
         }
 
         return new class($articles) implements AdapterInterface {
@@ -49,5 +52,10 @@ class CategoryGateway implements CategoryGatewayInterface
                 return \array_slice($this->articles, $offset, $length);
             }
         };
+    }
+
+    public function getFacetCategories(): array
+    {
+        return [];
     }
 }

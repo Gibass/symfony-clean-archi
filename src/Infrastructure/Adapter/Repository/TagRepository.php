@@ -43,6 +43,11 @@ class TagRepository extends ServiceEntityRepository implements TagGatewayInterfa
         return new QueryAdapter($query);
     }
 
+    public function getPopularTag(): array
+    {
+        return [];
+    }
+
     public function convert(TagDoctrine $tagDoctrine): Tag
     {
         return (new Tag($tagDoctrine->getTitle(), $tagDoctrine->getSlug()))

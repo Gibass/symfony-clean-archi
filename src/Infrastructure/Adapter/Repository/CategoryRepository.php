@@ -43,6 +43,11 @@ class CategoryRepository extends ServiceEntityRepository implements CategoryGate
         return new QueryAdapter($query);
     }
 
+    public function getFacetCategories(): array
+    {
+        return [];
+    }
+
     public function convert(CategoryDoctrine $category): Category
     {
         return (new Category($category->getTitle(), $category->getSlug()))
