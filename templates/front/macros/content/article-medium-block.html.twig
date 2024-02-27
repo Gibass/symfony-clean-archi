@@ -15,7 +15,7 @@
                 </li>
                 <li class="list-inline-item">Date : March 15, 2020</li>
                 {% if article.category %}
-                    <li class="list-inline-item">Categories : <a href="{{ path('category_listing', {slug: article.category.slug}) }}" class="ml-1">{{ article.category.title }} </a></li>
+                    <li class="list-inline-item">Categories : <a href="{{ path('category_show', {slug: article.category.slug}) }}" class="ml-1">{{ article.category.title }} </a></li>
                 {% endif %}
                 {% if article.tags|length > 0 %}
                     <li class="list-inline-item">Tags :{{ taxonomyLinks.generate(article.tags, 'tag_show') }}</li>

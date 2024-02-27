@@ -8,4 +8,6 @@ use App\Domain\Shared\Listing\Gateway\ListingGatewayInterface;
 interface CategoryGatewayInterface extends ListingGatewayInterface
 {
     public function getBySlug(string $slug): ?Category;
+
+    public function getFacetCategories(): array;
 }

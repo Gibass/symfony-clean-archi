@@ -9,27 +9,47 @@ use Pagerfanta\Adapter\AdapterInterface;
 
 class TagGateway implements TagGatewayInterface
 {
+    public const SLUGS = [
+        1 => 'image',
+        2 => 'photo',
+    ];
+
     public function getBySlug(string $slug): ?Tag
     {
         if ($slug === 'no-tag') {
             return null;
         }
 
-        return new Tag(ucfirst($slug), $slug);
+        return match ($slug) {
+            'image' => (new Tag('Image', $slug))->setId(1),
+            'photo' => (new Tag('Photo', $slug))->setId(2),
+            default => new Tag(ucfirst($slug), $slug),
+        };
+    }
+
+    public function getPopularTag(): array
+    {
+        return [
+            new Tag('Image', 'image'),
+            new Tag('Photo', 'photo'),
+            new Tag('Video', 'video'),
+        ];
     }
 
     public function getPaginatedAdapter(array $conditions = []): AdapterInterface
     {
         $articles = [];
 
-        $range = match ($conditions['slug'] ?? null) {
-            'image' => range(1, 5),
-            'photo' => range(6, 10),
+        $range = match ($conditions['id'] ?? null) {
+            1 => range(1, 5),
+            2 => range(6, 10),
             default => [],
         };
 
+        $slug = self::SLUGS[$conditions['id']] ?? 'Null';
+
         foreach ($range as $i) {
-            $articles[$i] = (new Article())->setId($i)->addTags([new Tag($conditions['slug'], $conditions['slug'])]);
+            $articles[$i] = (new Article())->setId($i)->addTags([new Tag($slug, $slug)]);
         }
 
         return new class($articles) implements AdapterInterface {

@@ -7,7 +7,7 @@ use App\Domain\Shared\Listing\Gateway\ListingGatewayInterface;
 
 interface ArticleGatewayInterface extends ListingGatewayInterface
 {
-    public function getById(int $id): ?Article;
-
     public function getPublishedById(int $id): ?Article;
+
+    public function getLastArticles(): array;
 }

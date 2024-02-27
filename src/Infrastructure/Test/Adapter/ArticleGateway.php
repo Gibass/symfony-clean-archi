@@ -9,7 +9,7 @@ use Pagerfanta\Adapter\AdapterInterface;
 
 class ArticleGateway implements ArticleGatewayInterface
 {
-    public function getById(int $id): ?Article
+    public function getPublishedById(int $id): ?Article
     {
         if ($id > 0) {
             return (new Article())
@@ -26,9 +26,13 @@ class ArticleGateway implements ArticleGatewayInterface
         return null;
     }
 
-    public function getPublishedById(int $id): ?Article
+    public function getLastArticles(): array
     {
-        return $this->getById($id);
+        return [
+            (new Article())->setId(1)->setTitle('Custom title'),
+            (new Article())->setId(2)->setTitle('Lorem title'),
+            (new Article())->setId(3)->setTitle('Ipsum title'),
+        ];
     }
 
     public function getPaginatedAdapter(array $conditions = []): AdapterInterface

@@ -45,7 +45,7 @@ class ArticleDoctrine
     #[ORM\JoinTable(name: 'articles_tags')]
     #[ORM\JoinColumn(name: 'article_id', referencedColumnName: 'id')]
     #[ORM\InverseJoinColumn(name: 'tag_id', referencedColumnName: 'id')]
-    #[ORM\ManyToMany(targetEntity: TagDoctrine::class)]
+    #[ORM\ManyToMany(targetEntity: TagDoctrine::class, inversedBy: 'articles')]
     private Collection $tags;
 
     public function __construct()
