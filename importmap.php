@@ -18,4 +18,8 @@ return [
         'path' => './assets/front/js/app.js',
         'entrypoint' => true,
     ],
+    'admin' => [
+        'path' => './assets/admin/js/admin.js',
+        'entrypoint' => true,
+    ],
 ];
