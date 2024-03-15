@@ -12,6 +12,6 @@ class CreateController extends AbstractController
     #[Route('/admin/create/article', name: 'create_article_admin')]
     public function createArticle(): Response
     {
-        return $this->render('admin/articles/create.html.twig');
+        return $this->render('admin/pages/articles/create.html.twig');
     }
 }
