@@ -22,10 +22,10 @@ class UserDoctrine implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 180, unique: true)]
     private ?string $email = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?string $firstname = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?string $lastname = null;
 
     #[ORM\Column]
