@@ -7,6 +7,7 @@ use App\Domain\Security\Gateway\UserGatewayInterface;
 use App\Domain\Security\Request\RegistrationRequest;
 use App\Domain\Security\Response\RegistrationResponse;
 use App\Domain\Security\UseCase\Registration;
+use App\Domain\Shared\Event\EventDispatcherInterface;
 use Assert\AssertionFailedException;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -20,8 +21,9 @@ class RegistrationTest extends TestCase
     protected function setUp(): void
     {
         $this->gateway = $this->createMock(UserGatewayInterface::class);
+        $dispatcher = $this->createMock(EventDispatcherInterface::class);
 
-        $this->useCase = new Registration($this->gateway);
+        $this->useCase = new Registration($this->gateway, $dispatcher);
     }
 
     public function testSuccessful(): void

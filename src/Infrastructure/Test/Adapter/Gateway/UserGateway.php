@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Infrastructure\Test\Adapter;
+namespace App\Infrastructure\Test\Adapter\Gateway;
 
 use App\Domain\Security\Entity\User;
 use App\Domain\Security\Gateway\UserGatewayInterface;

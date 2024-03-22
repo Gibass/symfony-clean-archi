@@ -153,6 +153,7 @@ class UserDoctrine implements UserInterface, PasswordAuthenticatedUserInterface
     public function setIsVerified(bool $isVerified): UserDoctrine
     {
         $this->isVerified = $isVerified;
+
         return $this;
     }
 }

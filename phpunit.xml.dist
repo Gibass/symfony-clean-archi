@@ -38,6 +38,7 @@
         <exclude>
             <file>src/Kernel.php</file>
             <directory>src/Infrastructure/Doctrine/DataFixtures</directory>
+            <directory>src/Infrastructure/Doctrine/Factory</directory>
         </exclude>
     </coverage>
 

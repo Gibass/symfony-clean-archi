@@ -1,31 +1,38 @@
 <?php
 
-namespace App\Infrastructure\Test\Adapter;
+namespace App\Infrastructure\Test\Adapter\Gateway;
 
 use App\Domain\Article\Entity\Article;
-use App\Domain\Article\Entity\Category;
-use App\Domain\Category\Gateway\CategoryGatewayInterface;
+use App\Domain\Article\Entity\Tag;
+use App\Domain\Tag\Gateway\TagGatewayInterface;
 use Pagerfanta\Adapter\AdapterInterface;
 
-class CategoryGateway implements CategoryGatewayInterface
+class TagGateway implements TagGatewayInterface
 {
-    public function getBySlug(string $slug): ?Category
+    public const SLUGS = [
+        1 => 'image',
+        2 => 'photo',
+    ];
+
+    public function getBySlug(string $slug): ?Tag
     {
-        if ($slug === 'no-category') {
+        if ($slug === 'no-tag') {
             return null;
         }
 
         return match ($slug) {
-            'men' => (new Category('Men', $slug))->setId(1),
-            default => new Category(ucfirst($slug), $slug),
+            'image' => (new Tag('Image', $slug))->setId(1),
+            'photo' => (new Tag('Photo', $slug))->setId(2),
+            default => new Tag(ucfirst($slug), $slug),
         };
     }
 
-    public function getFacetCategories(): array
+    public function getPopularTag(): array
     {
         return [
-            ['id' => 1, 'slug' => 'men', 'title' => 'Men', 'total' => 3],
-            ['id' => 2, 'slug' => 'women', 'title' => 'Women', 'total' => 1],
+            new Tag('Image', 'image'),
+            new Tag('Photo', 'photo'),
+            new Tag('Video', 'video'),
         ];
     }
 
@@ -35,11 +42,14 @@ class CategoryGateway implements CategoryGatewayInterface
 
         $range = match ($conditions['id'] ?? null) {
             1 => range(1, 5),
+            2 => range(6, 10),
             default => [],
         };
 
+        $slug = self::SLUGS[$conditions['id']] ?? 'Null';
+
         foreach ($range as $i) {
-            $articles[$i] = (new Article())->setId($i)->setCategory(new Category('men', 'men'));
+            $articles[$i] = (new Article())->setId($i)->addTags([new Tag($slug, $slug)]);
         }
 
         return new class($articles) implements AdapterInterface {

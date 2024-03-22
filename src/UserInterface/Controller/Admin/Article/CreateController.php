@@ -1,4 +1,5 @@
 <?php
+
 namespace App\UserInterface\Controller\Admin\Article;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

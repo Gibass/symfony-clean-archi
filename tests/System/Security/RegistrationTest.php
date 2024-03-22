@@ -23,6 +23,9 @@ class RegistrationTest extends WebTestCase
 
         $client->submit($form);
         $this->assertResponseStatusCodeSame(Response::HTTP_FOUND);
+        $this->assertSelectorTextContains('html', '/register/success');
+        $client->followRedirect();
+        $this->assertSelectorTextContains('body', 'An email has been sent to your address email.');
     }
 
     /**

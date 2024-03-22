@@ -16,7 +16,7 @@ class UserFixtures extends Fixture implements FixtureGroupInterface
             'lastname' => 'Doe',
             'email' => 'test@test.com',
             'plainPassword' => 'password',
-            'isVerified' => true
+            'isVerified' => true,
         ]);
 
         UserDoctrineFactory::createMany(9);

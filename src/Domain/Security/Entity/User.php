@@ -23,6 +23,7 @@ class User
     public function setId(?int $id): User
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -34,6 +35,7 @@ class User
     public function setEmail(?string $email): User
     {
         $this->email = $email;
+
         return $this;
     }
 
@@ -45,6 +47,7 @@ class User
     public function setFirstname(?string $firstname): User
     {
         $this->firstname = $firstname;
+
         return $this;
     }
 
@@ -56,6 +59,7 @@ class User
     public function setLastname(?string $lastname): User
     {
         $this->lastname = $lastname;
+
         return $this;
     }
 
@@ -67,6 +71,7 @@ class User
     public function setPassword(?string $password): User
     {
         $this->password = $password;
+
         return $this;
     }
 
@@ -78,6 +83,7 @@ class User
     public function setIsVerified(bool $isVerified): User
     {
         $this->isVerified = $isVerified;
+
         return $this;
     }
 }

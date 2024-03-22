@@ -7,7 +7,6 @@ use App\Domain\Security\Request\UserValidateRequest;
 use App\Domain\Security\UseCase\UserValidate;
 use App\UserInterface\Presenter\Mail\UserValidateMailPresenter;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\Routing\RouterInterface;
 
 readonly class RegisterSubscriber implements EventSubscriberInterface
 {
