@@ -51,6 +51,7 @@ final class UserDoctrineFactory extends ModelFactory
             'firstname' => self::faker()->firstName,
             'lastname' => self::faker()->lastName,
             'plainPassword' => self::faker()->password(),
+            'isVerified' => self::faker()->boolean(),
             'roles' => [],
         ];
     }

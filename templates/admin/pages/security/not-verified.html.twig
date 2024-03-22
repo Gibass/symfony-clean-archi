@@ -1,0 +1,30 @@
+{% extends 'admin/layouts/base-disconnected.html.twig' %}
+
+{% block title %}User not Verified{% endblock %}
+
+{% block body %}
+    <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+         data-sidebar-position="fixed" data-header-position="fixed">
+        <div
+                class="position-relative overflow-hidden radial-gradient min-vh-100 d-flex align-items-center justify-content-center">
+            <div class="d-flex align-items-center justify-content-center w-100">
+                <div class="row justify-content-center w-100">
+                    <div class="col-md-8 col-lg-6 col-xxl-3">
+                        <div class="card mb-0">
+                            <div class="card-body">
+                                <h3 class="text-center py-3 w-100">User not verified</h3>
+                                <p class="text-center">
+                                    Your Account hasn't been verified. <br>
+                                    Please validate your account on clicking the link on your email box.
+                                </p>
+                                <p class="text-center">
+                                    <a href="#" class="btn btn-primary py-8 fs-4 mt-1 mb-4 rounded-2">Resend the mail</a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

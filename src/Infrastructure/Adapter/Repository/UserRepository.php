@@ -47,7 +47,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         return (bool) $this->findOneBy(['email' => $email]);
     }
 
-    public function register(User $user): void
+    public function register(User $user): User
     {
         $_user = (new UserDoctrine())
             ->setEmail($user->getEmail())
@@ -56,5 +56,20 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
         $this->_em->persist($_user);
         $this->_em->flush();
+
+        return $this->convert($_user);
+    }
+
+    public function convert(UserDoctrine $userDoctrine): User
+    {
+        return (new User())
+            ->setId($userDoctrine->getId())
+            ->setFirstname($userDoctrine->getFirstname())
+            ->setLastname($userDoctrine->getLastname())
+            ->setEmail($userDoctrine->getEmail())
+            ->setIsVerified($userDoctrine->isVerified())
+            ->setCreatedAt($userDoctrine->getCreatedAt())
+            ->setUpdatedAt($userDoctrine->getUpdatedAt())
+        ;
     }
 }

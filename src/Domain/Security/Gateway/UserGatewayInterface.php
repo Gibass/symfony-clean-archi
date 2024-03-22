@@ -6,7 +6,7 @@ use App\Domain\Security\Entity\User;
 
 interface UserGatewayInterface
 {
-    public function register(User $user): void;
+    public function register(User $user): User;
 
     public function isExist(string $email): bool;
 }

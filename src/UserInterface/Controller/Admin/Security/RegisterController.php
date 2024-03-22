@@ -30,7 +30,7 @@ class RegisterController extends AbstractController
 
             try {
                 if ($registration->execute($registrationRequest)) {
-                    return $this->redirectToRoute('home_listing');
+                    return $this->redirectToRoute('admin_register_success');
                 }
             } catch (EmailAlreadyExistException|AssertionFailedException $e) {
                 $this->addFlash('error', $e->getMessage());
@@ -38,5 +38,11 @@ class RegisterController extends AbstractController
         }
 
         return $presenter->present($form);
+    }
+
+    #[Route('/register/success', name: 'admin_register_success')]
+    public function registerSuccess(): Response
+    {
+        return $this->render('admin/pages/security/register-success.html.twig');
     }
 }

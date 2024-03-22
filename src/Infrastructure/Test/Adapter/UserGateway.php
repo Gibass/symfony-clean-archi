@@ -7,9 +7,9 @@ use App\Domain\Security\Gateway\UserGatewayInterface;
 
 class UserGateway implements UserGatewayInterface
 {
-    public function register(User $user): void
+    public function register(User $user): User
     {
-        // TODO: Implement register() method.
+        return new User();
     }
 
     public function isExist(string $email): bool

@@ -13,6 +13,7 @@ class User
     private ?string $firstname = null;
     private ?string $lastname = null;
     private ?string $password = null;
+    private bool $isVerified = false;
 
     public function getId(): ?int
     {
@@ -66,6 +67,17 @@ class User
     public function setPassword(?string $password): User
     {
         $this->password = $password;
+        return $this;
+    }
+
+    public function isVerified(): bool
+    {
+        return $this->isVerified;
+    }
+
+    public function setIsVerified(bool $isVerified): User
+    {
+        $this->isVerified = $isVerified;
         return $this;
     }
 }

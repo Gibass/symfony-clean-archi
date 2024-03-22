@@ -3,16 +3,18 @@
 namespace App\Domain\Security\UseCase;
 
 use App\Domain\Security\Entity\User;
+use App\Domain\Security\Event\RegistrationEvent;
 use App\Domain\Security\Exception\EmailAlreadyExistException;
 use App\Domain\Security\Gateway\UserGatewayInterface;
 use App\Domain\Security\Request\RegistrationRequest;
 use App\Domain\Security\Response\RegistrationResponse;
+use App\Domain\Shared\Event\EventDispatcherInterface;
 use Assert\Assertion;
 use Assert\AssertionFailedException;
 
 readonly class Registration
 {
-    public function __construct(private UserGatewayInterface $userGateway)
+    public function __construct(private UserGatewayInterface $userGateway, private EventDispatcherInterface $eventDispatcher)
     {
     }
 
@@ -30,6 +32,7 @@ readonly class Registration
         ;
 
         $this->userGateway->register($user);
+        $this->eventDispatcher->dispatch(new RegistrationEvent($user), RegistrationEvent::USER_REGISTRATION);
 
         return new RegistrationResponse($user);
     }
