@@ -19,7 +19,7 @@ RUN curl -sSLf \
         -o /usr/local/bin/install-php-extensions \
         https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions && \
     chmod +x /usr/local/bin/install-php-extensions && \
-    install-php-extensions apcu intl opcache zip xdebug pdo_mysql
+    install-php-extensions apcu intl opcache zip xdebug uopz pdo_mysql
 
 COPY conf.d/app.ini $PHP_INI_DIR/conf.d/
 

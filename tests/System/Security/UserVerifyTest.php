@@ -1,16 +1,22 @@
 <?php
 
-namespace Integration\Security;
+namespace System\Security;
 
-use App\Infrastructure\Test\IntegrationTestCase;
+use App\Tests\Common\Helper\TokenHelper;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class UserVerifyTest extends IntegrationTestCase
+class UserVerifyTest extends WebTestCase
 {
     public function testUserVerifySuccess(): void
     {
         $client = $this->createClient();
 
-        $client->request('GET', 'user/verify/valid-token');
+        $token = TokenHelper::generateTestToken([
+            'user_id' => 1,
+            'user_email' => 'test@test.com',
+        ], 3600);
+
+        $client->request('GET', 'user/verify/' . $token);
 
         $this->assertResponseIsSuccessful();
 
@@ -34,7 +40,10 @@ class UserVerifyTest extends IntegrationTestCase
     public static function dataUserVerificationFailed(): \Generator
     {
         yield 'User_Verify_Expired_Token' => [
-            'token' => 'expired-token',
+            'token' => TokenHelper::generateTestToken([
+                'user_id' => 1,
+                'user_email' => 'test@test.com',
+            ], 3600, TokenHelper::JWT_SECRET, new \DateTimeImmutable('2024-03-20')),
             'message' => 'The verification link is expired',
         ];
 
@@ -44,7 +53,10 @@ class UserVerifyTest extends IntegrationTestCase
         ];
 
         yield 'User_Verify_User_not_found' => [
-            'token' => 'not-found-token',
+            'token' => TokenHelper::generateTestToken([
+                'user_id' => 10,
+                'user_email' => 'not-found@test.com',
+            ], 3600),
             'message' => 'User no longer exists',
         ];
     }

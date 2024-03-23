@@ -2,6 +2,7 @@
 
 namespace App\UserInterface\Presenter\Web;
 
+use App\Domain\Security\Exception\EmailNotFoundException;
 use App\Domain\Security\Exception\ExpiredTokenException;
 use App\Domain\Security\Exception\InvalidTokenException;
 use App\Domain\Security\Presenter\UserVerifyPresenterInterface;
@@ -15,6 +16,7 @@ class UserVerifyPresenterHTML extends AbstractWebPresenter implements UserVerify
         $message = match ($response->getInvalidCode()) {
             ExpiredTokenException::INVALID_CODE => 'The verification link is expired',
             InvalidTokenException::INVALID_CODE => 'Your link is invalid',
+            EmailNotFoundException::INVALID_CODE => 'User no longer exists',
             default => null,
         };
 
