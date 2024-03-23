@@ -2,7 +2,6 @@
 
 namespace App\UserInterface\Presenter\Web;
 
-use App\Domain\Shared\Listing\Presenter\ListingPresenterInterface;
 use App\Domain\Tag\Presenter\TagShowPresenterInterface as TagListingPresenter;
 use App\Domain\Tag\Response\TagShowResponse;
 use Pagerfanta\Pagerfanta;

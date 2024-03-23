@@ -56,6 +56,15 @@ services:
     networks:
       - internal
 
+  mail:
+    image: mailhog/mailhog
+    container_name: ${PROJECT_NAME}-mail
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+    networks:
+      - internal
+
 networks:
   internal:
     driver: bridge

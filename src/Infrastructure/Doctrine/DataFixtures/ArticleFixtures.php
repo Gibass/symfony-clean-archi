@@ -7,9 +7,10 @@ use App\Infrastructure\Doctrine\Factory\CategoryDoctrineFactory;
 use App\Infrastructure\Doctrine\Factory\TagDoctrineFactory;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 
-class ArticleFixtures extends Fixture implements FixtureGroupInterface
+class ArticleFixtures extends Fixture implements FixtureGroupInterface, DependentFixtureInterface
 {
     public function load(ObjectManager $manager): void
     {
@@ -21,5 +22,10 @@ class ArticleFixtures extends Fixture implements FixtureGroupInterface
     public static function getGroups(): array
     {
         return ['dev'];
+    }
+
+    public function getDependencies(): array
+    {
+        return [UserFixtures::class];
     }
 }

@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Welcome!{% endblock %}</title>
+    <link rel="shortcut icon" type="image/png" href="../assets/images/logos/favicon.png" />
+
+    {% block stylesheets %}
+        <link rel="stylesheet" href="{{ asset('admin/lib/simplebar/simplebar.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('admin/lib/icons/tabler-icons/tabler-icons.css') }}">
+        <link rel="stylesheet" href="{{ asset('admin/css/style-admin.css') }}">
+    {% endblock %}
+
+    {% block javascripts %}
+        {% block importmap %}{{ importmap('admin') }}{% endblock %}
+    {% endblock %}
+</head>
+
+<body>
+<!--  Body Wrapper -->
+<div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+     data-sidebar-position="fixed" data-header-position="fixed">
+    {% include 'admin/partials/aside/_aside.html.twig' %}
+    <!--  Sidebar End -->
+    <!--  Main wrapper -->
+    <div class="body-wrapper">
+        {{ include('admin/partials/header/_header.html.twig') }}
+        {% block body %}
+        {% endblock %}
+    </div>
+</div>
+</body>
+
+</html>
