@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Domain\Security\Response;
+namespace App\Domain\Security\Request;
 
 use App\Domain\Security\Entity\User;
 
-readonly class UserValidateResponse
+readonly class UserSendValidateRequest
 {
     public function __construct(private User $user)
     {

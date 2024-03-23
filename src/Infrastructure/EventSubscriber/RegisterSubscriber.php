@@ -3,14 +3,14 @@
 namespace App\Infrastructure\EventSubscriber;
 
 use App\Domain\Security\Event\RegistrationEvent;
-use App\Domain\Security\Request\UserValidateRequest;
-use App\Domain\Security\UseCase\UserValidate;
-use App\UserInterface\Presenter\Mail\UserValidateMailPresenter;
+use App\Domain\Security\Request\UserSendValidateRequest;
+use App\Domain\Security\UseCase\UserSendValidate;
+use App\UserInterface\Presenter\Mail\UserSendValidateMailPresenter;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 readonly class RegisterSubscriber implements EventSubscriberInterface
 {
-    public function __construct(private UserValidate $verify, private UserValidateMailPresenter $presenter)
+    public function __construct(private UserSendValidate $verify, private UserSendValidateMailPresenter $presenter)
     {
     }
 
@@ -23,7 +23,7 @@ readonly class RegisterSubscriber implements EventSubscriberInterface
 
     public function onRegistration(RegistrationEvent $event): void
     {
-        $request = new UserValidateRequest($event->getUser());
+        $request = new UserSendValidateRequest($event->getUser());
         $this->verify->execute($request, $this->presenter);
     }
 }

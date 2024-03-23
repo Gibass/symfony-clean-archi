@@ -14,7 +14,7 @@ class UserVerifyPresenterHTML extends AbstractWebPresenter implements UserVerify
     {
         $message = match ($response->getInvalidCode()) {
             ExpiredTokenException::INVALID_CODE => 'The verification link is expired',
-            InvalidTokenException::INVALID_CODE => 'Your Link is invalid',
+            InvalidTokenException::INVALID_CODE => 'Your link is invalid',
             default => null,
         };
 

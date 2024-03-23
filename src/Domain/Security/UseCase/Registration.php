@@ -50,7 +50,7 @@ readonly class Registration
         Assertion::minLength($request->getPassword(), 6);
         Assertion::same($request->getPassword(), $request->getConfirmPassword());
 
-        if ($this->userGateway->isExist($request->getEmail())) {
+        if ($this->userGateway->findByEmail($request->getEmail())) {
             throw new EmailAlreadyExistException('This email is already exist');
         }
     }

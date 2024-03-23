@@ -42,9 +42,11 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->getEntityManager()->flush();
     }
 
-    public function isExist(string $email): bool
+    public function findByEmail(string $email): ?User
     {
-        return (bool) $this->findOneBy(['email' => $email]);
+        $user = $this->findOneBy(['email' => $email]);
+
+        return $user ? $this->convert($user) : null;
     }
 
     public function register(User $user): User
@@ -58,6 +60,16 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->_em->flush();
 
         return $this->convert($_user);
+    }
+
+    public function validate(User $user): void
+    {
+        $user = $this->findOneBy(['email' => $user->getEmail()]);
+
+        if ($user) {
+            $user->setIsVerified(true);
+            $this->_em->flush();
+        }
     }
 
     public function convert(UserDoctrine $userDoctrine): User

@@ -8,5 +8,7 @@ interface UserGatewayInterface
 {
     public function register(User $user): User;
 
-    public function isExist(string $email): bool;
+    public function findByEmail(string $email): ?User;
+
+    public function validate(User $user): void;
 }

@@ -40,7 +40,7 @@ class UserVerifyTest extends IntegrationTestCase
 
         yield 'User_Verify_Invalid_Token' => [
             'token' => 'invalid-token',
-            'message' => 'Your Link is invalid',
+            'message' => 'Your link is invalid',
         ];
     }
 }

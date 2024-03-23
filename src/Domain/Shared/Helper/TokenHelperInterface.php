@@ -8,11 +8,11 @@ use App\Domain\Security\Exception\InvalidTokenException;
 
 interface TokenHelperInterface
 {
-    public function generateUserToken(User $user): string;
+    public function generateUserToken(User $user, int $lifetime = 3600): string;
 
     /**
      * @throws InvalidTokenException
      * @throws ExpiredTokenException
      */
-    public function verifyToken(string $token): bool;
+    public function verifyToken(string $token): array;
 }

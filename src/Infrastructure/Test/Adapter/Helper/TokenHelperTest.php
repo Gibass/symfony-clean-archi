@@ -9,12 +9,12 @@ use App\Domain\Shared\Helper\TokenHelperInterface;
 
 class TokenHelperTest implements TokenHelperInterface
 {
-    public function generateUserToken(User $user): string
+    public function generateUserToken(User $user, int $lifetime = 3600): string
     {
-        return '';
+        return 'token';
     }
 
-    public function verifyToken(string $token): bool
+    public function verifyToken(string $token): array
     {
         if ($token === 'invalid-token') {
             throw new InvalidTokenException();
@@ -24,6 +24,14 @@ class TokenHelperTest implements TokenHelperInterface
             throw new ExpiredTokenException();
         }
 
-        return true;
+        if ($token === 'not-found-token') {
+            return [
+                'user_email' => 'not-found@mail.com',
+            ];
+        }
+
+        return [
+            'user_email' => 'used@mail.com',
+        ];
     }
 }

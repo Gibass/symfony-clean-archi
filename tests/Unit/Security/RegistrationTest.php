@@ -2,6 +2,7 @@
 
 namespace Unit\Security;
 
+use App\Domain\Security\Entity\User;
 use App\Domain\Security\Exception\EmailAlreadyExistException;
 use App\Domain\Security\Gateway\UserGatewayInterface;
 use App\Domain\Security\Request\RegistrationRequest;
@@ -40,7 +41,7 @@ class RegistrationTest extends TestCase
     {
         $request = new RegistrationRequest('used@mail.com', 'password', 'password');
 
-        $this->gateway->method('isExist')->willReturn(true);
+        $this->gateway->method('findByEmail')->willReturn(new User());
 
         $this->expectException(EmailAlreadyExistException::class);
         $this->useCase->execute($request);

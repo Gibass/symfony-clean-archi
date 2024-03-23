@@ -22,10 +22,12 @@
                                         <a href="{{ path('app_login') }}" class="btn btn-primary py-8 fs-4 mt-1 mb-4 rounded-2">Sign in</a>
                                     </p>
                                 {% else %}
-                                    <div class="alert alert-danger">
+                                    <div class="alert alert-danger text-center">
                                         {{ message }} <br>
-                                        Please click on the resend button to get another valid Link.
                                     </div>
+                                    <p class="text-center">
+                                        Please click on the resend button below to get another valid Link.
+                                    </p>
                                     <p class="text-center">
                                         <a href="#" class="btn btn-primary py-8 fs-4 mt-1 mb-4 rounded-2">Resend the mail</a>
                                     </p>

@@ -8,6 +8,7 @@ use App\UserInterface\Presenter\Web\UserVerifyPresenterHTML;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class VerificationController extends AbstractController
 {
@@ -18,8 +19,10 @@ class VerificationController extends AbstractController
     }
 
     #[Route('/user/not-verified', name: 'user_not_verified')]
-    public function notVerified(): Response
+    public function notVerified(AuthenticationUtils $authenticationUtils): Response
     {
-        return $this->render('admin/pages/security/not-verified.html.twig');
+        return $this->render('admin/pages/security/not-verified.html.twig', [
+            'error' => $authenticationUtils->getLastAuthenticationError(),
+        ]);
     }
 }

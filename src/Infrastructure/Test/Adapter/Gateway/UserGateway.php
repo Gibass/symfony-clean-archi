@@ -12,8 +12,17 @@ class UserGateway implements UserGatewayInterface
         return new User();
     }
 
-    public function isExist(string $email): bool
+    public function findByEmail(string $email): ?User
     {
-        return $email === 'used@mail.com';
+        if ($email === 'used@mail.com') {
+            return (new User())->setEmail($email);
+        }
+
+        return null;
+    }
+
+    public function validate(User $user): void
+    {
+        $user->setIsVerified(true);
     }
 }
