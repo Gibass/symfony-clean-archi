@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Infrastructure\Test\Adapter;
+namespace App\Infrastructure\Test\Adapter\Gateway;
 
 use App\Domain\Article\Entity\Article;
 use App\Domain\Article\Entity\Tag;

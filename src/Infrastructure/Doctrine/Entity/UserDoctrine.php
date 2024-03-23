@@ -22,10 +22,10 @@ class UserDoctrine implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 180, unique: true)]
     private ?string $email = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?string $firstname = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?string $lastname = null;
 
     #[ORM\Column]
@@ -35,6 +35,9 @@ class UserDoctrine implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $password = null;
 
     private ?string $plainPassword = null;
+
+    #[ORM\Column]
+    private bool $isVerified = false;
 
     public function getId(): ?int
     {
@@ -140,5 +143,17 @@ class UserDoctrine implements UserInterface, PasswordAuthenticatedUserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         $this->plainPassword = null;
+    }
+
+    public function isVerified(): bool
+    {
+        return $this->isVerified;
+    }
+
+    public function setIsVerified(bool $isVerified): UserDoctrine
+    {
+        $this->isVerified = $isVerified;
+
+        return $this;
     }
 }

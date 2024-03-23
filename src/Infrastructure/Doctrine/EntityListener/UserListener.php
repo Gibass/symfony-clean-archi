@@ -24,7 +24,9 @@ readonly class UserListener
 
     public function preUpdate(UserDoctrine $user, PreUpdateEventArgs $eventArgs): void
     {
-        $user->setPassword($this->encodePassword($user));
+        if ($user->getPlainPassword()) {
+            $user->setPassword($this->encodePassword($user));
+        }
     }
 
     private function encodePassword(UserDoctrine $user): string

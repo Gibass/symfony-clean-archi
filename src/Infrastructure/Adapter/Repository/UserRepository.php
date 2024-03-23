@@ -2,6 +2,8 @@
 
 namespace App\Infrastructure\Adapter\Repository;
 
+use App\Domain\Security\Entity\User;
+use App\Domain\Security\Gateway\UserGatewayInterface;
 use App\Infrastructure\Doctrine\Entity\UserDoctrine;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -19,7 +21,7 @@ use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
  * @method UserDoctrine[]    findAll()
  * @method UserDoctrine[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class UserRepository extends ServiceEntityRepository implements PasswordUpgraderInterface
+class UserRepository extends ServiceEntityRepository implements PasswordUpgraderInterface, UserGatewayInterface
 {
     public function __construct(ManagerRegistry $registry)
     {
@@ -38,5 +40,48 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $user->setPassword($newHashedPassword);
         $this->getEntityManager()->persist($user);
         $this->getEntityManager()->flush();
+    }
+
+    public function findByEmail(string $email): ?User
+    {
+        $user = $this->findOneBy(['email' => $email]);
+
+        return $user ? $this->convert($user) : null;
+    }
+
+    public function register(User $user): User
+    {
+        $_user = (new UserDoctrine())
+            ->setEmail($user->getEmail())
+            ->setPlainPassword($user->getPassword())
+        ;
+
+        $this->_em->persist($_user);
+        $this->_em->flush();
+
+        return $this->convert($_user);
+    }
+
+    public function validate(User $user): void
+    {
+        $user = $this->findOneBy(['email' => $user->getEmail()]);
+
+        if ($user) {
+            $user->setIsVerified(true);
+            $this->_em->flush();
+        }
+    }
+
+    public function convert(UserDoctrine $userDoctrine): User
+    {
+        return (new User())
+            ->setId($userDoctrine->getId())
+            ->setFirstname($userDoctrine->getFirstname())
+            ->setLastname($userDoctrine->getLastname())
+            ->setEmail($userDoctrine->getEmail())
+            ->setIsVerified($userDoctrine->isVerified())
+            ->setCreatedAt($userDoctrine->getCreatedAt())
+            ->setUpdatedAt($userDoctrine->getUpdatedAt())
+        ;
     }
 }

@@ -16,6 +16,15 @@ class UserTestFixtures extends Fixture implements FixtureGroupInterface
             'lastname' => 'Doe',
             'email' => 'test@test.com',
             'plainPassword' => 'password',
+            'isVerified' => true,
+        ]);
+
+        UserDoctrineFactory::createOne([
+            'firstname' => 'John',
+            'lastname' => 'Doe',
+            'email' => 'unverified@test.com',
+            'plainPassword' => 'password',
+            'isVerified' => false,
         ]);
     }
 
