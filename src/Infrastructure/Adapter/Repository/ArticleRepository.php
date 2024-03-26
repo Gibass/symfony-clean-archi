@@ -4,6 +4,8 @@ namespace App\Infrastructure\Adapter\Repository;
 
 use App\Domain\Article\Entity\Article;
 use App\Domain\Article\Gateway\ArticleGatewayInterface;
+use App\Domain\CRUD\Entity\CrudEntityInterface;
+use App\Domain\CRUD\Entity\PostedData;
 use App\Infrastructure\Doctrine\Entity\ArticleDoctrine;
 use App\Infrastructure\Doctrine\Entity\CategoryDoctrine;
 use App\Infrastructure\Doctrine\Entity\TagDoctrine;
@@ -32,8 +34,9 @@ class ArticleRepository extends ServiceEntityRepository implements ArticleGatewa
     public function getPublishedById(int $id): ?Article
     {
         $_article = $this->getFullArticleQuery()
-            ->andWhere('article.id = :articleId')
+            ->andWhere('article.status = :status AND article.id = :articleId')
             ->setParameter('articleId', $id)
+            ->setParameter('status', true)
             ->getQuery()
             ->getOneOrNullResult()
         ;
@@ -48,8 +51,6 @@ class ArticleRepository extends ServiceEntityRepository implements ArticleGatewa
             ->addSelect('category')
             ->leftJoin('article.tags', 'tags')
             ->leftJoin('article.category', 'category')
-            ->where('article.status = :status')
-            ->setParameter('status', true)
         ;
     }
 
@@ -62,7 +63,15 @@ class ArticleRepository extends ServiceEntityRepository implements ArticleGatewa
 
     public function getPaginatedAdapter(array $conditions = []): AdapterInterface
     {
-        return new QueryAdapter($this->orderQuery());
+        $query = $this->orderQuery();
+
+        if (empty($conditions['type']) || $conditions['type'] !== 'all') {
+            $query = $query->andWhere('article.status = :status')
+                ->setParameter('status', true)
+            ;
+        }
+
+        return new QueryAdapter($query);
     }
 
     public function getLastArticles(): array
@@ -75,6 +84,17 @@ class ArticleRepository extends ServiceEntityRepository implements ArticleGatewa
             ->getQuery()
             ->getResult()
         ;
+    }
+
+    public function create(PostedData $data): CrudEntityInterface
+    {
+        /** @var ArticleDoctrine $article */
+        $article = $data->createEntity(ArticleDoctrine::class);
+
+        $this->_em->persist($article);
+        $this->_em->flush();
+
+        return $this->convert($article);
     }
 
     public function convert(ArticleDoctrine $articleDoctrine): Article

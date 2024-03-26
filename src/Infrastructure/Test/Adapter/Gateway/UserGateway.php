@@ -4,6 +4,7 @@ namespace App\Infrastructure\Test\Adapter\Gateway;
 
 use App\Domain\Security\Entity\User;
 use App\Domain\Security\Gateway\UserGatewayInterface;
+use App\Infrastructure\Test\Adapter\Entity\UserTest;
 
 class UserGateway implements UserGatewayInterface
 {
@@ -16,6 +17,12 @@ class UserGateway implements UserGatewayInterface
     {
         if ($email === 'used@mail.com') {
             return (new User())->setEmail($email);
+        }
+
+        if ($email === 'test@test.com') {
+            return (new UserTest())->setEmail($email)
+                ->setIsVerified(true)
+            ;
         }
 
         return null;

@@ -5,9 +5,15 @@
 {% block body %}
     <div class="container-fluid">
         <div class="card">
+            <div class="card-header d-flex align-items-center">
+                <h5 class="card-title fw-semibold">Create Article</h5>
+            </div>
             <div class="card-body">
-                <h5 class="card-title fw-semibold mb-4">Sample Page</h5>
-                <p class="mb-0">This is a sample page </p>
+                {% include 'admin/partials/block/alert/_alert-messages.html.twig' %}
+                {{ form_start(form) }}
+                    {{ form_rest(form) }}
+                    <button class="btn btn-primary" type="submit">Create</button>
+                {{ form_end(form) }}
             </div>
         </div>
     </div>

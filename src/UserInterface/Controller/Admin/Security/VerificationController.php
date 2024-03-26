@@ -4,7 +4,7 @@ namespace App\UserInterface\Controller\Admin\Security;
 
 use App\Domain\Security\Request\UserVerifyRequest;
 use App\Domain\Security\UseCase\UserVerify;
-use App\UserInterface\Presenter\Web\UserVerifyPresenterHTML;
+use App\UserInterface\Presenter\Web\Admin\UserVerifyPresenterHTML;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;

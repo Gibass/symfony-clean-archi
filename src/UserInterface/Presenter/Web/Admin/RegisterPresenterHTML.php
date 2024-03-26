@@ -1,7 +1,8 @@
 <?php
 
-namespace App\UserInterface\Presenter\Web;
+namespace App\UserInterface\Presenter\Web\Admin;
 
+use App\UserInterface\Presenter\Web\AbstractWebPresenter;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Response;
 

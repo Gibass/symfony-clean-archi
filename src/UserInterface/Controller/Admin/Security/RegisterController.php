@@ -7,7 +7,7 @@ use App\Domain\Security\Request\RegistrationRequest;
 use App\Domain\Security\UseCase\Registration;
 use App\UserInterface\DTO\RegistrationDTO;
 use App\UserInterface\Form\RegistrationType;
-use App\UserInterface\Presenter\Web\RegisterPresenterHTML;
+use App\UserInterface\Presenter\Web\Admin\RegisterPresenterHTML;
 use Assert\AssertionFailedException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;

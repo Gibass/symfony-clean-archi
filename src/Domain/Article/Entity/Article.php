@@ -2,10 +2,11 @@
 
 namespace App\Domain\Article\Entity;
 
+use App\Domain\CRUD\Entity\CrudEntityInterface;
 use App\Domain\Shared\Entity\DateEntity;
 use App\Domain\Shared\Entity\PublishEntity;
 
-class Article
+class Article implements CrudEntityInterface
 {
     use DateEntity;
     use PublishEntity;
@@ -125,5 +126,10 @@ class Article
         }
 
         return $this;
+    }
+
+    public function getIdentifier(): int
+    {
+        return $this->getId();
     }
 }

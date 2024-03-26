@@ -38,6 +38,7 @@ class TagRepository extends ServiceEntityRepository implements TagGatewayInterfa
         $query = $this->_em->getRepository(ArticleDoctrine::class)->orderQuery()
             ->andwhere('tags.id = :tagId AND article.status = :status')
             ->setParameter('tagId', $conditions['id'] ?? null)
+            ->setParameter('status', true)
         ;
 
         return new QueryAdapter($query);

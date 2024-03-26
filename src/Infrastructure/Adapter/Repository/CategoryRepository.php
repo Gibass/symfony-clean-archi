@@ -39,6 +39,7 @@ class CategoryRepository extends ServiceEntityRepository implements CategoryGate
         $query = $this->_em->getRepository(ArticleDoctrine::class)->orderQuery()
             ->andwhere('category.id = :categoryId AND article.status = :status')
             ->setParameter('categoryId', $conditions['id'] ?? null)
+            ->setParameter('status', true)
         ;
 
         return new QueryAdapter($query);

@@ -1,12 +1,13 @@
 <?php
 
-namespace App\UserInterface\Presenter\Web;
+namespace App\UserInterface\Presenter\Web\Admin;
 
 use App\Domain\Security\Exception\EmailNotFoundException;
 use App\Domain\Security\Exception\ExpiredTokenException;
 use App\Domain\Security\Exception\InvalidTokenException;
 use App\Domain\Security\Presenter\UserVerifyPresenterInterface;
 use App\Domain\Security\Response\UserVerifyResponse;
+use App\UserInterface\Presenter\Web\AbstractWebPresenter;
 use Symfony\Component\HttpFoundation\Response;
 
 class UserVerifyPresenterHTML extends AbstractWebPresenter implements UserVerifyPresenterInterface

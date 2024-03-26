@@ -5,6 +5,8 @@ namespace App\Infrastructure\Test\Adapter\Gateway;
 use App\Domain\Article\Entity\Article;
 use App\Domain\Article\Entity\Tag;
 use App\Domain\Article\Gateway\ArticleGatewayInterface;
+use App\Domain\CRUD\Entity\CrudEntityInterface;
+use App\Domain\CRUD\Entity\PostedData;
 use Pagerfanta\Adapter\AdapterInterface;
 
 class ArticleGateway implements ArticleGatewayInterface
@@ -57,5 +59,16 @@ class ArticleGateway implements ArticleGatewayInterface
                 return \array_slice($this->articles, $offset, $length);
             }
         };
+    }
+
+    public function create(PostedData $data): CrudEntityInterface
+    {
+        return (new Article())
+            ->setId(1)
+            ->setTitle($data->get('title'))
+            ->setDescription($data->get('description'))
+            ->setContent($data->get('content'))
+            ->setStatus($data->get('status'))
+        ;
     }
 }

@@ -11,6 +11,8 @@ use Doctrine\Persistence\ObjectManager;
 
 class ArticleTestFixtures extends Fixture implements FixtureGroupInterface
 {
+    public const NB_TOTAL = 63;
+
     /**
      * @throws \Exception
      */

@@ -1,0 +1,88 @@
+{% extends 'admin/layouts/base.html.twig' %}
+
+{% block title %}Articles{% endblock %}
+
+{% block body %}
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-body">
+                {% include 'admin/partials/block/alert/_alert-messages.html.twig' %}
+                <div class="card-header d-flex align-items-center">
+                    <h5 class="card-title fw-semibold">Articles</h5>
+                    <div class="button-container ms-auto">
+                        {% if routes.add is defined %}
+                            <a href="{{ path(routes.add) }}" class="btn btn-primary">Create</a>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table text-nowrap mb-0 align-middle">
+                                <thead class="text-dark fs-4">
+                                    <tr>
+                                        <th class="border-bottom-0">
+                                            <h6 class="fw-semibold mb-0">Id</h6>
+                                        </th>
+                                        <th class="border-bottom-0">
+                                            <h6 class="fw-semibold mb-0">Title</h6>
+                                        </th>
+                                        <th class="border-bottom-0">
+                                            <h6 class="fw-semibold mb-0">Owner</h6>
+                                        </th>
+                                        <th class="border-bottom-0">
+                                            <h6 class="fw-semibold mb-0">Created At</h6>
+                                        </th>
+                                        <th class="border-bottom-0">
+                                            <h6 class="fw-semibold mb-0">Status</h6>
+                                        </th>
+                                        <th class="border-bottom-0">
+                                            <h6 class="fw-semibold mb-0">Actions</h6>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {% for article in pager %}
+                                    <tr class="items-rows article-{{ article.id }}">
+                                        <td class="border-bottom-0"><h6 class="fw-semibold mb-0">{{ article.id }}</h6></td>
+                                        <td class="border-bottom-0">
+                                            <h6 class="fw-semibold mb-1">{{ article.title }}</h6>
+                                        </td>
+                                        <td class="border-bottom-0">
+                                            <a class="text-primary mb-0 fw-normal" href="#">Owner</a>
+                                        </td>
+                                        <td class="border-bottom-0">
+                                            <p class="mb-0 fw-normal fs-2 text-end">{{ article.createdAt|date('d/m/Y - H:i', 'Europe/Paris') }}</p>
+                                        </td>
+                                        <td class="border-bottom-0">
+                                            <div class="d-flex align-items-center gap-2">
+                                                <span class="badge bg-{{ article.isPublished ? 'success' : 'danger' }} rounded-3 fw-semibold">
+                                                    {{ article.isPublished ? 'Published' : 'Unpublished' }}
+                                                </span>
+                                            </div>
+                                        </td>
+                                        <td class="border-bottom-0">
+                                            <ul class="d-flex mb-0 justify-content-between">
+                                                <li class="ms-1"><a href="#" class="btn btn-primary"><i class="ti ti-edit"></i></a></li>
+                                                <li class="ms-1"><a href="#" class="btn btn-danger"><i class="ti ti-trash"></i></a></li>
+                                                <li class="ms-1"><a href="{{ path('article_show', {id: article.id}) }}" class="btn btn-dark"><i class="ti ti-eye"></i></a></li>
+                                            </ul>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center px-4">
+                    {{ pagerfanta(pager, {'prev_message': '<', 'next_message': '>'}) }}
+                    <div class="ms-auto">
+                        <p class="fs-2">{{ pagerInfo(pager) }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

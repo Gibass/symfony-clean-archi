@@ -2,6 +2,7 @@
 
 namespace App\Infrastructure\Doctrine\Entity;
 
+use App\Domain\CRUD\Entity\CrudEntityInterface;
 use App\Infrastructure\Adapter\Repository\ArticleRepository;
 use App\Infrastructure\Doctrine\Trait\EntityPublish;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -13,7 +14,7 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
 
 #[ORM\Entity(repositoryClass: ArticleRepository::class)]
 #[ORM\Table(name: 'article')]
-class ArticleDoctrine
+class ArticleDoctrine implements CrudEntityInterface
 {
     use EntityPublish;
     use TimestampableEntity;
@@ -152,5 +153,10 @@ class ArticleDoctrine
         $this->tags->removeElement($tag);
 
         return $this;
+    }
+
+    public function getIdentifier(): string
+    {
+        return 'email';
     }
 }

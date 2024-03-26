@@ -79,6 +79,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->setFirstname($userDoctrine->getFirstname())
             ->setLastname($userDoctrine->getLastname())
             ->setEmail($userDoctrine->getEmail())
+            ->setPassword($userDoctrine->getPassword())
             ->setIsVerified($userDoctrine->isVerified())
             ->setCreatedAt($userDoctrine->getCreatedAt())
             ->setUpdatedAt($userDoctrine->getUpdatedAt())
