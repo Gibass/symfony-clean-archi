@@ -2,32 +2,43 @@
 
 namespace App\Infrastructure\Doctrine\Entity;
 
-use App\Infrastructure\Adapter\Repository\TaxonomyRepository;
+use App\Domain\Article\Entity\TaxonomyInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation\Slug;
 
 #[ORM\Entity(repositoryClass: TaxonomyRepository::class)]
 #[ORM\InheritanceType('JOINED')]
 #[ORM\DiscriminatorColumn(name: 'type', type: 'string')]
-#[ORM\DiscriminatorMap(['tag' => TagDoctrine::class, 'category' => CategoryDoctrine::class])]
-#[ORM\Table(name: 'taxonomy')]
-class TaxonomyDoctrine
+#[ORM\DiscriminatorMap(['tag' => Tag::class, 'category' => Category::class])]
+class Taxonomy implements TaxonomyInterface
 {
+    #[ORM\Column(length: 255)]
+    protected ?string $title;
+
+    #[Slug(fields: ['title'])]
+    #[ORM\Column(length: 128, unique: true)]
+    protected ?string $slug;
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $title = null;
-
-    #[Slug(fields: ['title'])]
-    #[ORM\Column(length: 128, unique: true)]
-    private ?string $slug = null;
+    public function __construct(string $title = null, string $slug = null)
+    {
+        $this->title = $title;
+        $this->slug = $slug;
+    }
 
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function setId(?int $id): static
+    {
+        $this->id = $id;
+
+        return $this;
     }
 
     public function getTitle(): ?string

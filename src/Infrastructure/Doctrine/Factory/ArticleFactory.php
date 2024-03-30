@@ -3,32 +3,32 @@
 namespace App\Infrastructure\Doctrine\Factory;
 
 use App\Infrastructure\Adapter\Repository\ArticleRepository;
-use App\Infrastructure\Doctrine\Entity\ArticleDoctrine;
+use App\Infrastructure\Doctrine\Entity\Article;
 use Zenstruck\Foundry\LazyValue;
 use Zenstruck\Foundry\ModelFactory;
 use Zenstruck\Foundry\Proxy;
 use Zenstruck\Foundry\RepositoryProxy;
 
 /**
- * @extends ModelFactory<ArticleDoctrine>
+ * @extends ModelFactory<Article>
  *
- * @method        ArticleDoctrine|Proxy             create(array|callable $attributes = [])
- * @method static ArticleDoctrine|Proxy             createOne(array $attributes = [])
- * @method static ArticleDoctrine|Proxy             find(object|array|mixed $criteria)
- * @method static ArticleDoctrine|Proxy             findOrCreate(array $attributes)
- * @method static ArticleDoctrine|Proxy             first(string $sortedField = 'id')
- * @method static ArticleDoctrine|Proxy             last(string $sortedField = 'id')
- * @method static ArticleDoctrine|Proxy             random(array $attributes = [])
- * @method static ArticleDoctrine|Proxy             randomOrCreate(array $attributes = [])
+ * @method        Article|Proxy             create(array|callable $attributes = [])
+ * @method static Article|Proxy             createOne(array $attributes = [])
+ * @method static Article|Proxy             find(object|array|mixed $criteria)
+ * @method static Article|Proxy             findOrCreate(array $attributes)
+ * @method static Article|Proxy             first(string $sortedField = 'id')
+ * @method static Article|Proxy             last(string $sortedField = 'id')
+ * @method static Article|Proxy             random(array $attributes = [])
+ * @method static Article|Proxy             randomOrCreate(array $attributes = [])
  * @method static ArticleRepository|RepositoryProxy repository()
- * @method static ArticleDoctrine[]|Proxy[]         all()
- * @method static ArticleDoctrine[]|Proxy[]         createMany(int $number, array|callable $attributes = [])
- * @method static ArticleDoctrine[]|Proxy[]         createSequence(iterable|callable $sequence)
- * @method static ArticleDoctrine[]|Proxy[]         findBy(array $attributes)
- * @method static ArticleDoctrine[]|Proxy[]         randomRange(int $min, int $max, array $attributes = [])
- * @method static ArticleDoctrine[]|Proxy[]         randomSet(int $number, array $attributes = [])
+ * @method static Article[]|Proxy[]         all()
+ * @method static Article[]|Proxy[]         createMany(int $number, array|callable $attributes = [])
+ * @method static Article[]|Proxy[]         createSequence(iterable|callable $sequence)
+ * @method static Article[]|Proxy[]         findBy(array $attributes)
+ * @method static Article[]|Proxy[]         randomRange(int $min, int $max, array $attributes = [])
+ * @method static Article[]|Proxy[]         randomSet(int $number, array $attributes = [])
  */
-final class ArticleDoctrineFactory extends ModelFactory
+final class ArticleFactory extends ModelFactory
 {
     /**
      * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#factories-as-services
@@ -72,8 +72,8 @@ final class ArticleDoctrineFactory extends ModelFactory
             'title' => self::faker()->sentence,
             'description' => self::faker()->paragraphs(3, true),
             'content' => self::faker()->paragraphs(20, true),
-            'category' => LazyValue::new(fn () => CategoryDoctrineFactory::random()),
-            'tags' => LazyValue::new(fn () => TagDoctrineFactory::randomRange(0, 5)),
+            'category' => LazyValue::new(fn () => CategoryFactory::random()),
+            'tags' => LazyValue::new(fn () => TagFactory::randomRange(0, 5)),
             'createdAt' => self::faker()->dateTimeBetween('-1 year'),
         ];
     }
@@ -89,6 +89,6 @@ final class ArticleDoctrineFactory extends ModelFactory
 
     protected static function getClass(): string
     {
-        return ArticleDoctrine::class;
+        return Article::class;
     }
 }

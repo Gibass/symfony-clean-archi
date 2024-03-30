@@ -2,9 +2,11 @@
 
 namespace App\Infrastructure\Test\Adapter\Gateway;
 
-use App\Domain\Article\Entity\Article;
-use App\Domain\Article\Entity\Tag;
+use App\Domain\Article\Entity\ArticleInterface;
+use App\Domain\Article\Entity\TaxonomyInterface;
 use App\Domain\Tag\Gateway\TagGatewayInterface;
+use App\Infrastructure\Doctrine\Entity\Article;
+use App\Infrastructure\Doctrine\Entity\Tag;
 use Pagerfanta\Adapter\AdapterInterface;
 
 class TagGateway implements TagGatewayInterface
@@ -14,7 +16,7 @@ class TagGateway implements TagGatewayInterface
         2 => 'photo',
     ];
 
-    public function getBySlug(string $slug): ?Tag
+    public function getBySlug(string $slug): ?TaxonomyInterface
     {
         if ($slug === 'no-tag') {
             return null;

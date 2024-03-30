@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Infrastructure\Test\Adapter\Provider;
+namespace App\Infrastructure\Provider;
 
 use App\Domain\Security\Gateway\UserGatewayInterface;
-use App\Infrastructure\Test\Adapter\Entity\UserTest;
+use App\Infrastructure\Doctrine\Entity\User;
+use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
@@ -18,13 +19,19 @@ readonly class UserProvider implements UserProviderInterface
         return $this->gateway->findByEmail($user->getUserIdentifier());
     }
 
-    public function supportsClass(string $class)
+    public function supportsClass(string $class): bool
     {
-        return $class === UserTest::class;
+        return $class === User::class;
     }
 
     public function loadUserByIdentifier(string $identifier): UserInterface
     {
-        return $this->gateway->findByEmail($identifier);
+        $user = $this->gateway->findByEmail($identifier);
+
+        if ($user === null) {
+            throw new UserNotFoundException();
+        }
+
+        return $user;
     }
 }

@@ -2,8 +2,8 @@
 
 namespace App\Domain\Category\Response;
 
-use App\Domain\Article\Entity\Article;
-use App\Domain\Article\Entity\Category;
+use App\Domain\Article\Entity\ArticleInterface;
+use App\Domain\Article\Entity\TaxonomyInterface;
 use App\Domain\Shared\Listing\Response\AbstractListingResponse;
 use Pagerfanta\Adapter\AdapterInterface;
 
@@ -11,7 +11,7 @@ class CategoryShowResponse extends AbstractListingResponse
 {
     public function __construct(
         AdapterInterface $adapter,
-        private readonly Category $category,
+        private readonly TaxonomyInterface $category,
         private readonly array $categories,
         private readonly array $tags,
         private readonly array $lastArticles,
@@ -20,7 +20,7 @@ class CategoryShowResponse extends AbstractListingResponse
         parent::__construct($adapter, $currentPage, $maxPerPage);
     }
 
-    public function getCategory(): Category
+    public function getCategory(): TaxonomyInterface
     {
         return $this->category;
     }
@@ -36,7 +36,7 @@ class CategoryShowResponse extends AbstractListingResponse
     }
 
     /**
-     * @return Article[]
+     * @return ArticleInterface[]
      */
     public function getLastArticles(): array
     {

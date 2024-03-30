@@ -2,14 +2,14 @@
 
 namespace App\Tests\Unit\Article;
 
-use App\Domain\Article\Entity\Article;
-use App\Domain\Article\Entity\Tag;
+use App\Domain\Article\Entity\ArticleInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 
 readonly class ArticleTestDetails
 {
     public function __construct(
         private ?int $id,
-        private ?Article $article,
+        private ?array $data,
         private ?string $response,
         private ?string $exception = null,
         private ?string $exceptionMessage = null
@@ -18,23 +18,34 @@ readonly class ArticleTestDetails
 
     public static function create(int $id, array $data = [], string $exception = null, string $exceptionMessage = null): static
     {
-        $article = $response = null;
-        if ($data) {
-            $article = self::createArticle($id, $data);
-            $response = self::createResponse($id, $data);
+        $response = self::createResponse($id, $data);
+
+        return new self($id, $data, $response, $exception, $exceptionMessage);
+    }
+
+    public function generateMockArticle(ArticleInterface&MockObject $article): null|ArticleInterface|MockObject
+    {
+        if ($this->id === 0) {
+            return null;
         }
 
-        return new self($id, $article, $response, $exception, $exceptionMessage);
+        $article->method('getId')->willReturn($this->id);
+        $article->method('getTitle')->willReturn('Title-' . $this->id);
+        $article->method('getSlug')->willReturn('title-' . $this->id);
+
+        foreach ($this->data['fields'] ?? [] as $field => $value) {
+            $method = 'get' . ucfirst($field);
+            if (method_exists($article, $method)) {
+                $article->method($method)->willReturn($value);
+            }
+        }
+
+        return $article;
     }
 
     public function getId(): int
     {
         return $this->id;
-    }
-
-    public function getArticle(): ?Article
-    {
-        return $this->article;
     }
 
     public function getResponse(): ?string
@@ -52,50 +63,33 @@ readonly class ArticleTestDetails
         return $this->exceptionMessage;
     }
 
-    private static function createArticle(int $id, array $data): Article
-    {
-        $article = (new Article())
-            ->setId($id)
-            ->setTitle('Title-' . $id)
-            ->setSlug('title-' . $id)
-        ;
-
-        if (!empty($data['tags'])) {
-            $article->addTags($data['tags']);
-        }
-
-        if (!empty($data['category'])) {
-            $article->setCategory($data['category']);
-        }
-
-        foreach ($data as $key => $value) {
-            $method = 'set' . ucfirst($key);
-            if (method_exists($article, $method)) {
-                $article->$method($value);
-            }
-        }
-
-        return $article;
-    }
-
     private static function createResponse(int $id, array $data): string
     {
         $response = 'Article id: ' . $id . ', ' .
             'url: title-' . $id . ', ' .
             'title : Title-' . $id . ', ' .
-            'Content: ' . ($data['content'] ?? '') . ', ' .
-            'Created At: ' . (!empty($data['createdAt']) ? $data['createdAt']->format('d-m-Y') : '');
+            'Content: ' . ($data['fields']['content'] ?? '');
 
-        if (!empty($data['category'])) {
-            $response .= ', Category: ' . $data['category']->getTitle();
+        if (!empty($data['relations']['getCategory'])) {
+            $response .= ', Category: ' . $data['relations']['getCategory']->getFields('title');
         }
 
-        if (!empty($data['tags'])) {
-            $response .= ', Tags: ' . implode(',', array_map(function (Tag $tag) {
-                return $tag->getTitle();
+        if (!empty($data['relations']['getTags'])) {
+            $response .= ', Tags: ' . implode(',', array_map(function (array $tag) {
+                return $tag['title'];
             }, $data['tags']));
         }
 
         return $response;
+    }
+
+    public function hasRelations(): bool
+    {
+        return !empty($this->data['relations']);
+    }
+
+    public function getRelations(): array
+    {
+        return $this->data['relations'] ?? [];
     }
 }

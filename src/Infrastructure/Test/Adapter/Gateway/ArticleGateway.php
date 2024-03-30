@@ -2,16 +2,17 @@
 
 namespace App\Infrastructure\Test\Adapter\Gateway;
 
-use App\Domain\Article\Entity\Article;
-use App\Domain\Article\Entity\Tag;
+use App\Domain\Article\Entity\ArticleInterface;
 use App\Domain\Article\Gateway\ArticleGatewayInterface;
 use App\Domain\CRUD\Entity\CrudEntityInterface;
 use App\Domain\CRUD\Entity\PostedData;
+use App\Infrastructure\Doctrine\Entity\Article;
+use App\Infrastructure\Doctrine\Entity\Tag;
 use Pagerfanta\Adapter\AdapterInterface;
 
 class ArticleGateway implements ArticleGatewayInterface
 {
-    public function getPublishedById(int $id): ?Article
+    public function getPublishedById(int $id): ?ArticleInterface
     {
         if ($id > 0) {
             return (new Article())

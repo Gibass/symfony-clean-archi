@@ -2,13 +2,13 @@
 
 namespace App\Infrastructure\Adapter\Repository;
 
-use App\Domain\Article\Entity\Article;
+use App\Domain\Article\Entity\ArticleInterface;
 use App\Domain\Article\Gateway\ArticleGatewayInterface;
 use App\Domain\CRUD\Entity\CrudEntityInterface;
 use App\Domain\CRUD\Entity\PostedData;
-use App\Infrastructure\Doctrine\Entity\ArticleDoctrine;
-use App\Infrastructure\Doctrine\Entity\CategoryDoctrine;
-use App\Infrastructure\Doctrine\Entity\TagDoctrine;
+use App\Infrastructure\Doctrine\Entity\Article;
+use App\Infrastructure\Doctrine\Entity\Category;
+use App\Infrastructure\Doctrine\Entity\Tag;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\QueryBuilder;
@@ -17,31 +17,29 @@ use Pagerfanta\Adapter\AdapterInterface;
 use Pagerfanta\Doctrine\ORM\QueryAdapter;
 
 /**
- * @extends ServiceEntityRepository<ArticleDoctrine>
+ * @extends ServiceEntityRepository<Article>
  *
- * @method ArticleDoctrine|null find($id, $lockMode = null, $lockVersion = null)
- * @method ArticleDoctrine|null findOneBy(array $criteria, array $orderBy = null)
- * @method ArticleDoctrine[]    findAll()
- * @method ArticleDoctrine[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Article|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Article|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Article[]    findAll()
+ * @method Article[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class ArticleRepository extends ServiceEntityRepository implements ArticleGatewayInterface
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, ArticleDoctrine::class);
+        parent::__construct($registry, Article::class);
     }
 
-    public function getPublishedById(int $id): ?Article
+    public function getPublishedById(int $id): ?ArticleInterface
     {
-        $_article = $this->getFullArticleQuery()
+        return $this->getFullArticleQuery()
             ->andWhere('article.status = :status AND article.id = :articleId')
             ->setParameter('articleId', $id)
             ->setParameter('status', true)
             ->getQuery()
             ->getOneOrNullResult()
         ;
-
-        return $_article ? $this->convert($_article) : null;
     }
 
     public function getFullArticleQuery(): QueryBuilder
@@ -88,37 +86,11 @@ class ArticleRepository extends ServiceEntityRepository implements ArticleGatewa
 
     public function create(PostedData $data): CrudEntityInterface
     {
-        /** @var ArticleDoctrine $article */
-        $article = $data->createEntity(ArticleDoctrine::class);
+        $article = $data->createEntity(Article::class);
 
         $this->_em->persist($article);
         $this->_em->flush();
 
-        return $this->convert($article);
-    }
-
-    public function convert(ArticleDoctrine $articleDoctrine): Article
-    {
-        return (new Article())
-            ->setId($articleDoctrine->getId())
-            ->setSlug($articleDoctrine->getSlug())
-            ->setTitle($articleDoctrine->getTitle())
-            ->addTags(
-                $articleDoctrine->getTags() ? array_map(function (TagDoctrine $tag) {
-                    return $this->_em->getRepository(TagDoctrine::class)->convert($tag);
-                }, $articleDoctrine->getTags()->toArray()) : []
-            )
-            ->setDescription($articleDoctrine->getDescription())
-            ->setContent($articleDoctrine->getContent())
-            ->setCategory(
-                $articleDoctrine->getCategory() ?
-                    $this->_em->getRepository(CategoryDoctrine::class)->convert($articleDoctrine->getCategory()) :
-                    null
-            )
-            ->setStatus($articleDoctrine->isPublished())
-            ->setUpdatedAt($articleDoctrine->getUpdatedAt())
-            ->setCreatedAt($articleDoctrine->getCreatedAt())
-            ->setPublishedAt($articleDoctrine->getPublishedAt())
-        ;
+        return $article;
     }
 }

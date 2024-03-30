@@ -2,10 +2,11 @@
 
 namespace App\Infrastructure\Adapter\Repository;
 
-use App\Domain\Article\Entity\Category;
+use App\Domain\Article\Entity\CategoryInterface;
+use App\Domain\Article\Entity\TaxonomyInterface;
 use App\Domain\Category\Gateway\CategoryGatewayInterface;
-use App\Infrastructure\Doctrine\Entity\ArticleDoctrine;
-use App\Infrastructure\Doctrine\Entity\CategoryDoctrine;
+use App\Infrastructure\Doctrine\Entity\Article;
+use App\Infrastructure\Doctrine\Entity\Category;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\Persistence\ManagerRegistry;
@@ -13,30 +14,28 @@ use Pagerfanta\Adapter\AdapterInterface;
 use Pagerfanta\Doctrine\ORM\QueryAdapter;
 
 /**
- * @extends ServiceEntityRepository<CategoryDoctrine>
+ * @extends ServiceEntityRepository<Category>
  *
- * @method CategoryDoctrine|null find($id, $lockMode = null, $lockVersion = null)
- * @method CategoryDoctrine|null findOneBy(array $criteria, array $orderBy = null)
- * @method CategoryDoctrine[]    findAll()
- * @method CategoryDoctrine[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Category|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Category|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Category[]    findAll()
+ * @method Category[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class CategoryRepository extends ServiceEntityRepository implements CategoryGatewayInterface
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, CategoryDoctrine::class);
+        parent::__construct($registry, Category::class);
     }
 
-    public function getBySlug(string $slug): ?Category
+    public function getBySlug(string $slug): ?TaxonomyInterface
     {
-        $_category = $this->findOneBy(['slug' => $slug]);
-
-        return $_category ? $this->convert($_category) : null;
+        return $this->findOneBy(['slug' => $slug]);
     }
 
     public function getPaginatedAdapter(array $conditions = []): AdapterInterface
     {
-        $query = $this->_em->getRepository(ArticleDoctrine::class)->orderQuery()
+        $query = $this->_em->getRepository(Article::class)->orderQuery()
             ->andwhere('category.id = :categoryId AND article.status = :status')
             ->setParameter('categoryId', $conditions['id'] ?? null)
             ->setParameter('status', true)
@@ -58,13 +57,6 @@ class CategoryRepository extends ServiceEntityRepository implements CategoryGate
             ->setMaxResults(5)
             ->getQuery()
             ->getScalarResult()
-        ;
-    }
-
-    public function convert(CategoryDoctrine $category): Category
-    {
-        return (new Category($category->getTitle(), $category->getSlug()))
-            ->setId($category->getId())
         ;
     }
 }

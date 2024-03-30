@@ -2,6 +2,7 @@
 
 namespace App\Infrastructure\Doctrine\Entity;
 
+use App\Domain\Security\Entity\UserEntityInterface;
 use App\Infrastructure\Adapter\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
@@ -9,8 +10,7 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-#[ORM\Table(name: 'user')]
-class UserDoctrine implements UserInterface, PasswordAuthenticatedUserInterface
+class User implements UserInterface, PasswordAuthenticatedUserInterface, UserEntityInterface
 {
     use TimestampableEntity;
 
@@ -39,7 +39,7 @@ class UserDoctrine implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private bool $isVerified = false;
 
-    public function setId(int $id): static
+    public function setId(?int $id): static
     {
         $this->id = $id;
 
@@ -56,7 +56,7 @@ class UserDoctrine implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->email;
     }
 
-    public function setEmail(string $email): static
+    public function setEmail(?string $email): static
     {
         $this->email = $email;
 
@@ -68,7 +68,7 @@ class UserDoctrine implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->firstname;
     }
 
-    public function setFirstname(?string $firstname): UserDoctrine
+    public function setFirstname(?string $firstname): static
     {
         $this->firstname = $firstname;
 
@@ -80,7 +80,7 @@ class UserDoctrine implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->lastname;
     }
 
-    public function setLastname(?string $lastname): UserDoctrine
+    public function setLastname(?string $lastname): static
     {
         $this->lastname = $lastname;
 
@@ -124,7 +124,7 @@ class UserDoctrine implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->password;
     }
 
-    public function setPassword(string $password): static
+    public function setPassword(?string $password): static
     {
         $this->password = $password;
 
@@ -136,7 +136,7 @@ class UserDoctrine implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->plainPassword;
     }
 
-    public function setPlainPassword(?string $plainPassword): UserDoctrine
+    public function setPlainPassword(?string $plainPassword): static
     {
         $this->plainPassword = $plainPassword;
 
@@ -157,7 +157,7 @@ class UserDoctrine implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->isVerified;
     }
 
-    public function setIsVerified(bool $isVerified): UserDoctrine
+    public function setIsVerified(bool $isVerified): self
     {
         $this->isVerified = $isVerified;
 

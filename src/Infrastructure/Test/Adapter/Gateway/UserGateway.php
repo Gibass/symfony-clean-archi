@@ -2,15 +2,18 @@
 
 namespace App\Infrastructure\Test\Adapter\Gateway;
 
-use App\Domain\Security\Entity\User;
+use App\Domain\Security\Entity\UserEntityInterface;
 use App\Domain\Security\Gateway\UserGatewayInterface;
-use App\Infrastructure\Test\Adapter\Entity\UserTest;
+use App\Infrastructure\Doctrine\Entity\User;
 
 class UserGateway implements UserGatewayInterface
 {
-    public function register(User $user): User
+    public function register(array $data): UserEntityInterface
     {
-        return new User();
+        return (new User())
+            ->setEmail($data['email'] ?? null)
+            ->setPassword($data['password'] ?? null)
+        ;
     }
 
     public function findByEmail(string $email): ?User
@@ -20,15 +23,16 @@ class UserGateway implements UserGatewayInterface
         }
 
         if ($email === 'test@test.com') {
-            return (new UserTest())->setEmail($email)
+            return (new User())->setEmail($email)
                 ->setIsVerified(true)
+                ->setPassword('password')
             ;
         }
 
         return null;
     }
 
-    public function validate(User $user): void
+    public function validate(UserEntityInterface $user): void
     {
         $user->setIsVerified(true);
     }

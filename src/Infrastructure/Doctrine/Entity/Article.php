@@ -2,7 +2,11 @@
 
 namespace App\Infrastructure\Doctrine\Entity;
 
+use App\Domain\Article\Entity\ArticleInterface;
+use App\Domain\Article\Entity\TaxonomyInterface;
 use App\Domain\CRUD\Entity\CrudEntityInterface;
+use App\Domain\Shared\Entity\DateEntityInterface;
+use App\Domain\Shared\Entity\PublishEntityInterface;
 use App\Infrastructure\Adapter\Repository\ArticleRepository;
 use App\Infrastructure\Doctrine\Trait\EntityPublish;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -14,7 +18,7 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
 
 #[ORM\Entity(repositoryClass: ArticleRepository::class)]
 #[ORM\Table(name: 'article')]
-class ArticleDoctrine implements CrudEntityInterface
+class Article implements ArticleInterface, PublishEntityInterface, DateEntityInterface, CrudEntityInterface
 {
     use EntityPublish;
     use TimestampableEntity;
@@ -31,9 +35,6 @@ class ArticleDoctrine implements CrudEntityInterface
     #[ORM\Column(length: 100, unique: true)]
     private ?string $slug = null;
 
-    #[ORM\ManyToOne]
-    private ?MediaDoctrine $mainMedia = null;
-
     #[ORM\Column(type: Types::TEXT, length: 800, nullable: true)]
     private ?string $description = null;
 
@@ -41,12 +42,12 @@ class ArticleDoctrine implements CrudEntityInterface
     private ?string $content = null;
 
     #[ORM\ManyToOne(inversedBy: 'articles')]
-    private ?CategoryDoctrine $category = null;
+    private ?Category $category = null;
 
     #[ORM\JoinTable(name: 'articles_tags')]
     #[ORM\JoinColumn(name: 'article_id', referencedColumnName: 'id')]
     #[ORM\InverseJoinColumn(name: 'tag_id', referencedColumnName: 'id')]
-    #[ORM\ManyToMany(targetEntity: TagDoctrine::class, inversedBy: 'articles')]
+    #[ORM\ManyToMany(targetEntity: Tag::class, inversedBy: 'articles')]
     private Collection $tags;
 
     public function __construct()
@@ -59,12 +60,20 @@ class ArticleDoctrine implements CrudEntityInterface
         return $this->id;
     }
 
+    public function setId(?int $id): ArticleInterface
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
     public function getTitle(): ?string
     {
         return $this->title;
     }
 
-    public function setTitle(string $title): static
+
+    public function setTitle(?string $title): static
     {
         $this->title = $title;
 
@@ -76,21 +85,9 @@ class ArticleDoctrine implements CrudEntityInterface
         return $this->slug;
     }
 
-    public function setSlug(string $slug): static
+    public function setSlug(?string $slug): static
     {
         $this->slug = $slug;
-
-        return $this;
-    }
-
-    public function getMainMedia(): ?MediaDoctrine
-    {
-        return $this->mainMedia;
-    }
-
-    public function setMainMedia(?MediaDoctrine $mainMedia): static
-    {
-        $this->mainMedia = $mainMedia;
 
         return $this;
     }
@@ -100,7 +97,7 @@ class ArticleDoctrine implements CrudEntityInterface
         return $this->description;
     }
 
-    public function setDescription(?string $description): ArticleDoctrine
+    public function setDescription(?string $description): Article
     {
         $this->description = $description;
 
@@ -119,12 +116,12 @@ class ArticleDoctrine implements CrudEntityInterface
         return $this;
     }
 
-    public function getCategory(): ?CategoryDoctrine
+    public function getCategory(): ?Category
     {
         return $this->category;
     }
 
-    public function setCategory(?CategoryDoctrine $category): static
+    public function setCategory(?TaxonomyInterface $category): static
     {
         $this->category = $category;
 
@@ -132,14 +129,14 @@ class ArticleDoctrine implements CrudEntityInterface
     }
 
     /**
-     * @return Collection<int, TagDoctrine>
+     * @return Collection<int, Tag>
      */
     public function getTags(): Collection
     {
         return $this->tags;
     }
 
-    public function addTag(TagDoctrine $tag): static
+    public function addTag(Tag $tag): static
     {
         if (!$this->tags->contains($tag)) {
             $this->tags->add($tag);
@@ -148,7 +145,7 @@ class ArticleDoctrine implements CrudEntityInterface
         return $this;
     }
 
-    public function removeTag(TagDoctrine $tag): static
+    public function removeTag(Tag $tag): static
     {
         $this->tags->removeElement($tag);
 
@@ -158,5 +155,14 @@ class ArticleDoctrine implements CrudEntityInterface
     public function getIdentifier(): string
     {
         return 'email';
+    }
+
+    public function addTags(array $tags): ArticleInterface
+    {
+        foreach ($tags as $tag) {
+            $this->addTag($tag);
+        }
+
+        return $this;
     }
 }

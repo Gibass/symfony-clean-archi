@@ -2,8 +2,9 @@
 
 namespace Unit\Category;
 
-use App\Domain\Article\Entity\Category;
-use App\Domain\Article\Entity\Tag;
+use App\Domain\Article\Entity\CategoryInterface;
+use App\Domain\Article\Entity\TagInterface;
+use App\Domain\Article\Entity\TaxonomyInterface;
 use App\Domain\Article\Gateway\ArticleGatewayInterface;
 use App\Domain\Category\Exception\CategoryNotFoundException;
 use App\Domain\Category\Gateway\CategoryGatewayInterface;
@@ -48,10 +49,12 @@ class CategoryShowTest extends TestCase
         $adapter = $this->createMock(AdapterInterface::class);
         $adapter->method('getNbResults')->willReturn(10);
 
+        $category = $this->createMock(TaxonomyInterface::class);
+
         $this->articleGateway->method('getLastArticles')->willReturn(range(1, 3));
         $this->categoryGateway->method('getFacetCategories')->willReturn(range(1, 5));
         $this->categoryGateway->method('getPaginatedAdapter')->willReturn($adapter);
-        $this->categoryGateway->method('getBySlug')->willReturn(new Category('Men', 'men'));
+        $this->categoryGateway->method('getBySlug')->willReturn($category);
         $this->tageGateway->method('getPopularTag')->willReturn(range(1, 10));
 
         $response = $this->useCase->execute($request, $this->presenter);

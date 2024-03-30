@@ -2,9 +2,9 @@
 
 namespace App\Infrastructure\Adapter\Repository;
 
-use App\Domain\Security\Entity\User;
+use App\Domain\Security\Entity\UserEntityInterface;
 use App\Domain\Security\Gateway\UserGatewayInterface;
-use App\Infrastructure\Doctrine\Entity\UserDoctrine;
+use App\Infrastructure\Doctrine\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
@@ -12,20 +12,20 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 
 /**
- * @extends ServiceEntityRepository<UserDoctrine>
+ * @extends ServiceEntityRepository<User>
  *
- * @implements PasswordUpgraderInterface<UserDoctrine>
+ * @implements PasswordUpgraderInterface<User>
  *
- * @method UserDoctrine|null find($id, $lockMode = null, $lockVersion = null)
- * @method UserDoctrine|null findOneBy(array $criteria, array $orderBy = null)
- * @method UserDoctrine[]    findAll()
- * @method UserDoctrine[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method User|null find($id, $lockMode = null, $lockVersion = null)
+ * @method User|null findOneBy(array $criteria, array $orderBy = null)
+ * @method User[]    findAll()
+ * @method User[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class UserRepository extends ServiceEntityRepository implements PasswordUpgraderInterface, UserGatewayInterface
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, UserDoctrine::class);
+        parent::__construct($registry, User::class);
     }
 
     /**
@@ -33,7 +33,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
      */
     public function upgradePassword(PasswordAuthenticatedUserInterface $user, string $newHashedPassword): void
     {
-        if (!$user instanceof UserDoctrine) {
+        if (!$user instanceof User) {
             throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', $user::class));
         }
 
@@ -42,27 +42,25 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->getEntityManager()->flush();
     }
 
-    public function findByEmail(string $email): ?User
+    public function findByEmail(string $email): ?UserEntityInterface
     {
-        $user = $this->findOneBy(['email' => $email]);
-
-        return $user ? $this->convert($user) : null;
+        return $this->findOneBy(['email' => $email]);
     }
 
-    public function register(User $user): User
+    public function register(array $data): UserEntityInterface
     {
-        $_user = (new UserDoctrine())
-            ->setEmail($user->getEmail())
-            ->setPlainPassword($user->getPassword())
+        $user = (new User())
+            ->setEmail($data['email'] ?? null)
+            ->setPlainPassword($data['password'] ?? null)
         ;
 
-        $this->_em->persist($_user);
+        $this->_em->persist($user);
         $this->_em->flush();
 
-        return $this->convert($_user);
+        return $user;
     }
 
-    public function validate(User $user): void
+    public function validate(UserEntityInterface $user): void
     {
         $user = $this->findOneBy(['email' => $user->getEmail()]);
 
@@ -70,19 +68,5 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             $user->setIsVerified(true);
             $this->_em->flush();
         }
-    }
-
-    public function convert(UserDoctrine $userDoctrine): User
-    {
-        return (new User())
-            ->setId($userDoctrine->getId())
-            ->setFirstname($userDoctrine->getFirstname())
-            ->setLastname($userDoctrine->getLastname())
-            ->setEmail($userDoctrine->getEmail())
-            ->setPassword($userDoctrine->getPassword())
-            ->setIsVerified($userDoctrine->isVerified())
-            ->setCreatedAt($userDoctrine->getCreatedAt())
-            ->setUpdatedAt($userDoctrine->getUpdatedAt())
-        ;
     }
 }

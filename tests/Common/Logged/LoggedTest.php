@@ -3,7 +3,6 @@
 namespace App\Tests\Common\Logged;
 
 use App\Domain\Security\Gateway\UserGatewayInterface;
-use App\Infrastructure\Doctrine\Entity\UserDoctrine;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -21,15 +20,6 @@ trait LoggedTest
         $user = $gateway->findByEmail('test@test.com');
 
         if ($user) {
-            if (!$user instanceof UserInterface) {
-                $user = (new UserDoctrine())
-                    ->setId($user->getId())
-                    ->setEmail($user->getEmail())
-                    ->setIsVerified($user->isVerified())
-                    ->setPassword($user->getPassword())
-                ;
-            }
-
             $client->loginUser($user);
         }
 

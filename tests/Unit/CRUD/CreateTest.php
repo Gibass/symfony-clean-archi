@@ -2,7 +2,8 @@
 
 namespace Unit\CRUD;
 
-use App\Domain\Article\Entity\Article;
+use App\Domain\Article\Entity\ArticleInterface;
+use App\Domain\CRUD\Entity\CrudEntityInterface;
 use App\Domain\CRUD\Gateway\CrudGatewayInterface;
 use App\Domain\CRUD\Request\CreateRequest;
 use App\Domain\CRUD\Response\CreateResponse;
@@ -28,7 +29,8 @@ class CreateTest extends TestCase
     {
         $request = new CreateRequest(['id' => 1]);
 
-        $article = (new Article())->setId(1);
+        $article = $this->createMock(CrudEntityInterface::class);
+        $article->method('getIdentifier')->willReturn(1);
         $this->gateway->method('create')->willReturn($article);
 
         $response = $this->useCase->execute($request, $this->gateway, $this->validator);

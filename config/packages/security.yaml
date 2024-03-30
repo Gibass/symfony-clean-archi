@@ -6,9 +6,7 @@ security:
     providers:
         # used to reload user from session & other features (e.g. switch_user)
         app_user_provider:
-            entity:
-                class: App\Infrastructure\Doctrine\Entity\UserDoctrine
-                property: email
+            id: App\Infrastructure\Provider\UserProvider
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
@@ -50,9 +48,3 @@ when@test:
                 cost: 4 # Lowest possible value for bcrypt
                 time_cost: 3 # Lowest possible value for argon
                 memory_cost: 10 # Lowest possible value for argon
-
-when@integration:
-    security:
-        providers:
-            custom:
-                id: App\Infrastructure\Test\Adapter\Provider\UserProvider

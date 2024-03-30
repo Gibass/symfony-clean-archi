@@ -2,9 +2,9 @@
 
 namespace App\Infrastructure\Doctrine\DataFixtures;
 
-use App\Infrastructure\Doctrine\Factory\ArticleDoctrineFactory;
-use App\Infrastructure\Doctrine\Factory\CategoryDoctrineFactory;
-use App\Infrastructure\Doctrine\Factory\TagDoctrineFactory;
+use App\Infrastructure\Doctrine\Factory\ArticleFactory;
+use App\Infrastructure\Doctrine\Factory\CategoryFactory;
+use App\Infrastructure\Doctrine\Factory\TagFactory;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\Persistence\ObjectManager;
@@ -19,13 +19,13 @@ class ArticleTestFixtures extends Fixture implements FixtureGroupInterface
     public function load(ObjectManager $manager): void
     {
         // Tag
-        $photo = TagDoctrineFactory::createOne(['title' => 'Photo']);
-        $image = TagDoctrineFactory::createOne(['title' => 'Image']);
+        $photo = TagFactory::createOne(['title' => 'Photo']);
+        $image = TagFactory::createOne(['title' => 'Image']);
 
         // Category
-        $men = CategoryDoctrineFactory::createOne(['title' => 'Men']);
+        $men = CategoryFactory::createOne(['title' => 'Men']);
 
-        ArticleDoctrineFactory::new([
+        ArticleFactory::new([
             'title' => 'Custom Title',
             'content' => 'This is the article content',
             'category' => $men,
@@ -36,7 +36,7 @@ class ArticleTestFixtures extends Fixture implements FixtureGroupInterface
             'createdAt' => \DateTime::createFromFormat('Y-m-d H:i:s', '2023-05-15 01:00:00'),
         ])->published()->create();
 
-        ArticleDoctrineFactory::new()
+        ArticleFactory::new()
             ->published()
             ->sequence(function () use ($photo, $men) {
                 $date = new \DateTimeImmutable('2023-05-15 01:00:00');
@@ -51,7 +51,7 @@ class ArticleTestFixtures extends Fixture implements FixtureGroupInterface
             ->create()
         ;
 
-        ArticleDoctrineFactory::new()
+        ArticleFactory::new()
             ->published()
             ->noCategory()
             ->sequence(function () use ($image) {
@@ -66,13 +66,15 @@ class ArticleTestFixtures extends Fixture implements FixtureGroupInterface
             ->create()
         ;
 
+        $date = \DateTime::createFromFormat('Y-m-d H:i:s', '2024-03-20 01:00:00');
+
         // Unpublished
-        ArticleDoctrineFactory::new(['tags' => [$image]])->unpublished()->create();
-        ArticleDoctrineFactory::new(['tags' => [$photo], 'category' => $men])->unpublished()->create();
-        ArticleDoctrineFactory::new('unpublished', 'noTaxonomy')->create();
+        ArticleFactory::new(['tags' => [$image], 'createdAt' => $date->modify('+1 hour')])->unpublished()->create();
+        ArticleFactory::new(['tags' => [$photo], 'category' => $men, 'createdAt' => $date->modify('+1 hour')])->unpublished()->create();
+        ArticleFactory::new(['createdAt' => $date->modify('+1 hour')])->unpublished()->noTaxonomy()->create();
 
         // Stock
-        ArticleDoctrineFactory::new()
+        ArticleFactory::new()
             ->published()
             ->noTaxonomy()
             ->sequence(function () {

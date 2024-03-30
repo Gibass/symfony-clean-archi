@@ -2,14 +2,15 @@
 
 namespace App\Infrastructure\Test\Adapter\Gateway;
 
-use App\Domain\Article\Entity\Article;
-use App\Domain\Article\Entity\Category;
+use App\Domain\Article\Entity\TaxonomyInterface;
 use App\Domain\Category\Gateway\CategoryGatewayInterface;
+use App\Infrastructure\Doctrine\Entity\Article;
+use App\Infrastructure\Doctrine\Entity\Category;
 use Pagerfanta\Adapter\AdapterInterface;
 
 class CategoryGateway implements CategoryGatewayInterface
 {
-    public function getBySlug(string $slug): ?Category
+    public function getBySlug(string $slug): ?TaxonomyInterface
     {
         if ($slug === 'no-category') {
             return null;

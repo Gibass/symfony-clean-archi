@@ -2,7 +2,7 @@
 
 namespace App\Tests\Unit\Security;
 
-use App\Domain\Security\Entity\User;
+use App\Domain\Security\Entity\UserEntityInterface;
 use App\Domain\Security\Exception\EmailNotFoundException;
 use App\Domain\Security\Exception\ExpiredTokenException;
 use App\Domain\Security\Exception\InvalidTokenException;
@@ -41,7 +41,8 @@ class UserVerifyTest extends TestCase
     {
         $request = new UserVerifyRequest('test-token');
 
-        $this->userGateway->method('findByEmail')->willReturn(new User());
+        $user = $this->createMock(UserEntityInterface::class);
+        $this->userGateway->method('findByEmail')->willReturn($user);
 
         $response = $this->useCase->execute($request, $this->presenter);
         $this->assertInstanceOf(UserVerifyResponse::class, $response);
