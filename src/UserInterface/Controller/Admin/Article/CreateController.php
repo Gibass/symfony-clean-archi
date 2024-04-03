@@ -22,7 +22,7 @@ class CreateController extends AbstractController
     #[Route('/admin/create/article', name: 'admin_create_article')]
     public function createArticle(Request $request, Create $create, ArticleGatewayInterface $gateway, ArticleValidator $validator): Response
     {
-        $article = new ArticleDTO();
+        $article = (new ArticleDTO())->setOwner($this->getUser());
         $form = $this->createForm(ArticleType::class, $article);
 
         $form->handleRequest($request);

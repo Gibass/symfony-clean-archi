@@ -8,6 +8,7 @@ use App\Domain\CRUD\Entity\CrudEntityInterface;
 use App\Domain\CRUD\Entity\PostedData;
 use App\Infrastructure\Doctrine\Entity\Article;
 use App\Infrastructure\Doctrine\Entity\Tag;
+use App\Infrastructure\Doctrine\Entity\User;
 use Pagerfanta\Adapter\AdapterInterface;
 
 class ArticleGateway implements ArticleGatewayInterface
@@ -21,12 +22,18 @@ class ArticleGateway implements ArticleGatewayInterface
                 ->setSlug('custom-article')
                 ->setContent('Custom Content')
                 ->addTags([new Tag('Photo', 'photo'), new Tag('Image', 'image')])
+                ->setOwner((new User())->setFirstname('Jean')->setLastname('Doe'))
                 ->setCreatedAt(\DateTime::createFromFormat('d/m/Y', '15/05/2023'))
                 ->setPublishedAt(\DateTimeImmutable::createFromFormat('d/m/Y', '15/05/2023'))
             ;
         }
 
         return null;
+    }
+
+    public function getById(int $id): ?ArticleInterface
+    {
+        return $this->getPublishedById($id);
     }
 
     public function getLastArticles(): array
@@ -46,7 +53,9 @@ class ArticleGateway implements ArticleGatewayInterface
             public function __construct()
             {
                 foreach (range(1, 25) as $i) {
-                    $this->articles[] = (new Article())->setId($i);
+                    $this->articles[] = (new Article())->setId($i)
+                        ->setOwner((new User())->setFirstname('John')->setLastname('Place'))
+                    ;
                 }
             }
 
@@ -70,6 +79,17 @@ class ArticleGateway implements ArticleGatewayInterface
             ->setDescription($data->get('description'))
             ->setContent($data->get('content'))
             ->setStatus($data->get('status'))
+            ->setOwner($data->get('owner'))
         ;
+    }
+
+    public function update(PostedData $data): CrudEntityInterface
+    {
+        return $data->createEntity(Article::class);
+    }
+
+    public function delete(CrudEntityInterface $entity): bool
+    {
+        // TODO: Implement delete() method.
     }
 }

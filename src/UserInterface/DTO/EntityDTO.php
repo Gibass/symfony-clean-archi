@@ -15,4 +15,20 @@ abstract class EntityDTO
 
         return $data;
     }
+
+    public static function create(object $entity): static
+    {
+        $reflect = new \ReflectionClass(static::class);
+        $instance = $reflect->newInstance();
+
+        foreach ($reflect->getProperties() as $property) {
+            $setter = 'set' . ucfirst($property->getName());
+            $getter = 'get' . ucfirst($property->getName());
+            if ($reflect->hasMethod($setter) && method_exists($entity, $getter)) {
+                $instance->{$setter}($entity->{$getter}());
+            }
+        }
+
+        return $instance;
+    }
 }

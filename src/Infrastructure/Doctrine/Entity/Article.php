@@ -5,6 +5,7 @@ namespace App\Infrastructure\Doctrine\Entity;
 use App\Domain\Article\Entity\ArticleInterface;
 use App\Domain\Article\Entity\TaxonomyInterface;
 use App\Domain\CRUD\Entity\CrudEntityInterface;
+use App\Domain\Security\Entity\UserEntityInterface;
 use App\Domain\Shared\Entity\DateEntityInterface;
 use App\Domain\Shared\Entity\PublishEntityInterface;
 use App\Infrastructure\Adapter\Repository\ArticleRepository;
@@ -50,6 +51,9 @@ class Article implements ArticleInterface, PublishEntityInterface, DateEntityInt
     #[ORM\ManyToMany(targetEntity: Tag::class, inversedBy: 'articles')]
     private Collection $tags;
 
+    #[ORM\ManyToOne(inversedBy: 'articles')]
+    private ?User $owner = null;
+
     public function __construct()
     {
         $this->tags = new ArrayCollection();
@@ -71,7 +75,6 @@ class Article implements ArticleInterface, PublishEntityInterface, DateEntityInt
     {
         return $this->title;
     }
-
 
     public function setTitle(?string $title): static
     {
@@ -162,6 +165,18 @@ class Article implements ArticleInterface, PublishEntityInterface, DateEntityInt
         foreach ($tags as $tag) {
             $this->addTag($tag);
         }
+
+        return $this;
+    }
+
+    public function getOwner(): ?UserEntityInterface
+    {
+        return $this->owner;
+    }
+
+    public function setOwner(?UserEntityInterface $user): static
+    {
+        $this->owner = $user;
 
         return $this;
     }

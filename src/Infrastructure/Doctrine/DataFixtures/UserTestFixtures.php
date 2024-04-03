@@ -26,6 +26,17 @@ class UserTestFixtures extends Fixture implements FixtureGroupInterface
             'plainPassword' => 'password',
             'isVerified' => false,
         ]);
+
+        UserFactory::new()
+            ->sequence(function () {
+                foreach (range(1, 5) as $i) {
+                    yield [
+                        'email' => "test+{$i}test.com",
+                    ];
+                }
+            })
+            ->create()
+        ;
     }
 
     public static function getGroups(): array

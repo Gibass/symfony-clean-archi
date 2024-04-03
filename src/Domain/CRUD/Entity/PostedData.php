@@ -29,4 +29,16 @@ readonly class PostedData
 
         return $entity;
     }
+
+    public function updateEntity(CrudEntityInterface $entity): CrudEntityInterface
+    {
+        foreach ($this->data as $key => $value) {
+            $setter = 'set' . ucfirst($key);
+            if (method_exists($entity, $setter)) {
+                $entity->{$setter}($value);
+            }
+        }
+
+        return $entity;
+    }
 }

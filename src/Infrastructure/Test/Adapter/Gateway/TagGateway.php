@@ -2,11 +2,12 @@
 
 namespace App\Infrastructure\Test\Adapter\Gateway;
 
-use App\Domain\Article\Entity\ArticleInterface;
 use App\Domain\Article\Entity\TaxonomyInterface;
 use App\Domain\Tag\Gateway\TagGatewayInterface;
 use App\Infrastructure\Doctrine\Entity\Article;
 use App\Infrastructure\Doctrine\Entity\Tag;
+use App\Infrastructure\Doctrine\Entity\User;
+use App\Infrastructure\Doctrine\Factory\TagFactory;
 use Pagerfanta\Adapter\AdapterInterface;
 
 class TagGateway implements TagGatewayInterface
@@ -51,7 +52,10 @@ class TagGateway implements TagGatewayInterface
         $slug = self::SLUGS[$conditions['id']] ?? 'Null';
 
         foreach ($range as $i) {
-            $articles[$i] = (new Article())->setId($i)->addTags([new Tag($slug, $slug)]);
+            $articles[$i] = (new Article())
+                ->setOwner((new User())->setFirstname('Low')->setLastname('Cost'))
+            ->setId($i)->addTags([new Tag($slug, $slug)])
+            ;
         }
 
         return new class($articles) implements AdapterInterface {

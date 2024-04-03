@@ -12,21 +12,21 @@ use Zenstruck\Foundry\RepositoryProxy;
 /**
  * @extends ModelFactory<Article>
  *
- * @method        Article|Proxy             create(array|callable $attributes = [])
- * @method static Article|Proxy             createOne(array $attributes = [])
- * @method static Article|Proxy             find(object|array|mixed $criteria)
- * @method static Article|Proxy             findOrCreate(array $attributes)
- * @method static Article|Proxy             first(string $sortedField = 'id')
- * @method static Article|Proxy             last(string $sortedField = 'id')
- * @method static Article|Proxy             random(array $attributes = [])
- * @method static Article|Proxy             randomOrCreate(array $attributes = [])
+ * @method        Article|Proxy                     create(array|callable $attributes = [])
+ * @method static Article|Proxy                     createOne(array $attributes = [])
+ * @method static Article|Proxy                     find(object|array|mixed $criteria)
+ * @method static Article|Proxy                     findOrCreate(array $attributes)
+ * @method static Article|Proxy                     first(string $sortedField = 'id')
+ * @method static Article|Proxy                     last(string $sortedField = 'id')
+ * @method static Article|Proxy                     random(array $attributes = [])
+ * @method static Article|Proxy                     randomOrCreate(array $attributes = [])
  * @method static ArticleRepository|RepositoryProxy repository()
- * @method static Article[]|Proxy[]         all()
- * @method static Article[]|Proxy[]         createMany(int $number, array|callable $attributes = [])
- * @method static Article[]|Proxy[]         createSequence(iterable|callable $sequence)
- * @method static Article[]|Proxy[]         findBy(array $attributes)
- * @method static Article[]|Proxy[]         randomRange(int $min, int $max, array $attributes = [])
- * @method static Article[]|Proxy[]         randomSet(int $number, array $attributes = [])
+ * @method static Article[]|Proxy[]                 all()
+ * @method static Article[]|Proxy[]                 createMany(int $number, array|callable $attributes = [])
+ * @method static Article[]|Proxy[]                 createSequence(iterable|callable $sequence)
+ * @method static Article[]|Proxy[]                 findBy(array $attributes)
+ * @method static Article[]|Proxy[]                 randomRange(int $min, int $max, array $attributes = [])
+ * @method static Article[]|Proxy[]                 randomSet(int $number, array $attributes = [])
  */
 final class ArticleFactory extends ModelFactory
 {
@@ -75,6 +75,7 @@ final class ArticleFactory extends ModelFactory
             'category' => LazyValue::new(fn () => CategoryFactory::random()),
             'tags' => LazyValue::new(fn () => TagFactory::randomRange(0, 5)),
             'createdAt' => self::faker()->dateTimeBetween('-1 year'),
+            'owner' => LazyValue::new(fn () => UserFactory::random()),
         ];
     }
 

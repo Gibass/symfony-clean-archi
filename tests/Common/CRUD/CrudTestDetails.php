@@ -4,7 +4,10 @@ namespace App\Tests\Common\CRUD;
 
 abstract class CrudTestDetails
 {
-    public function __construct(private readonly string $url, private readonly array $values = [], private $assert = [])
+    public function __construct(
+        private readonly string $url,
+        private readonly array $values = [],
+        private readonly array $assert = [])
     {
     }
 
@@ -31,5 +34,15 @@ abstract class CrudTestDetails
     public function getVerifyCount(): string
     {
         return $this->assert['verifyCount'] ?? '';
+    }
+
+    public function getVerifyElement(): string
+    {
+        return $this->assert['verifyElement'] ?? '';
+    }
+
+    public function getDefaultValues(): array
+    {
+        return $this->assert['defaultValues'] ?? [];
     }
 }

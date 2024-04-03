@@ -6,6 +6,7 @@ use App\Domain\Article\Entity\TaxonomyInterface;
 use App\Domain\Category\Gateway\CategoryGatewayInterface;
 use App\Infrastructure\Doctrine\Entity\Article;
 use App\Infrastructure\Doctrine\Entity\Category;
+use App\Infrastructure\Doctrine\Entity\User;
 use Pagerfanta\Adapter\AdapterInterface;
 
 class CategoryGateway implements CategoryGatewayInterface
@@ -40,7 +41,10 @@ class CategoryGateway implements CategoryGatewayInterface
         };
 
         foreach ($range as $i) {
-            $articles[$i] = (new Article())->setId($i)->setCategory(new Category('men', 'men'));
+            $articles[$i] = (new Article())
+                ->setOwner((new User())->setFirstname('Low')->setLastname('Cost'))
+            ->setId($i)->setCategory(new Category('men', 'men'))
+            ;
         }
 
         return new class($articles) implements AdapterInterface {

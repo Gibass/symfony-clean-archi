@@ -42,7 +42,7 @@ class CreateTest extends IntegrationTestCase
     /**
      * @dataProvider dataProviderCreateFailed
      */
-    public function testCreatFailed(CrudTestDetails $details): void
+    public function testCreateFailed(CrudTestDetails $details): void
     {
         $client = $this->createClient();
 

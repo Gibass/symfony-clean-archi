@@ -2,7 +2,6 @@
 
 namespace App\Domain\Tag\Gateway;
 
-use App\Domain\Article\Entity\TagInterface;
 use App\Domain\Article\Entity\TaxonomyInterface;
 use App\Domain\Shared\Listing\Gateway\ListingGatewayInterface;
 

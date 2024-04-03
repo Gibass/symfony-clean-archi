@@ -4,6 +4,7 @@ namespace App\Infrastructure\Doctrine\Entity;
 
 use App\Domain\Security\Entity\UserEntityInterface;
 use App\Infrastructure\Adapter\Repository\UserRepository;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -38,6 +39,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, UserEnt
 
     #[ORM\Column]
     private bool $isVerified = false;
+
+    #[ORM\OneToMany(mappedBy: 'owner', targetEntity: Article::class)]
+    private Collection $articles;
 
     public function setId(?int $id): static
     {

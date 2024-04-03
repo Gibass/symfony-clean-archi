@@ -7,8 +7,6 @@ use App\Domain\Article\Gateway\ArticleGatewayInterface;
 use App\Domain\CRUD\Entity\CrudEntityInterface;
 use App\Domain\CRUD\Entity\PostedData;
 use App\Infrastructure\Doctrine\Entity\Article;
-use App\Infrastructure\Doctrine\Entity\Category;
-use App\Infrastructure\Doctrine\Entity\Tag;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\QueryBuilder;
@@ -42,13 +40,20 @@ class ArticleRepository extends ServiceEntityRepository implements ArticleGatewa
         ;
     }
 
+    public function getById(int $id): ?ArticleInterface
+    {
+        return $this->findOneBy(['id' => $id]);
+    }
+
     public function getFullArticleQuery(): QueryBuilder
     {
         return $this->createQueryBuilder('article')
             ->addSelect('tags')
             ->addSelect('category')
+            ->addSelect('owner')
             ->leftJoin('article.tags', 'tags')
             ->leftJoin('article.category', 'category')
+            ->leftJoin('article.owner', 'owner')
         ;
     }
 
@@ -92,5 +97,21 @@ class ArticleRepository extends ServiceEntityRepository implements ArticleGatewa
         $this->_em->flush();
 
         return $article;
+    }
+
+    public function update(PostedData $data): CrudEntityInterface
+    {
+        $article = $this->findOneBy(['id' => $data->get('id')]);
+
+        $article = $data->updateEntity($article);
+
+        $this->_em->flush();
+
+        return $article;
+    }
+
+    public function delete(CrudEntityInterface $entity): bool
+    {
+        // TODO: Implement delete() method.
     }
 }

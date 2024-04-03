@@ -2,9 +2,7 @@
 
 namespace App\Domain\Article\Entity;
 
-use App\Domain\CRUD\Entity\CrudEntityInterface;
-use App\Domain\Shared\Entity\DateEntityInterface;
-use App\Domain\Shared\Entity\PublishEntityInterface;
+use App\Domain\Security\Entity\UserEntityInterface;
 
 interface ArticleInterface
 {
@@ -41,4 +39,8 @@ interface ArticleInterface
      * @param TaxonomyInterface[] $tags
      */
     public function addTags(array $tags): ArticleInterface;
+
+    public function getOwner(): ?UserEntityInterface;
+
+    public function setOwner(?UserEntityInterface $user): static;
 }

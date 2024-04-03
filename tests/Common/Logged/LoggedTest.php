@@ -10,6 +10,18 @@ trait LoggedTest
 {
     protected ?UserInterface $user;
 
+    public function switchUser(KernelBrowser $client, string $email): void
+    {
+        /** @var UserGatewayInterface $gateway */
+        $gateway = $client->getContainer()->get(UserGatewayInterface::class);
+
+        $user = $gateway->findByEmail($email);
+
+        if ($user) {
+            $client->loginUser($user);
+        }
+    }
+
     protected static function createClient(array $options = [], array $server = []): KernelBrowser
     {
         $client = parent::createClient($options, $server);
@@ -24,17 +36,5 @@ trait LoggedTest
         }
 
         return $client;
-    }
-
-    public function switchUser(KernelBrowser $client, string $email): void
-    {
-        /** @var UserGatewayInterface $gateway */
-        $gateway = $client->getContainer()->get(UserGatewayInterface::class);
-
-        $user = $gateway->findByEmail($email);
-
-        if ($user) {
-            $client->loginUser($user);
-        }
     }
 }

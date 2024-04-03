@@ -2,7 +2,6 @@
 
 namespace App\Infrastructure\Adapter\Repository;
 
-use App\Domain\Article\Entity\CategoryInterface;
 use App\Domain\Article\Entity\TaxonomyInterface;
 use App\Domain\Category\Gateway\CategoryGatewayInterface;
 use App\Infrastructure\Doctrine\Entity\Article;

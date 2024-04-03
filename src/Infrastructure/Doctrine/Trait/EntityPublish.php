@@ -18,6 +18,11 @@ trait EntityPublish
         return $this->status;
     }
 
+    public function getStatus(): bool
+    {
+        return $this->status;
+    }
+
     public function setStatus(bool $status): PublishEntityInterface
     {
         $this->status = $status;

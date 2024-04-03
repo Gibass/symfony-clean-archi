@@ -2,12 +2,28 @@
 
 namespace App\UserInterface\DTO;
 
+use App\Domain\Security\Entity\UserEntityInterface;
+
 class ArticleDTO extends EntityDTO
 {
+    private ?int $id = null;
     private ?string $title = null;
     private ?string $description = null;
     private ?string $content = null;
     private bool $status = false;
+    private ?UserEntityInterface $owner = null;
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function setId(?int $id): ArticleDTO
+    {
+        $this->id = $id;
+
+        return $this;
+    }
 
     public function getTitle(): ?string
     {
@@ -53,6 +69,18 @@ class ArticleDTO extends EntityDTO
     public function setStatus(bool $status): ArticleDTO
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    public function getOwner(): ?UserEntityInterface
+    {
+        return $this->owner;
+    }
+
+    public function setOwner(?UserEntityInterface $owner): ArticleDTO
+    {
+        $this->owner = $owner;
 
         return $this;
     }
