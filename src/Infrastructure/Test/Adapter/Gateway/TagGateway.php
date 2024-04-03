@@ -7,7 +7,6 @@ use App\Domain\Tag\Gateway\TagGatewayInterface;
 use App\Infrastructure\Doctrine\Entity\Article;
 use App\Infrastructure\Doctrine\Entity\Tag;
 use App\Infrastructure\Doctrine\Entity\User;
-use App\Infrastructure\Doctrine\Factory\TagFactory;
 use Pagerfanta\Adapter\AdapterInterface;
 
 class TagGateway implements TagGatewayInterface

@@ -82,4 +82,46 @@ class ArticleTestDetails extends CrudTestDetails
             '/admin/edit/article/0',
         )];
     }
+
+    public static function dataTestDeleteArticleSuccess(): \Generator
+    {
+        yield 'test_delete_article_success' => [new self(
+            '/admin/delete/article/1',
+            [],
+            [
+                'success' => 'The article have been deleted successfully',
+                'verifyCount' => '1 - 50 sur ' . (ArticleTestFixtures::NB_TOTAL - 1),
+            ],
+        )];
+    }
+
+    public static function dataTestDeleteArticleFailed(): \Generator
+    {
+        yield 'test_delete_article_failed' => [new self(
+            '/admin/delete/article/10',
+            [],
+            [
+                'error' => 'An error was occurred during deleting article',
+            ],
+        )];
+
+        yield 'test_delete_article_not_found' => [new self(
+            '/admin/delete/article/0',
+            [],
+            [
+                'error' => 'The article with id 0 doesn\'t exist',
+            ],
+        )];
+    }
+
+    public static function dataTestDeleteArticleNotFound(): \Generator
+    {
+        yield 'test_delete_article_not_found' => [new self(
+            '/admin/delete/article/0',
+            [],
+            [
+                'error' => 'The article with id 0 doesn\'t exist',
+            ],
+        )];
+    }
 }

@@ -47,7 +47,7 @@ final class TagFactory extends ModelFactory
     protected function getDefaults(): array
     {
         return [
-            //'title' => ucwords(self::faker()->words(self::faker()->numberBetween(1, 2), true)),
+            // 'title' => ucwords(self::faker()->words(self::faker()->numberBetween(1, 2), true)),
         ];
     }
 

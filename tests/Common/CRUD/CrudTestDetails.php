@@ -45,4 +45,9 @@ abstract class CrudTestDetails
     {
         return $this->assert['defaultValues'] ?? [];
     }
+
+    public function getResponseCode(): int
+    {
+        return $this->assert['responseCode'] ?? 0;
+    }
 }

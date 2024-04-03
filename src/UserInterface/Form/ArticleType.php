@@ -24,6 +24,7 @@ class ArticleType extends AbstractType
             ])
             ->add('status', CheckboxType::class, [
                 'label' => 'Publish',
+                'required' => false,
             ])
         ;
     }

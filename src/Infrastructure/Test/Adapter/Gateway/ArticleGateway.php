@@ -13,6 +13,11 @@ use Pagerfanta\Adapter\AdapterInterface;
 
 class ArticleGateway implements ArticleGatewayInterface
 {
+    public function getByIdentifier(int|string $identifier): ?CrudEntityInterface
+    {
+        return $this->getById($identifier);
+    }
+
     public function getPublishedById(int $id): ?ArticleInterface
     {
         if ($id > 0) {
@@ -90,6 +95,10 @@ class ArticleGateway implements ArticleGatewayInterface
 
     public function delete(CrudEntityInterface $entity): bool
     {
-        // TODO: Implement delete() method.
+        if ($entity->getId() === 10) {
+            return false;
+        }
+
+        return true;
     }
 }

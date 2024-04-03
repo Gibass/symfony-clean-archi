@@ -29,6 +29,11 @@ class ArticleRepository extends ServiceEntityRepository implements ArticleGatewa
         parent::__construct($registry, Article::class);
     }
 
+    public function getByIdentifier(int|string $identifier): ?CrudEntityInterface
+    {
+        return $this->getById($identifier);
+    }
+
     public function getPublishedById(int $id): ?ArticleInterface
     {
         return $this->getFullArticleQuery()
@@ -112,6 +117,10 @@ class ArticleRepository extends ServiceEntityRepository implements ArticleGatewa
 
     public function delete(CrudEntityInterface $entity): bool
     {
-        // TODO: Implement delete() method.
+        $this->_em->remove($entity);
+
+        $this->_em->flush();
+
+        return true;
     }
 }

@@ -59,7 +59,7 @@
                                         <td class="border-bottom-0">
                                             <ul class="d-flex mb-0 justify-content-between">
                                                 <li class="ms-1"><a href="{{ path('admin_edit_article', {id: article.id}) }}" class="btn btn-primary" title="Edit"><i class="ti ti-edit"></i></a></li>
-                                                <li class="ms-1"><a href="#" class="btn btn-danger" title="Delete"><i class="ti ti-trash"></i></a></li>
+                                                <li class="ms-1"><a href="{{ path('admin_delete_article', {id: article.id}) }}" class="btn btn-danger" title="Delete"><i class="ti ti-trash"></i></a></li>
                                                 {% if article.isPublished %}
                                                     <li class="ms-1"><a href="{{ path('article_show', {id: article.id}) }}" class="btn btn-dark" title="View"><i class="ti ti-eye"></i></a></li>
                                                 {% else %}
