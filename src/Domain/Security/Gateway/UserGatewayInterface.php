@@ -2,13 +2,14 @@
 
 namespace App\Domain\Security\Gateway;
 
-use App\Domain\Security\Entity\User;
+use App\Domain\CRUD\Gateway\CrudGatewayInterface;
+use App\Domain\Security\Entity\UserEntityInterface;
 
-interface UserGatewayInterface
+interface UserGatewayInterface extends CrudGatewayInterface
 {
-    public function register(User $user): User;
+    public function register(array $data): UserEntityInterface;
 
-    public function findByEmail(string $email): ?User;
+    public function findByEmail(string $email): ?UserEntityInterface;
 
-    public function validate(User $user): void;
+    public function validate(UserEntityInterface $user): void;
 }

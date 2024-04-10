@@ -20,7 +20,7 @@ readonly class UserVerify
     public function execute(UserVerifyRequest $request, UserVerifyPresenterInterface $presenter)
     {
         $token = $request->getToken();
-        $response = new UserVerifyResponse($token);
+        $response = new UserVerifyResponse();
 
         try {
             $payload = $this->tokenHelper->verifyToken($token);

@@ -2,15 +2,15 @@
 
 namespace App\Domain\Security\Response;
 
-use App\Domain\Security\Entity\User;
+use App\Domain\Security\Entity\UserEntityInterface;
 
 readonly class UserSendValidateResponse
 {
-    public function __construct(private User $user, private string $token)
+    public function __construct(private UserEntityInterface $user, private string $token)
     {
     }
 
-    public function getUser(): User
+    public function getUser(): UserEntityInterface
     {
         return $this->user;
     }

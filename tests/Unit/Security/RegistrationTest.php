@@ -2,7 +2,7 @@
 
 namespace Unit\Security;
 
-use App\Domain\Security\Entity\User;
+use App\Domain\Security\Entity\UserEntityInterface;
 use App\Domain\Security\Exception\EmailAlreadyExistException;
 use App\Domain\Security\Gateway\UserGatewayInterface;
 use App\Domain\Security\Request\RegistrationRequest;
@@ -31,6 +31,10 @@ class RegistrationTest extends TestCase
     {
         $request = new RegistrationRequest('test@mail.com', 'password', 'password');
 
+        $user = $this->createMock(UserEntityInterface::class);
+        $user->method('getEmail')->willReturn('test@mail.com');
+        $this->gateway->method('register')->willReturn($user);
+
         $response = $this->useCase->execute($request);
 
         $this->assertInstanceOf(RegistrationResponse::class, $response);
@@ -41,7 +45,8 @@ class RegistrationTest extends TestCase
     {
         $request = new RegistrationRequest('used@mail.com', 'password', 'password');
 
-        $this->gateway->method('findByEmail')->willReturn(new User());
+        $user = $this->createMock(UserEntityInterface::class);
+        $this->gateway->method('findByEmail')->willReturn($user);
 
         $this->expectException(EmailAlreadyExistException::class);
         $this->useCase->execute($request);

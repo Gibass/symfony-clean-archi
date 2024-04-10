@@ -22,4 +22,17 @@ return [
         'path' => './assets/admin/js/admin.js',
         'entrypoint' => true,
     ],
+    'admin-form' => [
+        'path' => './assets/admin/js/admin-form.js',
+        'entrypoint' => true,
+    ],
+    '@hotwired/stimulus' => [
+        'version' => '3.2.2',
+    ],
+    'tom-select' => [
+        'version' => '2.3.1',
+    ],
+    '@tarekraafat/autocomplete.js' => [
+        'version' => '10.2.7',
+    ],
 ];

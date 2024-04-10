@@ -2,9 +2,9 @@
 
 namespace App\Infrastructure\Doctrine\DataFixtures;
 
-use App\Infrastructure\Doctrine\Factory\ArticleDoctrineFactory;
-use App\Infrastructure\Doctrine\Factory\CategoryDoctrineFactory;
-use App\Infrastructure\Doctrine\Factory\TagDoctrineFactory;
+use App\Infrastructure\Doctrine\Factory\ArticleFactory;
+use App\Infrastructure\Doctrine\Factory\CategoryFactory;
+use App\Infrastructure\Doctrine\Factory\TagFactory;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
@@ -14,9 +14,9 @@ class ArticleFixtures extends Fixture implements FixtureGroupInterface, Dependen
 {
     public function load(ObjectManager $manager): void
     {
-        TagDoctrineFactory::createMany(20);
-        CategoryDoctrineFactory::createMany(5);
-        ArticleDoctrineFactory::createMany(100);
+        TagFactory::createMany(20);
+        CategoryFactory::createMany(5);
+        ArticleFactory::createMany(100);
     }
 
     public static function getGroups(): array

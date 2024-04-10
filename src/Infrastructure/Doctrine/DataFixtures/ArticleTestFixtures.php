@@ -2,28 +2,39 @@
 
 namespace App\Infrastructure\Doctrine\DataFixtures;
 
-use App\Infrastructure\Doctrine\Factory\ArticleDoctrineFactory;
-use App\Infrastructure\Doctrine\Factory\CategoryDoctrineFactory;
-use App\Infrastructure\Doctrine\Factory\TagDoctrineFactory;
+use App\Infrastructure\Adapter\Repository\UserRepository;
+use App\Infrastructure\Doctrine\Factory\ArticleFactory;
+use App\Infrastructure\Doctrine\Factory\CategoryFactory;
+use App\Infrastructure\Doctrine\Factory\TagFactory;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 
-class ArticleTestFixtures extends Fixture implements FixtureGroupInterface
+class ArticleTestFixtures extends Fixture implements FixtureGroupInterface, DependentFixtureInterface
 {
+    public const NB_TOTAL = 63;
+
+    public function __construct(private UserRepository $repository)
+    {
+    }
+
     /**
      * @throws \Exception
      */
     public function load(ObjectManager $manager): void
     {
         // Tag
-        $photo = TagDoctrineFactory::createOne(['title' => 'Photo']);
-        $image = TagDoctrineFactory::createOne(['title' => 'Image']);
+        $photo = TagFactory::createOne(['title' => 'Photo']);
+        $image = TagFactory::createOne(['title' => 'Image']);
 
         // Category
-        $men = CategoryDoctrineFactory::createOne(['title' => 'Men']);
+        $men = CategoryFactory::createOne(['title' => 'Men']);
 
-        ArticleDoctrineFactory::new([
+        // Owner
+        $owner = $this->repository->findByEmail('test@test.com');
+
+        ArticleFactory::new([
             'title' => 'Custom Title',
             'content' => 'This is the article content',
             'category' => $men,
@@ -31,17 +42,20 @@ class ArticleTestFixtures extends Fixture implements FixtureGroupInterface
                 $photo,
                 $image,
             ],
+            'owner' => $owner,
             'createdAt' => \DateTime::createFromFormat('Y-m-d H:i:s', '2023-05-15 01:00:00'),
         ])->published()->create();
 
-        ArticleDoctrineFactory::new()
+        // Article With Tag Photo
+        ArticleFactory::new()
             ->published()
-            ->sequence(function () use ($photo, $men) {
+            ->sequence(function () use ($photo, $men, $owner) {
                 $date = new \DateTimeImmutable('2023-05-15 01:00:00');
                 foreach (range(1, 2) as $i) {
                     yield [
                         'tags' => [$photo],
                         'category' => $men,
+                        'owner' => $owner,
                         'createdAt' => $date->modify('+' . $i . ' hour'),
                     ];
                 }
@@ -49,14 +63,16 @@ class ArticleTestFixtures extends Fixture implements FixtureGroupInterface
             ->create()
         ;
 
-        ArticleDoctrineFactory::new()
+        // Article With Tag Image
+        ArticleFactory::new()
             ->published()
             ->noCategory()
-            ->sequence(function () use ($image) {
+            ->sequence(function () use ($image, $owner) {
                 $date = new \DateTimeImmutable('2023-05-15 03:15:00');
                 foreach (range(1, 2) as $i) {
                     yield [
                         'tags' => [$image],
+                        'owner' => $owner,
                         'createdAt' => $date->modify('+' . $i . ' hour'),
                     ];
                 }
@@ -64,13 +80,15 @@ class ArticleTestFixtures extends Fixture implements FixtureGroupInterface
             ->create()
         ;
 
+        $date = \DateTime::createFromFormat('Y-m-d H:i:s', '2024-03-20 01:00:00');
+
         // Unpublished
-        ArticleDoctrineFactory::new(['tags' => [$image]])->unpublished()->create();
-        ArticleDoctrineFactory::new(['tags' => [$photo], 'category' => $men])->unpublished()->create();
-        ArticleDoctrineFactory::new('unpublished', 'noTaxonomy')->create();
+        ArticleFactory::new(['tags' => [$image], 'createdAt' => $date->modify('+1 hour')])->unpublished()->create();
+        ArticleFactory::new(['tags' => [$photo], 'category' => $men, 'createdAt' => $date->modify('+1 hour')])->unpublished()->create();
+        ArticleFactory::new(['createdAt' => $date->modify('+1 hour')])->unpublished()->noTaxonomy()->create();
 
         // Stock
-        ArticleDoctrineFactory::new()
+        ArticleFactory::new()
             ->published()
             ->noTaxonomy()
             ->sequence(function () {
@@ -89,5 +107,10 @@ class ArticleTestFixtures extends Fixture implements FixtureGroupInterface
     public static function getGroups(): array
     {
         return ['test'];
+    }
+
+    public function getDependencies(): array
+    {
+        return [UserTestFixtures::class];
     }
 }

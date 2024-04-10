@@ -2,7 +2,7 @@
 
 namespace App\Infrastructure\Adapter\Helper;
 
-use App\Domain\Security\Entity\User;
+use App\Domain\Security\Entity\UserEntityInterface;
 use App\Domain\Security\Exception\ExpiredTokenException;
 use App\Domain\Security\Exception\InvalidTokenException;
 use App\Domain\Shared\Helper\TokenHelperInterface;
@@ -13,7 +13,7 @@ readonly class JWTToken implements TokenHelperInterface
     {
     }
 
-    public function generateUserToken(User $user, int $lifetime = 3600): string
+    public function generateUserToken(UserEntityInterface $user, int $lifetime = 3600): string
     {
         $header = [
             'alg' => 'HS256',

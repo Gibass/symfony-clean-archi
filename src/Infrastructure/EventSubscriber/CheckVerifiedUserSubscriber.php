@@ -2,7 +2,7 @@
 
 namespace App\Infrastructure\EventSubscriber;
 
-use App\Infrastructure\Doctrine\Entity\UserDoctrine;
+use App\Infrastructure\Doctrine\Entity\User;
 use App\Infrastructure\Exception\AccountNotVerifiedAuthException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -30,7 +30,7 @@ readonly class CheckVerifiedUserSubscriber implements EventSubscriberInterface
     public function onCheckPassport(CheckPassportEvent $event): void
     {
         $user = $event->getPassport()->getUser();
-        if (!$user instanceof UserDoctrine) {
+        if (!$user instanceof User) {
             throw new \Exception('Unexpected User type');
         }
 

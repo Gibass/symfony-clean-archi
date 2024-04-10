@@ -2,6 +2,7 @@
 
 namespace App\Infrastructure\Doctrine\Trait;
 
+use App\Domain\Shared\Entity\PublishEntityInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 trait EntityPublish
@@ -17,7 +18,12 @@ trait EntityPublish
         return $this->status;
     }
 
-    public function setStatus(bool $status): static
+    public function getStatus(): bool
+    {
+        return $this->status;
+    }
+
+    public function setStatus(bool $status): PublishEntityInterface
     {
         $this->status = $status;
 
@@ -29,7 +35,7 @@ trait EntityPublish
         return $this->publishedAt;
     }
 
-    public function setPublishedAt(?\DateTimeImmutable $publishedAt): static
+    public function setPublishedAt(?\DateTimeImmutable $publishedAt): PublishEntityInterface
     {
         $this->publishedAt = $publishedAt;
 

@@ -30,7 +30,7 @@ readonly class TagShow
             throw new TagNotFoundException('slug', $request->getSLug());
         }
 
-        $adapter = $this->tagGateway->getPaginatedAdapter(['id' => $tag->getId()]);
+        $adapter = $this->tagGateway->getArticlePaginated($tag->getId());
         $categories = $this->categoryGateway->getFacetCategories();
         $tags = $this->tagGateway->getPopularTag();
         $lastArticles = $this->articleGateway->getLastArticles();
