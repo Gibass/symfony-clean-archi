@@ -30,7 +30,7 @@ readonly class CategoryShow
             throw new CategoryNotFoundException('slug', $request->getSLug());
         }
 
-        $adapter = $this->categoryGateway->getPaginatedAdapter(['id' => $category->getId()]);
+        $adapter = $this->categoryGateway->getArticlePaginated($category->getId());
         $categories = $this->categoryGateway->getFacetCategories();
         $tags = $this->tagGateway->getPopularTag();
         $lastArticles = $this->articleGateway->getLastArticles();

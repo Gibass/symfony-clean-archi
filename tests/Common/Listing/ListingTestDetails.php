@@ -44,12 +44,12 @@ readonly class ListingTestDetails
         return !empty($this->asserts);
     }
 
-    public function getFistElementId(): string
+    public function getFirstElementId(): string
     {
         return $this->asserts['firstId'] ?? '';
     }
 
-    public function getFistSelector(): string
+    public function getFirstSelector(): string
     {
         return $this->asserts['firstSelector'] ?? '.article-content article:nth-child(1)';
     }

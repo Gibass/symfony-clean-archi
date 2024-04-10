@@ -39,16 +39,4 @@ class RegistrationDTO
 
         return $this;
     }
-
-    public function getTest(): ?string
-    {
-        return $this->test;
-    }
-
-    public function setTest(?string $test): RegistrationDTO
-    {
-        $this->test = $test;
-
-        return $this;
-    }
 }

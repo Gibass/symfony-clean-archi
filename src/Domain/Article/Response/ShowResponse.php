@@ -2,15 +2,15 @@
 
 namespace App\Domain\Article\Response;
 
-use App\Domain\Article\Entity\Article;
+use App\Domain\Article\Entity\ArticleInterface;
 
 readonly class ShowResponse
 {
-    public function __construct(private Article $article)
+    public function __construct(private ArticleInterface $article)
     {
     }
 
-    public function getArticle(): Article
+    public function getArticle(): ArticleInterface
     {
         return $this->article;
     }

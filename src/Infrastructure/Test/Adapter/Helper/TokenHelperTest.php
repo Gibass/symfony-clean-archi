@@ -2,14 +2,14 @@
 
 namespace App\Infrastructure\Test\Adapter\Helper;
 
-use App\Domain\Security\Entity\User;
+use App\Domain\Security\Entity\UserEntityInterface;
 use App\Domain\Security\Exception\ExpiredTokenException;
 use App\Domain\Security\Exception\InvalidTokenException;
 use App\Domain\Shared\Helper\TokenHelperInterface;
 
 class TokenHelperTest implements TokenHelperInterface
 {
-    public function generateUserToken(User $user, int $lifetime = 3600): string
+    public function generateUserToken(UserEntityInterface $user, int $lifetime = 3600): string
     {
         return 'token';
     }

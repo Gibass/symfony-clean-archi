@@ -2,7 +2,8 @@
 
 namespace Unit\Tag;
 
-use App\Domain\Article\Entity\Tag;
+use App\Domain\Article\Entity\TagInterface;
+use App\Domain\Article\Entity\TaxonomyInterface;
 use App\Domain\Article\Gateway\ArticleGatewayInterface;
 use App\Domain\Category\Gateway\CategoryGatewayInterface;
 use App\Domain\Tag\Exception\TagNotFoundException;
@@ -46,11 +47,14 @@ class TagShowTest extends TestCase
         $adapter = $this->createMock(AdapterInterface::class);
         $adapter->method('getNbResults')->willReturn(10);
 
+        $tag = $this->createMock(TaxonomyInterface::class);
+        $tag->method('getId')->willReturn(1);
+
         $this->articleGateway->method('getLastArticles')->willReturn(range(1, 3));
         $this->categoryGateway->method('getFacetCategories')->willReturn(range(1, 5));
-        $this->tageGateway->method('getPaginatedAdapter')->willReturn($adapter);
+        $this->tageGateway->method('getArticlePaginated')->willReturn($adapter);
         $this->tageGateway->method('getPopularTag')->willReturn(range(1, 10));
-        $this->tageGateway->method('getBySlug')->willReturn(new Tag('Photo', 'photo'));
+        $this->tageGateway->method('getBySlug')->willReturn($tag);
 
         $response = $this->useCase->execute($request, $this->presenter);
 

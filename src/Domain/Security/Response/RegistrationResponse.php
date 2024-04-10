@@ -2,15 +2,15 @@
 
 namespace App\Domain\Security\Response;
 
-use App\Domain\Security\Entity\User;
+use App\Domain\Security\Entity\UserEntityInterface;
 
 readonly class RegistrationResponse
 {
-    public function __construct(private User $user)
+    public function __construct(private UserEntityInterface $user)
     {
     }
 
-    public function getUser(): User
+    public function getUser(): UserEntityInterface
     {
         return $this->user;
     }

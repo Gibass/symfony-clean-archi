@@ -8,8 +8,7 @@ trait ListingTestTrait
 {
     public function listingSuccessResponse(ListingTestDetails $details): Crawler
     {
-        $client = self::createClient();
-
+        $client = $this->createClient();
         $crawler = $client->request('GET', $details->getUrl());
 
         $this->assertResponseIsSuccessful();
@@ -17,7 +16,7 @@ trait ListingTestTrait
         $this->assertSelectorCount($details->getCount(), $details->getElement());
 
         if ($details->getCount() > 0 && $details->hasAssert()) {
-            $this->assertStringContainsString($details->getFistElementId(), $crawler->filter($details->getFistSelector())->attr($details->getAttrSelector()));
+            $this->assertStringContainsString($details->getFirstElementId(), $crawler->filter($details->getFirstSelector())->attr($details->getAttrSelector()));
             $this->assertStringContainsString($details->getLastElementId(), $crawler->filter($details->getLastSelector())->attr($details->getAttrSelector()));
         }
 
@@ -29,8 +28,7 @@ trait ListingTestTrait
      */
     public function testListingFailedResponse(ListingTestDetails $details): void
     {
-        $client = self::createClient();
-
+        $client = $this->createClient();
         $client->catchExceptions(false);
         $this->expectException($details->getExceptionClass());
 

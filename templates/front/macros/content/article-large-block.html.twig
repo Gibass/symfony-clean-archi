@@ -12,9 +12,9 @@
             <h3><a class="post-title" href="{{ path('article_show', {id: article.id}) }}">{{ article.title }}</a></h3>
             <ul class="list-inline post-meta mb-4">
                 <li class="list-inline-item"><i class="ti-user mr-2"></i>
-                    <a href="author.html">John Doe</a>
+                    <a href="#">{{ article.owner.firstname }} {{ article.owner.lastname }}</a>
                 </li>
-                <li class="list-inline-item">Date : {{ article.publishedAt|date("F d, Y") }}</li>
+                <li class="list-inline-item">Date : {{ article.createdAt|date("F d, Y") }}</li>
                 {% if article.category %}
                     <li class="list-inline-item">Category : <a href="{{ path('category_show', {slug: article.category.slug}) }}" class="ml-1">{{ article.category.title }} </a></li>
                 {% endif %}

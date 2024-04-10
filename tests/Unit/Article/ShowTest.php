@@ -2,8 +2,8 @@
 
 namespace App\Tests\Unit\Article;
 
-use App\Domain\Article\Entity\Category;
-use App\Domain\Article\Entity\Tag;
+use App\Domain\Article\Entity\ArticleInterface;
+use App\Domain\Article\Entity\TaxonomyInterface;
 use App\Domain\Article\Exception\ArticleNotFoundException;
 use App\Domain\Article\Gateway\ArticleGatewayInterface;
 use App\Domain\Article\Presenter\ShowPresenterInterface;
@@ -45,7 +45,15 @@ class ShowTest extends TestCase
     {
         $request = new ShowRequest($details->getId());
 
-        $this->gateway->method('getPublishedById')->with($details->getId())->willReturn($details->getArticle());
+        $article = $details->generateMockArticle($this->createMock(ArticleInterface::class));
+        $this->gateway->method('getPublishedById')->with($details->getId())->willReturn($article);
+
+        if ($details->hasRelations()) {
+            foreach ($details->getRelations() as $method => $relation) {
+                $mock = $relation->generateMockRelation($this->createMock($relation->getClass()));
+                $article->method($method)->willReturn($mock);
+            }
+        }
 
         $response = $this->useCase->execute($request, $this->presenter);
         $this->assertSame($details->getResponse(), $response);
@@ -61,50 +69,56 @@ class ShowTest extends TestCase
         $this->expectException($details->getException());
         $this->expectExceptionMessage($details->getExceptionMessage());
 
-        $this->gateway->method('getPublishedById')->with($details->getId())->willReturn($details->getArticle());
+        $article = $details->generateMockArticle($this->createMock(ArticleInterface::class));
+        $this->gateway->method('getPublishedById')->with($details->getId())->willReturn($article);
         $this->useCase->execute($request, $this->presenter);
     }
 
     public static function dataSuccessfulProvider(): \Generator
     {
         yield 'show_existing_complete_article_with_title_and_content' => [ArticleTestDetails::create(1, [
-            'category' => new Category('Men', 'men'),
-            'tags' => [new Tag('Photo', 'photo'), new Tag('Image', 'image')],
-            'content' => 'The main Content',
-            'createdAt' => new \DateTime('25-04-2023'),
+            'relations' => [
+                'getCategory' => TaxonomyTestDetails::create(1, ['fields' => ['title' => 'Men']]),
+            ],
+            // 'tags' => [new TagInterface('Photo', 'photo'), new TagInterface('Image', 'image')],
+            'fields' => [
+                'content' => 'The main Content',
+            ],
         ])];
 
         yield 'show_existing_article_with_no_content' => [ArticleTestDetails::create(2, [
-            'category' => new Category('Men', 'men'),
-            'tags' => [new Tag('Photo', 'photo')],
-            'createdAt' => new \DateTime('25-04-2023'),
+            // 'category' => new CategoryInterface('Men', 'men'),
+            // 'tags' => [new TagInterface('Photo', 'photo')],
         ])];
 
         yield 'show_existing_article_with_no_tag' => [ArticleTestDetails::create(3, [
-            'category' => new Category('Men', 'men'),
-            'content' => 'The main Content',
-            'createdAt' => new \DateTime('25-04-2023'),
+            // 'category' => new CategoryInterface('Men', 'men'),
+            'fields' => [
+                'content' => 'The main Content',
+            ],
         ])];
 
         yield 'show_existing_article_with_no_category' => [ArticleTestDetails::create(4, [
-            'tags' => [new Tag('Photo', 'photo')],
-            'content' => 'The main Content',
-            'createdAt' => new \DateTime('25-04-2023'),
+            // 'tags' => [new TagInterface('Photo', 'photo')],
+            'fields' => [
+                'content' => 'The main Content',
+            ],
         ])];
 
         yield 'show_existing_article_with_no_taxonomy' => [ArticleTestDetails::create(4, [
-            'content' => 'The main Content',
-            'createdAt' => new \DateTime('25-04-2023'),
+            'fields' => [
+                'content' => 'The main Content',
+            ],
         ])];
     }
 
     public static function dataFailedProvider(): \Generator
     {
         yield 'load_non_existing_article' => [ArticleTestDetails::create(
-            3,
+            0,
             [],
             ArticleNotFoundException::class,
-            'Article with id : 3 not found'
+            'Article with id : 0 not found'
         )];
     }
 
@@ -113,21 +127,16 @@ class ShowTest extends TestCase
         $val = 'Article id: ' . $response->getArticle()->getId() . ', ' .
             'url: ' . $response->getArticle()->getSlug() . ', ' .
             'title : ' . $response->getArticle()->getTitle() . ', ' .
-            'Content: ' . $response->getArticle()->getContent() . ', ' .
-            'Created At: ' . $response->getArticle()->getCreatedAt()->format('d-m-Y');
+            'Content: ' . $response->getArticle()->getContent();
 
         if ($category = $response->getArticle()->getCategory()) {
             $val .= ', Category: ' . $category->getTitle();
         }
 
         if ($response->getArticle()->getTags()) {
-            $val .= ', Tags: ' . implode(',', array_map(function (Tag $tag) {
+            $val .= ', Tags: ' . implode(',', array_map(function (TaxonomyInterface $tag) {
                 return $tag->getTitle();
             }, $response->getArticle()->getTags()));
-        }
-
-        if ($response->getArticle()->getMainMedia()) {
-            $val .= sprintf(', Media : %s', $response->getArticle()->getMainMedia()->getTitle());
         }
 
         return $val;

@@ -2,7 +2,6 @@
 
 namespace App\Domain\Security\UseCase;
 
-use App\Domain\Security\Entity\User;
 use App\Domain\Security\Event\RegistrationEvent;
 use App\Domain\Security\Exception\EmailAlreadyExistException;
 use App\Domain\Security\Gateway\UserGatewayInterface;
@@ -26,12 +25,7 @@ readonly class Registration
     {
         $this->validate($request);
 
-        $user = (new User())
-            ->setEmail($request->getEmail())
-            ->setPassword($request->getPassword())
-        ;
-
-        $this->userGateway->register($user);
+        $user = $this->userGateway->register(['email' => $request->getEmail(), 'password' => $request->getPassword()]);
         $this->eventDispatcher->dispatch(new RegistrationEvent($user), RegistrationEvent::USER_REGISTRATION);
 
         return new RegistrationResponse($user);
