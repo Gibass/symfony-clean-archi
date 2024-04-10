@@ -20,9 +20,10 @@ class UserType extends AbstractType
             ->add('email', EmailType::class)
             ->add('roles', ChoiceType::class, [
                 'choices' => [
-                    'In Stock' => true,
-                    'Out of Stock' => false,
+                    'Administrator' => 'ROLE_AMDIN',
+                    'Editor' => 'ROLE_EDITOR',
                 ],
+                'multiple' => true,
             ])
         ;
     }

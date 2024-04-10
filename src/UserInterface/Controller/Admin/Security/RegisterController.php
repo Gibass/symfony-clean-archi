@@ -10,6 +10,7 @@ use App\UserInterface\Form\RegistrationType;
 use App\UserInterface\Presenter\Web\Admin\RegisterPresenterHTML;
 use Assert\AssertionFailedException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
@@ -19,8 +20,12 @@ use Symfony\Component\Routing\Attribute\Route;
 class RegisterController extends AbstractController
 {
     #[Route('/register', name: 'admin_register')]
-    public function register(Request $request, Registration $registration, RegisterPresenterHTML $presenter): Response
+    public function register(Security $security, Request $request, Registration $registration, RegisterPresenterHTML $presenter): Response
     {
+        if ($security->getUser()) {
+            return $this->redirectToRoute('admin_dashboard');
+        }
+
         $user = new RegistrationDTO();
         $form = $this->createForm(RegistrationType::class, $user);
         $form->handleRequest($request);
