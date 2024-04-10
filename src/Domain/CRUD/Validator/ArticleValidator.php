@@ -2,7 +2,7 @@
 
 namespace App\Domain\CRUD\Validator;
 
-use App\Domain\CRUD\Entity\PostedData;
+use App\Domain\CRUD\Entity\CrudEntityInterface;
 use Assert\Assertion;
 use Assert\AssertionFailedException;
 
@@ -11,11 +11,11 @@ class ArticleValidator implements CrudEntityValidatorInterface
     /**
      * @throws AssertionFailedException
      */
-    public function validate(PostedData $postedData): bool
+    public function validate(CrudEntityInterface $entity): bool
     {
-        Assertion::notBlank($postedData->get('title'), null, 'title');
-        Assertion::minLength($postedData->get('title'), 25, null, 'title');
-        Assertion::maxLength($postedData->get('title'), 255, null, 'title');
+        Assertion::notBlank($entity->getTitle(), null, 'title');
+        Assertion::minLength($entity->getTitle(), 25, null, 'title');
+        Assertion::maxLength($entity->getTitle(), 255, null, 'title');
 
         return true;
     }

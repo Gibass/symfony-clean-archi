@@ -2,6 +2,7 @@
 
 namespace App\Infrastructure\Doctrine\Entity;
 
+use App\Domain\CRUD\Entity\CrudEntityInterface;
 use App\Domain\Security\Entity\UserEntityInterface;
 use App\Infrastructure\Adapter\Repository\UserRepository;
 use Doctrine\Common\Collections\Collection;
@@ -11,7 +12,7 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-class User implements UserInterface, PasswordAuthenticatedUserInterface, UserEntityInterface
+class User implements UserInterface, PasswordAuthenticatedUserInterface, UserEntityInterface, CrudEntityInterface
 {
     use TimestampableEntity;
 
@@ -166,5 +167,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, UserEnt
         $this->isVerified = $isVerified;
 
         return $this;
+    }
+
+    public function getIdentifier(): string
+    {
+        return 'id';
     }
 }

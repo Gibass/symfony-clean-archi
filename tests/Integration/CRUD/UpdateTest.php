@@ -5,6 +5,8 @@ namespace Integration\CRUD;
 use App\Infrastructure\Test\IntegrationTestCase;
 use App\Tests\Common\CRUD\CrudTestDetails;
 use App\Tests\Common\CRUD\Details\ArticleTestDetails;
+use App\Tests\Common\CRUD\Details\CategoryTestDetails;
+use App\Tests\Common\CRUD\Details\TagTestDetails;
 use App\Tests\Common\Logged\LoggedTest;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -46,6 +48,8 @@ class UpdateTest extends IntegrationTestCase
     public static function dataProviderUpdateSuccess(): \Generator
     {
         yield from ArticleTestDetails::dataTestUpdateArticleSuccess();
+        yield from CategoryTestDetails::dataTestUpdateCategorySuccess();
+        yield from TagTestDetails::dataTestUpdateTagSuccess();
     }
 
     /**
@@ -79,6 +83,8 @@ class UpdateTest extends IntegrationTestCase
     public static function dataProviderCreateFailed(): \Generator
     {
         yield from ArticleTestDetails::dataTestUpdateArticleFailed();
+        yield from CategoryTestDetails::dataTestUpdateCategoryFailed();
+        yield from TagTestDetails::dataTestUpdateTagFailed();
     }
 
     /**
@@ -99,5 +105,7 @@ class UpdateTest extends IntegrationTestCase
     public static function dataProviderNotFoundEntity(): \Generator
     {
         yield from ArticleTestDetails::dataTestUpdateArticleNotFound();
+        yield from CategoryTestDetails::dataTestUpdateCategoryNotFound();
+        yield from TagTestDetails::dataTestUpdateTagNotFound();
     }
 }

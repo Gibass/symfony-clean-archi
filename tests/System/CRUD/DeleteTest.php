@@ -4,6 +4,8 @@ namespace System\CRUD;
 
 use App\Tests\Common\CRUD\CrudTestDetails;
 use App\Tests\Common\CRUD\Details\ArticleTestDetails;
+use App\Tests\Common\CRUD\Details\CategoryTestDetails;
+use App\Tests\Common\CRUD\Details\TagTestDetails;
 use App\Tests\Common\Logged\LoggedTest;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
@@ -32,6 +34,8 @@ class DeleteTest extends WebTestCase
     public static function dataProviderDeleteSuccess(): \Generator
     {
         yield from ArticleTestDetails::dataTestDeleteArticleSuccess();
+        yield from CategoryTestDetails::dataTestDeleteCategorySuccess();
+        yield from TagTestDetails::dataTestDeleteTagSuccess();
     }
 
     /**
@@ -53,5 +57,7 @@ class DeleteTest extends WebTestCase
     public static function dataProviderDeleteFailed(): \Generator
     {
         yield from ArticleTestDetails::dataTestDeleteArticleNotFound();
+        yield from CategoryTestDetails::dataTestDeleteCategoryNotFound();
+        yield from TagTestDetails::dataTestDeleteTagNotFound();
     }
 }

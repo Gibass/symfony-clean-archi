@@ -50,10 +50,11 @@ class CategoryShowTest extends TestCase
         $adapter->method('getNbResults')->willReturn(10);
 
         $category = $this->createMock(TaxonomyInterface::class);
+        $category->method('getId')->willReturn(1);
 
         $this->articleGateway->method('getLastArticles')->willReturn(range(1, 3));
         $this->categoryGateway->method('getFacetCategories')->willReturn(range(1, 5));
-        $this->categoryGateway->method('getPaginatedAdapter')->willReturn($adapter);
+        $this->categoryGateway->method('getArticlePaginated')->willReturn($adapter);
         $this->categoryGateway->method('getBySlug')->willReturn($category);
         $this->tageGateway->method('getPopularTag')->willReturn(range(1, 10));
 

@@ -5,7 +5,7 @@ namespace App\Infrastructure\Adapter\Repository;
 use App\Domain\Article\Entity\ArticleInterface;
 use App\Domain\Article\Gateway\ArticleGatewayInterface;
 use App\Domain\CRUD\Entity\CrudEntityInterface;
-use App\Domain\CRUD\Entity\PostedData;
+use App\Infrastructure\Adapter\Repository\Trait\CrudRepository;
 use App\Infrastructure\Doctrine\Entity\Article;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Collections\Criteria;
@@ -24,6 +24,8 @@ use Pagerfanta\Doctrine\ORM\QueryAdapter;
  */
 class ArticleRepository extends ServiceEntityRepository implements ArticleGatewayInterface
 {
+    use CrudRepository;
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Article::class);
@@ -92,35 +94,5 @@ class ArticleRepository extends ServiceEntityRepository implements ArticleGatewa
             ->getQuery()
             ->getResult()
         ;
-    }
-
-    public function create(PostedData $data): CrudEntityInterface
-    {
-        $article = $data->createEntity(Article::class);
-
-        $this->_em->persist($article);
-        $this->_em->flush();
-
-        return $article;
-    }
-
-    public function update(PostedData $data): CrudEntityInterface
-    {
-        $article = $this->findOneBy(['id' => $data->get('id')]);
-
-        $article = $data->updateEntity($article);
-
-        $this->_em->flush();
-
-        return $article;
-    }
-
-    public function delete(CrudEntityInterface $entity): bool
-    {
-        $this->_em->remove($entity);
-
-        $this->_em->flush();
-
-        return true;
     }
 }

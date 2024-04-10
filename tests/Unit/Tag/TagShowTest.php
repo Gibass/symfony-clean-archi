@@ -48,10 +48,11 @@ class TagShowTest extends TestCase
         $adapter->method('getNbResults')->willReturn(10);
 
         $tag = $this->createMock(TaxonomyInterface::class);
+        $tag->method('getId')->willReturn(1);
 
         $this->articleGateway->method('getLastArticles')->willReturn(range(1, 3));
         $this->categoryGateway->method('getFacetCategories')->willReturn(range(1, 5));
-        $this->tageGateway->method('getPaginatedAdapter')->willReturn($adapter);
+        $this->tageGateway->method('getArticlePaginated')->willReturn($adapter);
         $this->tageGateway->method('getPopularTag')->willReturn(range(1, 10));
         $this->tageGateway->method('getBySlug')->willReturn($tag);
 

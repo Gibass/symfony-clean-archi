@@ -5,7 +5,6 @@ namespace App\Infrastructure\Test\Adapter\Gateway;
 use App\Domain\Article\Entity\ArticleInterface;
 use App\Domain\Article\Gateway\ArticleGatewayInterface;
 use App\Domain\CRUD\Entity\CrudEntityInterface;
-use App\Domain\CRUD\Entity\PostedData;
 use App\Infrastructure\Doctrine\Entity\Article;
 use App\Infrastructure\Doctrine\Entity\Tag;
 use App\Infrastructure\Doctrine\Entity\User;
@@ -76,21 +75,14 @@ class ArticleGateway implements ArticleGatewayInterface
         };
     }
 
-    public function create(PostedData $data): CrudEntityInterface
+    public function create(CrudEntityInterface $entity): CrudEntityInterface
     {
-        return (new Article())
-            ->setId(1)
-            ->setTitle($data->get('title'))
-            ->setDescription($data->get('description'))
-            ->setContent($data->get('content'))
-            ->setStatus($data->get('status'))
-            ->setOwner($data->get('owner'))
-        ;
+        return $entity->setId(1);
     }
 
-    public function update(PostedData $data): CrudEntityInterface
+    public function update(CrudEntityInterface $entity): CrudEntityInterface
     {
-        return $data->createEntity(Article::class);
+        return $entity;
     }
 
     public function delete(CrudEntityInterface $entity): bool

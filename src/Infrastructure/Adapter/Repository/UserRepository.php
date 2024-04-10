@@ -2,11 +2,15 @@
 
 namespace App\Infrastructure\Adapter\Repository;
 
+use App\Domain\CRUD\Entity\CrudEntityInterface;
 use App\Domain\Security\Entity\UserEntityInterface;
 use App\Domain\Security\Gateway\UserGatewayInterface;
+use App\Infrastructure\Adapter\Repository\Trait\CrudRepository;
 use App\Infrastructure\Doctrine\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Pagerfanta\Adapter\AdapterInterface;
+use Pagerfanta\Doctrine\ORM\QueryAdapter;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
@@ -23,6 +27,8 @@ use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
  */
 class UserRepository extends ServiceEntityRepository implements PasswordUpgraderInterface, UserGatewayInterface
 {
+    use CrudRepository;
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, User::class);
@@ -68,5 +74,19 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             $user->setIsVerified(true);
             $this->_em->flush();
         }
+    }
+
+    public function getByIdentifier(int|string $identifier): ?CrudEntityInterface
+    {
+        return $this->findOneBy(['id' => $identifier]);
+    }
+
+    public function getPaginatedAdapter(array $conditions = []): AdapterInterface
+    {
+        $query = $this->createQueryBuilder('user')
+            ->orderBy('user.id', 'DESC')
+        ;
+
+        return new QueryAdapter($query);
     }
 }

@@ -4,6 +4,8 @@ namespace App\Infrastructure\Adapter\Repository;
 
 use App\Domain\Article\Entity\TaxonomyInterface;
 use App\Domain\Category\Gateway\CategoryGatewayInterface;
+use App\Domain\CRUD\Entity\CrudEntityInterface;
+use App\Infrastructure\Adapter\Repository\Trait\CrudRepository;
 use App\Infrastructure\Doctrine\Entity\Article;
 use App\Infrastructure\Doctrine\Entity\Category;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -22,9 +24,16 @@ use Pagerfanta\Doctrine\ORM\QueryAdapter;
  */
 class CategoryRepository extends ServiceEntityRepository implements CategoryGatewayInterface
 {
+    use CrudRepository;
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Category::class);
+    }
+
+    public function getById(int $id): ?TaxonomyInterface
+    {
+        return $this->findOneBy(['id' => $id]);
     }
 
     public function getBySlug(string $slug): ?TaxonomyInterface
@@ -32,11 +41,11 @@ class CategoryRepository extends ServiceEntityRepository implements CategoryGate
         return $this->findOneBy(['slug' => $slug]);
     }
 
-    public function getPaginatedAdapter(array $conditions = []): AdapterInterface
+    public function getArticlePaginated(int $id): AdapterInterface
     {
         $query = $this->_em->getRepository(Article::class)->orderQuery()
             ->andwhere('category.id = :categoryId AND article.status = :status')
-            ->setParameter('categoryId', $conditions['id'] ?? null)
+            ->setParameter('categoryId', $id)
             ->setParameter('status', true)
         ;
 
@@ -57,5 +66,28 @@ class CategoryRepository extends ServiceEntityRepository implements CategoryGate
             ->getQuery()
             ->getScalarResult()
         ;
+    }
+
+    public function getAll(): array
+    {
+        return $this->findAll();
+    }
+
+    public function getByIdentifier(int|string $identifier): ?CrudEntityInterface
+    {
+        if (\is_int($identifier)) {
+            return $this->getById($identifier);
+        }
+
+        return $this->getBySlug($identifier);
+    }
+
+    public function getPaginatedAdapter(array $conditions = []): AdapterInterface
+    {
+        $query = $this->createQueryBuilder('cat')
+            ->orderBy('cat.title', 'ASC')
+        ;
+
+        return new QueryAdapter($query);
     }
 }

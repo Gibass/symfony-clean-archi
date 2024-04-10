@@ -26,9 +26,9 @@ class UpdateTest extends TestCase
 
     public function testUpdateSuccessfully(): void
     {
-        $request = new UpdateRequest(['id' => 1]);
-
         $article = $this->createMock(CrudEntityInterface::class);
+        $request = new UpdateRequest($article);
+
         $article->method('getIdentifier')->willReturn(1);
         $this->gateway->method('update')->willReturn($article);
 
@@ -40,7 +40,8 @@ class UpdateTest extends TestCase
 
     public function testCreateFailed(): void
     {
-        $request = new UpdateRequest(['id' => 1]);
+        $article = $this->createMock(CrudEntityInterface::class);
+        $request = new UpdateRequest($article);
 
         $this->validator->method('validate')->willThrowException(new \Exception('Validation Error'));
 

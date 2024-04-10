@@ -9,10 +9,11 @@ use App\Domain\CRUD\UseCase\Delete;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Requirement\Requirement;
 
 class DeleteController extends AbstractController
 {
-    #[Route('/admin/delete/article/{id}', name: 'admin_delete_article')]
+    #[Route('/admin/delete/article/{id}', name: 'admin_delete_article', requirements: ['id' => Requirement::DIGITS])]
     public function delete(int $id, Delete $delete, ArticleGatewayInterface $gateway): RedirectResponse
     {
         $deleteRequest = new DeleteRequest($id);

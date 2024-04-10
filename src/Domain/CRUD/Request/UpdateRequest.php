@@ -2,19 +2,16 @@
 
 namespace App\Domain\CRUD\Request;
 
-use App\Domain\CRUD\Entity\PostedData;
+use App\Domain\CRUD\Entity\CrudEntityInterface;
 
-class UpdateRequest
+readonly class UpdateRequest
 {
-    private PostedData $postedData;
-
-    public function __construct(array $data)
+    public function __construct(private CrudEntityInterface $entity)
     {
-        $this->postedData = new PostedData($data);
     }
 
-    public function getPostedData(): PostedData
+    public function getEntity(): CrudEntityInterface
     {
-        return $this->postedData;
+        return $this->entity;
     }
 }

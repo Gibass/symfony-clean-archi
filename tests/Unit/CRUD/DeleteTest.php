@@ -7,11 +7,14 @@ use App\Domain\CRUD\Exception\CrudEntityNotFoundException;
 use App\Domain\CRUD\Gateway\CrudGatewayInterface;
 use App\Domain\CRUD\Request\DeleteRequest;
 use App\Domain\CRUD\UseCase\Delete;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 class DeleteTest extends TestCase
 {
     private Delete $useCase;
+
+    private CrudGatewayInterface&MockObject $gateway;
 
     protected function setUp(): void
     {

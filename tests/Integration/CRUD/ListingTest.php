@@ -37,6 +37,36 @@ class ListingTest extends IntegrationTestCase
                 ],
             ]),
         ];
+
+        // Category
+        yield 'test_listing_categories_first_page' => [
+            ListingTestDetails::create('/admin/listing/categories', [
+                'element' => 'table .items-rows',
+                'count' => 5,
+                'asserts' => [
+                    'attrSelector' => 'class',
+                    'firstSelector' => 'table tr.items-rows:nth-child(1)',
+                    'lastSelector' => 'table tr.items-rows:last-child',
+                    'firstId' => 'category-1',
+                    'LastId' => 'category-5',
+                ],
+            ]),
+        ];
+
+        // Tag
+        yield 'test_listing_tag_first_page' => [
+            ListingTestDetails::create('/admin/listing/tags', [
+                'element' => 'table .items-rows',
+                'count' => 5,
+                'asserts' => [
+                    'attrSelector' => 'class',
+                    'firstSelector' => 'table tr.items-rows:nth-child(1)',
+                    'lastSelector' => 'table tr.items-rows:last-child',
+                    'firstId' => 'tag-1',
+                    'LastId' => 'tag-5',
+                ],
+            ]),
+        ];
     }
 
     public static function dataFailedProvider(): \Generator

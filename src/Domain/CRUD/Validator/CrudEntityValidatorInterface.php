@@ -2,13 +2,15 @@
 
 namespace App\Domain\CRUD\Validator;
 
-use App\Domain\CRUD\Entity\PostedData;
+use App\Domain\CRUD\Entity\CrudEntityInterface;
+use App\Domain\CRUD\Exception\InvalidCrudEntityException;
 use Assert\AssertionFailedException;
 
 interface CrudEntityValidatorInterface
 {
     /**
      * @throws AssertionFailedException
+     * @throws InvalidCrudEntityException
      */
-    public function validate(PostedData $postedData): bool;
+    public function validate(CrudEntityInterface $entity): bool;
 }

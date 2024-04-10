@@ -4,6 +4,8 @@ namespace System\CRUD;
 
 use App\Tests\Common\CRUD\CrudTestDetails;
 use App\Tests\Common\CRUD\Details\ArticleTestDetails;
+use App\Tests\Common\CRUD\Details\CategoryTestDetails;
+use App\Tests\Common\CRUD\Details\TagTestDetails;
 use App\Tests\Common\Logged\LoggedTest;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
@@ -38,6 +40,8 @@ class CreateTest extends WebTestCase
     public static function dataProviderCreateSuccess(): \Generator
     {
         yield from ArticleTestDetails::dataTestCreateArticleSuccess();
+        yield from CategoryTestDetails::dataTestCreateCategorySuccess();
+        yield from TagTestDetails::dataTestCreateTagSuccess();
     }
 
     /**
@@ -63,5 +67,7 @@ class CreateTest extends WebTestCase
     public static function dataProviderCreateFailed(): \Generator
     {
         yield from ArticleTestDetails::dataTestCreateArticleFailed();
+        yield from CategoryTestDetails::dataTestCreateCategoryFailed();
+        yield from TagTestDetails::dataTestCreateTagFailed();
     }
 }

@@ -10,5 +10,7 @@ interface TaxonomyInterface
 
     public function getTitle(): ?string;
 
+    public function setTitle(?string $title): static;
+
     public function getSlug(): ?string;
 }

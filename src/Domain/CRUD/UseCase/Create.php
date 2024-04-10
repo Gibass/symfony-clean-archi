@@ -18,9 +18,9 @@ class Create
         CrudGatewayInterface $gateway,
         CrudEntityValidatorInterface $validator
     ): CreateResponse {
-        $validator->validate($request->getPostedData());
+        $validator->validate($request->getEntity());
 
-        $entity = $gateway->create($request->getPostedData());
+        $entity = $gateway->create($request->getEntity());
 
         return new CreateResponse($entity);
     }
