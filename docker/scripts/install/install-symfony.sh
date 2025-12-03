@@ -21,3 +21,9 @@ if [ ! -f composer.json ]; then
   cd ..
   rm -Rf tmp/
 fi
+
+if [ ! -d vendor ]; then
+  if [ -f composer.json ]; then
+    exec composer install
+  fi
+fi

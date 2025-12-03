@@ -1,0 +1,10 @@
+{{ form_start(form) }}
+<div class="form-group mb-3">
+  {{ form_label(form.name) }}
+  {{ form_widget(form.name) }}
+</div>
+{{ form_rest(form) }}
+<div class="cta">
+  <input type="submit" value="Save" class="btn btn-primary">
+</div>
+{{ form_end(form) }}

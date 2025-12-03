@@ -1,36 +1,33 @@
-version: '3'
-
 services:
-  nginx:
-    image: nginx:latest
-    container_name: ${PROJECT_NAME}-webserver
-    ports:
-      - "80:80"
-      - "443:443"
-    restart: always
+  php:
+    image: gibass/php:8.4
+    container_name: ${PROJECT_NAME}-php
+    environment:
+      SYMFONY_VERSION: ${SYMFONY_VERSION:-}
+      SCRIPTS_DIR: ${SCRIPTS_DIR:-}
+      APP_DIR: ${APP_DIR:-/var/www/html}
+      DEV_UID: ${UID}
+      ENV: ${ENV:-}
     volumes:
-      - ${WORKSPACE}/docker/nginx/conf/conf.d:/etc/nginx/conf.d:ro
-      - ${WORKSPACE}/docker/nginx/conf/certs:/etc/nginx/certs:ro
       - ${WORKSPACE}:/var/www/html
-    depends_on:
-      - php
     networks:
       - internal
 
-  php:
-    build: ${WORKSPACE}/docker/php
-    container_name: ${PROJECT_NAME}-php
+  nginx:
+    image: nginx:stable
+    container_name: ${PROJECT_NAME}-nginx
+    ports:
+      - "80:80"
+      - "443:443"
     volumes:
-      - ${WORKSPACE}:/var/www/html
-    environment:
-      ENV: ${ENV:-}
-      SYMFONY_VERSION: ${SYMFONY_VERSION:-}
-      DEV_UID: ${UID}
+      - ${WORKSPACE}/docker/nginx/conf/conf.d:/etc/nginx/conf.d:ro
+      - ${WORKSPACE}/docker/nginx/conf/certs:/etc/nginx/certs
+      - ${WORKSPACE}/public:/var/www/html/public
     networks:
       - internal
 
   database:
-    image: mysql:5.7
+    image: mysql:8.4
     container_name: ${PROJECT_NAME}-database
     environment:
       MYSQL_ROOT_PASSWORD: ${ROOT_PASSWORD}
@@ -41,27 +38,6 @@ services:
       - "6033:3306"
     volumes:
       - ${WORKSPACE}/docker/mysql/init:/docker-entrypoint-initdb.d
-    networks:
-      - internal
-
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin:latest
-    container_name: ${PROJECT_NAME}-phpmyadmin
-    environment:
-      PMA_ARBITRARY: 1
-      PMA_HOST: database
-      UPLOAD_LIMIT: 20M
-    ports:
-        - "8899:80"
-    networks:
-      - internal
-
-  mail:
-    image: mailhog/mailhog
-    container_name: ${PROJECT_NAME}-mail
-    ports:
-      - "1025:1025"
-      - "8025:8025"
     networks:
       - internal
 

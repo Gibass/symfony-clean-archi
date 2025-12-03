@@ -1,0 +1,29 @@
+body {
+    background-color: #121212;
+    color: #e4e4e4;
+}
+.card {
+    background-color: #1e1e1e;
+    border: 1px solid #333;
+}
+.table-dark-custom {
+    background-color: #1c1c1c;
+}
+.table-dark-custom th {
+    background-color: #282828 !important;
+}
+.navbar-dark {
+    background-color: #000 !important;
+}
+.btn-info {
+    background-color: #0dcaf0;
+    border: none;
+}
+.btn-warning {
+    background-color: #ffc107;
+    border: none;
+}
+.btn-danger {
+    background-color: #dc3545;
+    border: none;
+}

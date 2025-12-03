@@ -1,16 +1,17 @@
 <h1 align="center">
-  🎯 A Clean Archi Project Example with Symfony
+  🚀 A Docker Starter Kit for Symfony
 </h1>
 
 <p align="center">
-    <a href="#"><img src="https://img.shields.io/badge/php-^8.2-purple.svg?logo=php" alt="PHP version"/></a>
-    <a href="#"><img src="https://img.shields.io/badge/symfony-^6.4-white.svg?logo=symfony" alt="PHP version"/></a>
-    <a href="#"><img src="https://img.shields.io/badge/composer-latest-blue.svg?logo=composer" alt="PHP version"/></a>
-    <a href="#"><img src="https://img.shields.io/github/license/Naereen/StrapDown.js.svg"/></a>
+    <a href="#"><img src="https://img.shields.io/badge/php-^8.4-purple.svg?logo=php" alt="PHP version"/></a>
+    <a href="#"><img src="https://img.shields.io/badge/composer-latest-blue.svg?logo=composer" alt="composer"/></a>
+    <a href="#"><img src="https://img.shields.io/github/license/Naereen/StrapDown.js.svg" alt="license"/></a>
 </p>
 
 <p align="center">
-A Project example to apply clean-architecture stricture with symfony code project.
+    A Starter Kit to create new web or console Symfony Project quickly, with docker structure implementation
+    <br />
+    Using nginx for webserver with SSL autoconfiguration, and Mysql for database
 </p>
 
 ## 🔧 Environment Setup
@@ -26,9 +27,7 @@ Some tools are required to install a project :
 
 ### 1- Environment configuration
 
-Create your `.env` file from the dist file located in the `env/` folder according to your environment (``dev|stage|prod``).
-
-Change variables value.
+Change your custom variable value in the dist file `env/.env.dev.dist`, according your project application and your environment (``dev|stage|prod``).
 
 ```dotenv
 # in env/.env.dev.dist
@@ -38,27 +37,42 @@ ENV=dev
 DEBUG=true
 
 ## Install env var
+APP_DIR=/var/www/html
+SCRIPTS_DIR="${APP_DIR}/docker/scripts/entrypoint"
 PROJECT_NAME=starter-kit-symfony
-SYMFONY_VERSION=6.3.*
+SYMFONY_VERSION=7.3.*
 PROJECT_TYPE=web
 FULL_WEB=false
-HOST=dev-starter-kit-symfony.mg
+HOST=dev.symfony-starter.mg
 
-# Database conf
-ROOT_PASSWORD=--------
-MYSQL_DB_NAME=clean_archi_db
-MYSQL_USERNAME=clean_archi_user
-MYSQL_PASSWORD=--------
+## Database
+ROOT_PASSWORD=root
+MYSQL_DB_HOST=database
+MYSQL_DB_NAME=dbname
+MYSQL_USERNAME=dbuser
+MYSQL_PASSWORD=dbpassword
 ```
 
+- ``APP_DIR`` : your app directory volume
+- ``SCRIPTS_DIR`` : a directory to run scripts on container start (ex: file-permission.sh to set file permission)
 - ``PROJECT_NAME`` : your project name
 - ``SYMFONY_VERSION`` : The version of symfony that will be installed
 - ``PROJECT_TYPE`` : a `web` or `console` project
 - ``FULL_WEB`` : require weapp on symfony install if value is true
 - ``HOST`` : A host if your project type is a `web` symfony project
 
-### 2- Project Installation
-After creating and configure the `.env` file, run install with a `make install` command  
+Database configurations
+- ``ROOT_PASSWORD`` : the root password
+- ``MYSQL_DB_HOST`` : the database container name or external database host
+- ``MYSQL_DB_NAME`` : name of the database
+- ``MYSQL_USERNAME`` : username to access a database
+- ``MYSQL_PASSWORD`` : user password to access a database
+
+### 2- Configure your hosts
+Add your domain to your hosts file ``(/etc/hosts)`` (ex: ``127.0.0.1 dev.symfony-starter.mg``)
+
+### 3- Project Installation
+After configuring the env file in `env/` folder, run installation with a `make install` command  
 
 ```shell
 make install

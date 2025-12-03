@@ -1,0 +1,49 @@
+{% extends 'layouts/admin.base.html.twig' %}
+
+{% block body %}
+  <div class="container mt-4">
+
+    {% include 'components/alert/_alert-messages.html.twig' %}
+
+    <!-- HEADER + ADD BUTTON -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h3 class="mb-0">Taxonomies List</h3>
+      <a href="{{ path('taxonomy.create') }}" class="btn btn-primary">+ Add Taxonomy</a>
+    </div>
+
+    <!-- SEARCH BAR -->
+    <div class="input-group mb-3">
+      <input type="text" class="form-control bg-dark text-light border-secondary" placeholder="Search a taxonomy...">
+      <button class="btn btn-outline-secondary" type="button">Search</button>
+    </div>
+
+    <!-- TAXONOMIES TABLE -->
+    <div class="card shadow-sm">
+      <div class="card-body p-0">
+        <table class="table table-dark table-hover mb-0 table-dark-custom table-responsive-sm">
+          <thead>
+          <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th class="text-end">Actions</th>
+          </tr>
+          </thead>
+          <tbody>
+          {% for taxonomy in taxonomies %}
+            <tr>
+              <td>{{ taxonomy.id }}</td>
+              <td>{{ taxonomy.name }}</td>
+              <td class="text-end">
+                <button class="btn btn-sm btn-info">View</button>
+                <a href="{{ path('taxonomy.edit', {id: taxonomy.id}) }}" class="btn btn-sm btn-warning">Edit</a>
+                <button class="btn btn-sm btn-danger">Delete</button>
+              </td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}

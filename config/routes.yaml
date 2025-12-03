@@ -1,5 +1,17 @@
-controllers:
+home.controller:
     resource:
-        path: ../src/UserInterface/Controller/
-        namespace: App\UserInterface\Controller
+        path: ../src/Home/UserInterface/Controller/
+        namespace: App\Home\UserInterface\Controller
+    type: attribute
+
+article.controller:
+    resource:
+        path: ../src/Article/UserInterface/Controller/
+        namespace: App\Article\UserInterface\Controller
+    type: attribute
+
+taxonomy.controller:
+    resource:
+        path: ../src/Taxonomy/UserInterface/Controller/
+        namespace: App\Taxonomy\UserInterface\Controller
     type: attribute
